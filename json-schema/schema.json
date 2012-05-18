@@ -1,24 +1,61 @@
 {
-    "name": "data", "additionalProperties": false,
+    "name": "data",
+    "additionalProperties": false,
     "properties":
     {
         "nodes":
         {
-            "type": "array", "description": This array holds all the nodes of the graph.", "additionalItems": false, "items":
+            "type": "array",
+            "description": "This array holds all the nodes of the graph.",
+            "additionalItems": false,
+            "items":
             {
-                "type": "object", "additionalProperties": false,
+                "type": "object",
+                "additionalProperties": false,
                 "properties":
                 {
-                    "id":         { "type": "string", "required": true, "description": "A unique ID for this node." },
-                    "label":      { "type": "string", "required": true, "description": "The label with which the node is decorated."  },
-                    "class":      { "type": "string", "required": false "description": "The CSS class of this node. Used for skinning purposes." },
-                    "attributes": { "type": "array",  "required": false "description": "An array of additional attributes for this node.",
-                                    "additionalItems": false, "items":
+                    "id":
+                    {
+                        "type": "string",
+                        "required": true,
+                        "description": "A unique ID for this node."
+                    },
+                    "label":
+                    {
+                        "type": "string",
+                        "required": true,
+                        "description": "The label with which the node is decorated."
+                    },
+                    "class":
+                    {
+                        "type": "string",
+                        "required": false,
+                        "description": "The CSS class of this node. Used for skinning purposes."
+                    },
+                    "attributes":
+                    {
+                        "type": "array",
+                        "required": false,
+                        "description": "An array of additional attributes for this node.",
+                        "additionalItems": false,
+                        "items":
                         {
-                            "type": "object", "additionalProperties": false, "properties":
+                            "type": "object",
+                            "additionalProperties": false,
+                            "properties":
                             {
-                                "name":        { "type": "string",  "required": true, "description": "The attribute name." },
-                                "value":       { "type": "string",  "required": true, "description": "The atrribute value." }
+                                "name":
+                                {
+                                    "type": "string",
+                                    "required": true,
+                                    "description": "The attribute name."
+                                },
+                                "value":
+                                {
+                                    "type": "string",
+                                    "required": true,
+                                    "description": "The attribute value."
+                                }
                             }
                         }
                     }
@@ -27,30 +64,74 @@
         },
         "edges":
         {
-            "type": "array", "description": "This array holds all the edges of the graph.", "additionalItems": false, "items":
+            "type": "array",
+            "description": "This array holds all the edges of the graph.",
+            "additionalItems": false,
+            "items":
             {
-                "type": "object", "additionalProperties": false,
+                "type": "object",
+                "additionalProperties": false,
                 "properties":
                 {
-                    "id":    { "type": "string", "required": true, "description": "A unique ID for this edge." },
-                    "from":  { "type": "string", "required": true, "description": "The source node." },
-                    "to":    { "type": "string", "required": true  "description": "The target node." },
-                    "class": { "type": "string", "required": false, "description": "The CSS class of this edge. Used for skinning purposes." },
-                    "label": { "type": "string", "required": false, "description": "A label for this edge. Used as an alternative to the CSS class-based skinning." }
+                    "id":
+                    {
+                        "type": "string",
+                        "required": true,
+                        "description": "A unique ID for this edge."
+                    },
+                    "from":
+                    {
+                        "type": "string",
+                        "required": true,
+                        "description": "The source node."
+                    },
+                    "to":
+                    {
+                        "type": "string",
+                        "required": true,
+                        "description": "The target node."
+                    },
+                    "class":
+                    {
+                        "type": "string",
+                        "required": false,
+                        "description": "The CSS class of this edge. Used for skinning purposes."
+                    },
+                    "label":
+                    {
+                        "type": "string",
+                        "required": false,
+                        "description": "A label for this edge. Used as an alternative to the CSS class-based skinning."
+                    }
                 }
             }
         },
         "paths":
         {
-            "type": "array", "description": "This array holds all the paths which shall be visualized by the application.", "additionalItems": false, "items":
+            "type": "array",
+            "description": "This array holds all the paths which shall be visualized by the application.",
+            "additionalItems": false,
+            "items":
             {
-                "type": "object", "additionalProperties": false,
+                "type": "object",
+                "additionalProperties": false,
                 "properties":
                 {
-                    "id": { "type": "string", "required": true, "description": "A unique ID for this path." }
-                    "edges": "array", "description": "This array holds all the edges (specifically the unique edge IDs) belonging to this path.", "additionalItems": false, "items":
+                    "id":
                     {
-                        "type": "string"
+                        "type": "string",
+                        "required": true,
+                        "description": "A unique ID for this path."
+                    },
+                    "edges":
+                    {
+                        "type": "array",
+                        "description": "This array holds all the edges (specifically the unique edge IDs) belonging to this path.",
+                        "additionalItems": false,
+                        "items":
+                        {
+                            "type": "string"
+                        }
                     }
                 }
             }
