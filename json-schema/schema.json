@@ -1,17 +1,17 @@
 {
     "name": "data",
-    "additionalProperties": false,
     "properties":
     {
         "nodes":
         {
             "type": "array",
             "description": "This array holds all the nodes of the graph.",
-            "additionalItems": false,
+            "required": true,
             "items":
             {
                 "type": "object",
-                "additionalProperties": false,
+                "description": "A single node object",
+                "id": "nodeType",
                 "properties":
                 {
                     "id":
@@ -37,11 +37,10 @@
                         "type": "array",
                         "required": false,
                         "description": "An array of additional attributes for this node.",
-                        "additionalItems": false,
                         "items":
                         {
                             "type": "object",
-                            "additionalProperties": false,
+                            "description": "A single attribute name-value pair.",
                             "properties":
                             {
                                 "name":
@@ -66,10 +65,12 @@
         {
             "type": "array",
             "description": "This array holds all the edges of the graph.",
-            "additionalItems": false,
+            "required": true,
             "items":
             {
                 "type": "object",
+                "description": "A single edge.",
+                "id": "edgeType",
                 "additionalProperties": false,
                 "properties":
                 {
@@ -79,18 +80,8 @@
                         "required": true,
                         "description": "A unique ID for this edge."
                     },
-                    "from":
-                    {
-                        "type": "string",
-                        "required": true,
-                        "description": "The source node."
-                    },
-                    "to":
-                    {
-                        "type": "string",
-                        "required": true,
-                        "description": "The target node."
-                    },
+                    "from": { "$ref": "nodeType" },
+                    "to": { "$ref": "nodeType" },
                     "class":
                     {
                         "type": "string",
@@ -110,11 +101,10 @@
         {
             "type": "array",
             "description": "This array holds all the paths which shall be visualized by the application.",
-            "additionalItems": false,
+            "required": false,
             "items":
             {
                 "type": "object",
-                "additionalProperties": false,
                 "properties":
                 {
                     "id":
@@ -128,10 +118,7 @@
                         "type": "array",
                         "description": "This array holds all the edges (specifically references to the IDs of the edges) belonging to this path.",
                         "additionalItems": false,
-                        "items":
-                        {
-                            "type": "string"
-                        }
+                        "items": { "$ref": "edgeType" }
                     }
                 }
             }
