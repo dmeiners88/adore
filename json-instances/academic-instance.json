@@ -1,0 +1,29 @@
+{
+    "nodes":
+    [
+        { "id": "author1",  "label": "Author 1",  "class": "author" },
+        { "id": "author2",  "label": "Author 2",  "class": "author" },
+        { "id": "author3",  "label": "Author 3",  "class": "author" },
+        { "id": "author4",  "label": "Author 4",  "class": "author" },
+        { "id": "author5",  "label": "Author 5",  "class": "author" },
+        { "id": "author6",  "label": "Author 6",  "class": "author" },
+        { "id": "author7",  "label": "Author 7",  "class": "author" },
+        { "id": "author8",  "label": "Author 8",  "class": "author" },
+        { "id": "author9",  "label": "Author 9",  "class": "author" },
+        { "id": "author10", "label": "Author 10", "class": "author" },
+        { "id": "author11", "label": "Author 11", "class": "author" },
+        { "id": "author12", "label": "Author 12", "class": "author" },
+        
+        { "id": "paperA", "label": "Paper A", "class": "paper"  },
+        { "id": "paperB", "label": "Paper B", "class": "paper"  },
+        { "id": "paperC", "label": "Paper C", "class": "paper"  },
+        { "id": "paperD", "label": "Paper D", "class": "paper"  },
+        
+        { "id": "conferenceA", "label": "Conference A", "class": "conference" },
+        { "id": "conferenceB", "label": "Conference B", "class": "conference" }
+    ],
+    "edges":
+    [
+        { "id": "edge1", "from": { "$ref": "author1" }, "to": { "$ref": "paperA" }, "class": "authorship" }
+    ]
+}
