@@ -1,0 +1,2 @@
+﻿This folder holds example JSON instance documents.
+The documents should be well-formed and conform to the JSON schema in ../json-schema/schema.json.
