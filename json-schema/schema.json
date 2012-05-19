@@ -126,7 +126,7 @@
                     "edges":
                     {
                         "type": "array",
-                        "description": "This array holds all the edges (specifically the unique edge IDs) belonging to this path.",
+                        "description": "This array holds all the edges (specifically references to the IDs of the edges) belonging to this path.",
                         "additionalItems": false,
                         "items":
                         {
