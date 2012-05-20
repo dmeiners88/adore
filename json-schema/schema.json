@@ -5,7 +5,7 @@
         "nodes":
         {
             "type": "array",
-            "description": "This array holds all the nodes of the graph.",
+            "description": "This array holds all the nodes we want to draw.",
             "required": true,
             "items":
             {
@@ -64,14 +64,13 @@
         "edges":
         {
             "type": "array",
-            "description": "This array holds all the edges of the graph.",
+            "description": "This array holds all the edges we want to draw.",
             "required": true,
             "items":
             {
                 "type": "object",
                 "description": "A single edge.",
                 "id": "edgeType",
-                "additionalProperties": false,
                 "properties":
                 {
                     "id":
@@ -100,8 +99,8 @@
         "paths":
         {
             "type": "array",
-            "description": "This array holds all the paths which shall be visualized by the application.",
-            "required": false,
+            "description": "This array joins edges to paths.",
+            "required": true,
             "items":
             {
                 "type": "object",
