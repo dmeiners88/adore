@@ -1,23 +1,52 @@
-﻿jsPlumb.ready(function() {
-    $(".box").css("left", function() {
-        return $(window).width() * Math.random() + "px";
-    });
+/* This is the ADORE object that holds all the ADORE-specific functions and internal state information. */
+adore = (function() {
 
-    $(".box").css("top", function() {
-        return $(window).height() * Math.random() + "px";
-    });
+    /* Here come all the private properties. */
+    var skinFileContents,
+        jsonFileContents;
+    
+    /* Here come all the function definitions. */
+    function bindControls() {
+        /* Binds all HTML controls to their corresponding JavaScript function. */
 
-    $(".box").css("background-image", function(index) {
-        return "url('http://placehold.it/60x60&text=" + (index + 1).toString() + "')";
-    });
+        $("#skinFile").change(function (evt) {
+            skinFileContents = loadFile(evt);
+            $("#fileContents").text(skinFileContents);
+        });
+    }
 
-    var common = {
-        endpoint: [ "Dot", { radius: 5} ],
-        anchor: "AutoDefault"
-    };
+    function loadFile(inputId) {
+        /* Read a file from the file input field with the given ID and return the
+           file contents. */
 
-    jsPlumb.draggable(jsPlumb.getSelector(".box"));
-    jsPlumb.connect({ source: "box1", target: "box2" }, common);
-    jsPlumb.connect({ source: "box1", target: "box3" }, common);
-    jsPlumb.connect({ source: "box2", target: "box3" }, common);
+        var file = inputId.target.files[0];
+
+        if (file) {
+            var reader = new FileReader();
+            reader.onload = (function(f) {
+                console.log("Sucessfully read from file " + inputId.target.value);
+                //return f.target.result;
+                skinFileContents = f.target.result;
+            });
+            reader.readAsText(file);
+        }
+        else {
+            console.error("Failed to load file from input " + inputId);
+        }
+    }
+
+    function init() {
+        bindControls();
+    }
+
+    /* We return an anonymous object which holds references to the functions
+       we want to make public. */
+    return {
+        init: init
+    }
+
+})();
+
+$(function() {
+    adore.init();
 });
