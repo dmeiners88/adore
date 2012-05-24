@@ -1,16 +1,51 @@
 body {
-	margin-left: 1em;
-	font-size: small;
+    margin-left: 1em;
+    margin-top: 1em;
+    font-size: small;
 }
 
 #header {
-	margin-bottom: 0em;
+    margin-top: 0em;
+    margin-bottom: 0em;
+}
+
+#menuBox {
+    width: 30em;
+    padding: 1em;
+    box-shadow: 2px 2px 19px #AAAAAA;
+    border-radius: 0.5em 0.5em 0.5em 0.5em;
+    opacity: 0.5;
+    -moz-transition: opacity 0.3s;
+
+    &:hover {
+        opacity: 1.0;
+    }
+}
+
+h2 {
+    font-weight: normal;
+    color: gray;
+
+    span {
+        font-weight: bold;
+        color: black;
+    }
 }
 
 #subHeader {
-	margin-top: 0em;
+    margin-top: 0em;
 }
 
-input {
-	margin-bottom: 1em;
+#skinFileBrowseButton, #jsonFileBrowseButton {
+    float: right;
+}
+
+#fileInputForm {
+    input[type=file] {
+        display: none;
+    }
+
+    div:first-of-type {
+        margin-bottom: 1em;
+    }
 }
