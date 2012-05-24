@@ -1,52 +1,72 @@
 /* This is the ADORE object that holds all the ADORE-specific functions and internal state information. */
-adore = (function() {
+var adore = (function () {
 
-    /* Here come all the private properties. */
-    var skinFileContents,
-        jsonFileContents;
-    
+    /* The private object will hold the file contents. */
+    var data = {
+        skinFile: undefined,
+        jsonFile: undefined
+    };
+
     /* Here come all the function definitions. */
     function bindControls() {
-        /* Binds all HTML controls to their corresponding JavaScript function. */
+        /* Binds all HTML controls to JavaScript logic. */
 
-        $("#skinFile").change(function (evt) {
-            skinFileContents = loadFile(evt);
-            $("#fileContents").text(skinFileContents);
+        $("#skinFile, #jsonFile").each(function (index, element) {
+            element.onchange = loadFile;
+        });
+
+        $("#skinFileBrowseButton, #jsonFileBrowseButton").each(function (index, element) {
+            element.onclick = function () {
+                $("#" + element.dataset["for"]).get(0).click();
+            };
         });
     }
 
-    function loadFile(inputId) {
-        /* Read a file from the file input field with the given ID and return the
-           file contents. */
+    function setUpDraggables() {
+        /* Makes some page elements draggable */
+        $("#menuBox").draggable();
+    }
 
-        var file = inputId.target.files[0];
+    function loadFile(evt) {
+        /* This function takes an onchange-Event and reads a file from
+           the generating input field. */
+        var file = evt.target.files[0];
+        var fileName = evt.target.value;
 
         if (file) {
             var reader = new FileReader();
-            reader.onload = (function(f) {
-                console.log("Sucessfully read from file " + inputId.target.value);
-                //return f.target.result;
-                skinFileContents = f.target.result;
-            });
+
+            /* This is a callback function. It is called when the FileReader
+               object finishes its read operation. */
+            reader.onload = function (f) {
+                /* We store the file contents in our global data object. */
+                data[evt.target.id] = f.target.result;
+                $("#" + evt.target.id + "Name").text(fileName);
+            };
+
+            /* Start reading the text file. */
             reader.readAsText(file);
-        }
-        else {
-            console.error("Failed to load file from input " + inputId);
+        } else {
+            console.error("adore: failed to load from file" + fileName);
         }
     }
 
     function init() {
+        /* This function initializes the ADORE application */
         bindControls();
+        setUpDraggables();
     }
 
     /* We return an anonymous object which holds references to the functions
        we want to make public. */
     return {
         init: init
-    }
+    };
 
-})();
+}());
 
-$(function() {
+$(function () {
+    /* We call the ADORE init function inside the jQuery.ready() function to make sure
+       the DOM is ready. */
     adore.init();
 });
