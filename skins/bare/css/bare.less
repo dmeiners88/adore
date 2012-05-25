@@ -1,0 +1,36 @@
+/* bare.css – a minimal stylesheet to draw graphs without additional,
+   domain specific style information */
+
+.node {
+    width: 60px;
+    height: 60px !important;
+    border: 1px solid black;
+    text-align: center;
+    line-height: 60px;
+    display: inline;
+    position: absolute;
+
+    &:nth-child(2) {
+        left: 10em;
+    }
+
+    &:nth-child(3) {
+        left: 20em;
+    }
+
+    &:nth-child(4) {
+        left: 30em;
+    }
+
+    &:nth-child(5) {
+        left: 40em;
+    }
+
+    &:nth-child(6) {
+        left: 50em;
+    }
+}
+
+.path {
+    height: 10em;
+}

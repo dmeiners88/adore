@@ -28,20 +28,22 @@
                         <label for="skinFile">CSS Skin File:</label>
                         <span id="skinFileName"></span>
                         <input type="file" id="skinFile">
-                        <input type="button" id="skinFileBrowseButton" value="Browse..."
-                               data-for="skinFile">
+                        <button id="skinFileBrowseButton" data-for="skinFile" type="button">
+                            Browse...
+                        </button>
                     </div>
                     <div>
                         <label for="jsonFile">JSON Data File:</label>
                         <span id="jsonFileName"></span>
                         <input type="file" id="jsonFile">
-                        <input type="button" id="jsonFileBrowseButton" value="Browse..."
-                               data-for="jsonFile">
+                        <button id="jsonFileBrowseButton" data-for="jsonFile" type="button">
+                            Browse...
+                        </button>
                     </div>
                 </form>
             </div>
         </div>
-        <pre id="fileContents">
-        </pre>
+        <div id ="drawingArea">
+        </div>
     </body>
 </html>

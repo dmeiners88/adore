@@ -1,7 +1,38 @@
+/* In case no domain specific is loaded, we load very basic 'bare'
+   skin to make nodes and edges at least visible. */
+@import "../skins/bare/css/bare.less";
+
+/* Element styles */
+
 body {
     margin-left: 1em;
     margin-top: 1em;
     font-size: small;
+}
+
+h2 {
+    font-weight: normal;
+    font-size: medium;
+    color: gray;
+
+    span {
+        font-weight: bold;
+        color: black;
+    }
+}
+
+/* Class styles */
+
+/* Styles for single elements (selected via ID) */
+
+#fileInputForm {
+    input[type=file] {
+        display: none;
+    }
+
+    div:first-of-type {
+        margin-bottom: 1em;
+    }
 }
 
 #header {
@@ -10,8 +41,10 @@ body {
 }
 
 #menuBox {
+    background-color: white;
     width: 30em;
     padding: 1em;
+    margin-bottom: 1em;
     box-shadow: 2px 2px 19px #AAAAAA;
     border-radius: 0.5em 0.5em 0.5em 0.5em;
     opacity: 0.5;
@@ -22,30 +55,10 @@ body {
     }
 }
 
-h2 {
-    font-weight: normal;
-    color: gray;
-
-    span {
-        font-weight: bold;
-        color: black;
-    }
-}
-
-#subHeader {
-    margin-top: 0em;
-}
-
 #skinFileBrowseButton, #jsonFileBrowseButton {
     float: right;
 }
 
-#fileInputForm {
-    input[type=file] {
-        display: none;
-    }
-
-    div:first-of-type {
-        margin-bottom: 1em;
-    }
+#subHeader {
+    margin-top: 0em;
 }
