@@ -1,28 +1,71 @@
 // This is the ADORE object that holds all the ADORE-specific functions
 // and internal state information.
 var adore = (function () {
+    // We use strict mode to prevent bad programming habits and to fix some JavaScript
+    // quirks.
+    "use strict";
+
     // Here come all the function definitions.
 
-    // Binds all HTML controls to JavaScript logic.
-    function bindControls() {
+    // This function takes a JSON text fragment, parses it and draws it.
+    function drawFromJson(jsonText) {
+        var json = $.fromJsonRef(jsonText),
+            d = $("#drawingArea"),
+            pathCount,
+            i,
+            currPath,
+            j,
+            edgeCount,
+            pathDiv,
+            currEdge,
+            sourceNodeDiv,
+            targetNodeDiv;
 
-        $("#jsonFile").get(0).onchange = jsonFileChange;
-        $("#skinFile").get(0).onchange = skinFileChange;
+        // For each path in the JSON, we create a new `<div>` element.
+        pathCount = json.paths.length;
+        for (i = 0; i < pathCount; i += 1) {
+            currPath = json.paths[i];
+            edgeCount = currPath.edges.length;
+            pathDiv = $("<div/>").addClass("path").attr("id", currPath.id);
+            d.append(pathDiv);
 
-        $("#skinFileBrowseButton, #jsonFileBrowseButton").each(function (index, element) {
-            element.onclick = function () {
-                $("#" + element.dataset["for"]).get(0).click();
-            };
-        });
+            // We draw the current path in its own `<div>`.
+            // We start with looping trough the edges of the current path and inserting
+            // the source and target nodes.
+            for (j = 0; j < edgeCount; j += 1) {
+                currEdge = currPath.edges[j];
+
+                sourceNodeDiv = $("<div/>")
+                    .addClass("node")
+                    .addClass(currEdge.from["class"])
+                    .attr("id", currEdge.from.id)
+                    .text(currEdge.from.label);
+
+                targetNodeDiv = $("<div/>")
+                    .addClass("node")
+                    .addClass(currEdge.to["class"])
+                    .attr("id", currEdge.to.id)
+                    .text(currEdge.to.label);
+
+                pathDiv.append(sourceNodeDiv).append(targetNodeDiv);
+            }
+        }
+    }
+
+    // This function handles the loading of a CSS skin file and applies its styles
+    // to the current graph.
+    function skinFileChange(evt) {
+
     }
 
     // This function handles the loading of a JSON data file and triggers its
     // parsing and drawing.
     function jsonFileChange(evt) {
-        var file = evt.target.files[0];
+        var file = evt.target.files[0],
+            reader;
 
         if (file) {
-            var reader = new FileReader();
+            reader = new FileReader();
 
             // We assign a callback function to the `onload` event of the `FileReader`.
             // It is called when the `FileReader` object finishes its read operation.
@@ -41,39 +84,17 @@ var adore = (function () {
         }
     }
 
-    // This function takes a JSON text fragment, parses it and draws it.
-    function drawFromJson(jsonText) {
-        var json = $.fromJsonRef(jsonText);
-        var d = $("#drawingArea");
+    // Binds all HTML controls to JavaScript logic.
+    function bindControls() {
 
-        // For each path in the JSON, we create a new `<div>` element.
-        var pathCount = json.paths.length;
-        var i;
-        for (i = 0; i < pathCount; i += 1) {
-            var currPath = json.paths[i];
-            var j;
-            var edgeCount = currPath.edges.length;
-            var pathDiv = $("<div/>").addClass("path").attr("id", currPath.id);
-            d.append(pathDiv);
+        var skinFile = $("#skinFile").get(0),
+            jsonFile = $("#jsonFile").get(0);
 
-            // We draw the current path in its own `<div>`.
-            // We start with looping trough the edges of the current path and inserting
-            // the source and target nodes.
-            for (j = 0; j < edgeCount; j += 1) {
-                var currEdge = currPath.edges[j];
-                var sourceNodeDiv = $("<div/>").addClass("node").addClass(currEdge.from["class"])
-                    .attr("id", currEdge.from.id).text(currEdge.from.label);
-                var targetNodeDiv = $("<div/>").addClass("node").addClass(currEdge.to["class"])
-                    .attr("id", currEdge.to.id).text(currEdge.to.label);
-                pathDiv.append(sourceNodeDiv).append(targetNodeDiv);
-            }
-        }
-    }
+        skinFile.onchange = skinFileChange;
+        jsonFile.onchange = jsonFileChange;
 
-    // This function handles the loading of a CSS skin file and applies its styles
-    // to the current graph.
-    function skinFileChange(evt) {
-
+        $("#skinFileBrowseButton").get(0).onclick = function () { skinFile.click(); };
+        $("#jsonFileBrowseButton").get(0).onclick = function () { jsonFile.click(); };
     }
 
     // Makes some page elements draggable.
@@ -98,5 +119,6 @@ var adore = (function () {
 // We call the ADORE init function inside the `jQuery.ready` function to make sure
 // the DOM is ready.
 $(function () {
+    "use strict";
     adore.init();
 });
