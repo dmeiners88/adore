@@ -17,11 +17,11 @@
       <div class='octowrap'>
         <a class='octothorpe' href='#section-0'>#</a>
       </div>
-      <p>This is the ADORE object that holds all the ADORE-specific functions
-and internal state information.</p>
+      <p>This is the ADORE "constructor" that creates a new ADORE instance and initializes it.
+Note that this is not a real constructor, but a slightly modified module pattern.</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="kd">var</span> <span class="nx">adore</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span></pre></div>
+      <div class="highlight"><pre><span class="kd">function</span> <span class="nx">newAdore</span><span class="p">(</span><span class="nx">$</span><span class="p">,</span> <span class="nx">drawingArea</span><span class="p">)</span> <span class="p">{</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -55,21 +55,12 @@ quirks.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-3'>#</a>
       </div>
-      <p>This function takes a JSON text fragment, parses it and draws it.</p>
+      <p>This function draws the given edge.</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="kd">function</span> <span class="nx">drawFromJson</span><span class="p">(</span><span class="nx">jsonText</span><span class="p">)</span> <span class="p">{</span>
-        <span class="kd">var</span> <span class="nx">json</span> <span class="o">=</span> <span class="nx">$</span><span class="p">.</span><span class="nx">fromJsonRef</span><span class="p">(</span><span class="nx">jsonText</span><span class="p">),</span>
-            <span class="nx">d</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#drawingArea&quot;</span><span class="p">),</span>
-            <span class="nx">pathCount</span><span class="p">,</span>
-            <span class="nx">i</span><span class="p">,</span>
-            <span class="nx">currPath</span><span class="p">,</span>
-            <span class="nx">j</span><span class="p">,</span>
-            <span class="nx">edgeCount</span><span class="p">,</span>
-            <span class="nx">pathDiv</span><span class="p">,</span>
-            <span class="nx">currEdge</span><span class="p">,</span>
-            <span class="nx">sourceNodeDiv</span><span class="p">,</span>
-            <span class="nx">targetNodeDiv</span><span class="p">;</span></pre></div>
+      <div class="highlight"><pre>    <span class="kd">function</span> <span class="nx">drawEdge</span><span class="p">(</span><span class="nx">edge</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="p">}</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -78,15 +69,16 @@ quirks.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-4'>#</a>
       </div>
-      <p>For each path in the JSON, we create a new <code>&lt;div&gt;</code> element.</p>
+      <p>This function creates a <code>&lt;div&gt;</code> for a single source or target node.</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>        <span class="nx">pathCount</span> <span class="o">=</span> <span class="nx">json</span><span class="p">.</span><span class="nx">paths</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
-        <span class="k">for</span> <span class="p">(</span><span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">pathCount</span><span class="p">;</span> <span class="nx">i</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
-            <span class="nx">currPath</span> <span class="o">=</span> <span class="nx">json</span><span class="p">.</span><span class="nx">paths</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
-            <span class="nx">edgeCount</span> <span class="o">=</span> <span class="nx">currPath</span><span class="p">.</span><span class="nx">edges</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
-            <span class="nx">pathDiv</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;&lt;div/&gt;&quot;</span><span class="p">).</span><span class="nx">addClass</span><span class="p">(</span><span class="s2">&quot;path&quot;</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="nx">currPath</span><span class="p">.</span><span class="nx">id</span><span class="p">);</span>
-            <span class="nx">d</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="nx">pathDiv</span><span class="p">);</span></pre></div>
+      <div class="highlight"><pre>    <span class="kd">function</span> <span class="nx">makeNodeDiv</span><span class="p">(</span><span class="nx">node</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;&lt;div/&gt;&quot;</span><span class="p">)</span>
+            <span class="p">.</span><span class="nx">addClass</span><span class="p">(</span><span class="s2">&quot;node&quot;</span><span class="p">)</span>
+            <span class="p">.</span><span class="nx">addClass</span><span class="p">(</span><span class="nx">node</span><span class="p">[</span><span class="s2">&quot;class&quot;</span><span class="p">])</span>
+            <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="nx">node</span><span class="p">.</span><span class="nx">id</span><span class="p">)</span>
+            <span class="p">.</span><span class="nx">text</span><span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">label</span><span class="p">);</span>
+    <span class="p">}</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -95,29 +87,27 @@ quirks.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-5'>#</a>
       </div>
-      <p>We draw the current path in its own <code>&lt;div&gt;</code>.
-We start with looping trough the edges of the current path and inserting
-the source and target nodes.</p>
+      <p>This function creates a <code>&lt;div&gt;</code> for a single path from the JSON dataset,
+subsequently adding child-<code>&lt;div&gt;</code>'s for all source and target nodes as well.</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>            <span class="k">for</span> <span class="p">(</span><span class="nx">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">j</span> <span class="o">&lt;</span> <span class="nx">edgeCount</span><span class="p">;</span> <span class="nx">j</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
-                <span class="nx">currEdge</span> <span class="o">=</span> <span class="nx">currPath</span><span class="p">.</span><span class="nx">edges</span><span class="p">[</span><span class="nx">j</span><span class="p">];</span>
+      <div class="highlight"><pre>    <span class="kd">function</span> <span class="nx">makePathDiv</span><span class="p">(</span><span class="nx">path</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">pathDiv</span><span class="p">,</span>
+            <span class="nx">i</span><span class="p">,</span>
+            <span class="nx">edgeCount</span><span class="p">,</span>
+            <span class="nx">currEdge</span><span class="p">;</span>
 
-                <span class="nx">sourceNodeDiv</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;&lt;div/&gt;&quot;</span><span class="p">)</span>
-                    <span class="p">.</span><span class="nx">addClass</span><span class="p">(</span><span class="s2">&quot;node&quot;</span><span class="p">)</span>
-                    <span class="p">.</span><span class="nx">addClass</span><span class="p">(</span><span class="nx">currEdge</span><span class="p">.</span><span class="nx">from</span><span class="p">[</span><span class="s2">&quot;class&quot;</span><span class="p">])</span>
-                    <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="nx">currEdge</span><span class="p">.</span><span class="nx">from</span><span class="p">.</span><span class="nx">id</span><span class="p">)</span>
-                    <span class="p">.</span><span class="nx">text</span><span class="p">(</span><span class="nx">currEdge</span><span class="p">.</span><span class="nx">from</span><span class="p">.</span><span class="nx">label</span><span class="p">);</span>
+        <span class="nx">pathDiv</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;&lt;div/&gt;&quot;</span><span class="p">)</span>
+            <span class="p">.</span><span class="nx">addClass</span><span class="p">(</span><span class="s2">&quot;path&quot;</span><span class="p">)</span>
+            <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="nx">path</span><span class="p">.</span><span class="nx">id</span><span class="p">);</span>
 
-                <span class="nx">targetNodeDiv</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;&lt;div/&gt;&quot;</span><span class="p">)</span>
-                    <span class="p">.</span><span class="nx">addClass</span><span class="p">(</span><span class="s2">&quot;node&quot;</span><span class="p">)</span>
-                    <span class="p">.</span><span class="nx">addClass</span><span class="p">(</span><span class="nx">currEdge</span><span class="p">.</span><span class="nx">to</span><span class="p">[</span><span class="s2">&quot;class&quot;</span><span class="p">])</span>
-                    <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="nx">currEdge</span><span class="p">.</span><span class="nx">to</span><span class="p">.</span><span class="nx">id</span><span class="p">)</span>
-                    <span class="p">.</span><span class="nx">text</span><span class="p">(</span><span class="nx">currEdge</span><span class="p">.</span><span class="nx">to</span><span class="p">.</span><span class="nx">label</span><span class="p">);</span>
-
-                <span class="nx">pathDiv</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="nx">sourceNodeDiv</span><span class="p">).</span><span class="nx">append</span><span class="p">(</span><span class="nx">targetNodeDiv</span><span class="p">);</span>
-            <span class="p">}</span>
+        <span class="k">for</span> <span class="p">(</span><span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">edgeCount</span> <span class="o">=</span> <span class="nx">path</span><span class="p">.</span><span class="nx">edges</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">edgeCount</span><span class="p">;</span> <span class="nx">i</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">currEdge</span> <span class="o">=</span> <span class="nx">path</span><span class="p">.</span><span class="nx">edges</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
+            <span class="nx">pathDiv</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="nx">makeNodeDiv</span><span class="p">(</span><span class="nx">currEdge</span><span class="p">.</span><span class="nx">from</span><span class="p">));</span>
+            <span class="nx">pathDiv</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="nx">makeNodeDiv</span><span class="p">(</span><span class="nx">currEdge</span><span class="p">.</span><span class="nx">to</span><span class="p">));</span>
         <span class="p">}</span>
+
+        <span class="k">return</span> <span class="nx">pathDiv</span><span class="p">;</span>
     <span class="p">}</span></pre></div>
     </div>
   </div>
@@ -126,6 +116,36 @@ the source and target nodes.</p>
     <div class='docs'>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-6'>#</a>
+      </div>
+      <p>This function takes a JSON object and draws it.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="kd">function</span> <span class="nx">drawFromJson</span><span class="p">(</span><span class="nx">json</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">i</span><span class="p">,</span>
+            <span class="nx">pathCount</span><span class="p">;</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-7'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-7'>#</a>
+      </div>
+      <p>For each path in the JSON, we create a new <code>&lt;div&gt;</code> element and append it to
+the drawing area.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">for</span> <span class="p">(</span><span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">pathCount</span> <span class="o">=</span> <span class="nx">json</span><span class="p">.</span><span class="nx">paths</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">pathCount</span><span class="p">;</span> <span class="nx">i</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">drawingArea</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="nx">makePathDiv</span><span class="p">(</span><span class="nx">json</span><span class="p">.</span><span class="nx">paths</span><span class="p">[</span><span class="nx">i</span><span class="p">]));</span>
+        <span class="p">}</span>
+    <span class="p">}</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-8'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-8'>#</a>
       </div>
       <p>This function handles the loading of a CSS skin file and applies its styles
 to the current graph.</p>
@@ -137,10 +157,10 @@ to the current graph.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-7'>
+  <div class='section' id='section-9'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-7'>#</a>
+        <a class='octothorpe' href='#section-9'>#</a>
       </div>
       <p>This function handles the loading of a JSON data file and triggers its
 parsing and drawing.</p>
@@ -155,10 +175,10 @@ parsing and drawing.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-8'>
+  <div class='section' id='section-10'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-8'>#</a>
+        <a class='octothorpe' href='#section-10'>#</a>
       </div>
       <p>We assign a callback function to the <code>onload</code> event of the <code>FileReader</code>.
 It is called when the <code>FileReader</code> object finishes its read operation.</p>
@@ -168,10 +188,10 @@ It is called when the <code>FileReader</code> object finishes its read operation
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-9'>
+  <div class='section' id='section-11'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-9'>#</a>
+        <a class='octothorpe' href='#section-11'>#</a>
       </div>
       <p>We display the file name on the label.</p>
     </div>
@@ -180,23 +200,23 @@ It is called when the <code>FileReader</code> object finishes its read operation
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-10'>
+  <div class='section' id='section-12'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-10'>#</a>
+        <a class='octothorpe' href='#section-12'>#</a>
       </div>
       <p>We call the graph drawing function.</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>                <span class="nx">drawFromJson</span><span class="p">(</span><span class="nx">f</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">result</span><span class="p">);</span>
+      <div class="highlight"><pre>                <span class="nx">drawFromJson</span><span class="p">(</span><span class="nx">$</span><span class="p">.</span><span class="nx">fromJsonRef</span><span class="p">(</span><span class="nx">f</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">result</span><span class="p">));</span>
             <span class="p">};</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-11'>
+  <div class='section' id='section-13'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-11'>#</a>
+        <a class='octothorpe' href='#section-13'>#</a>
       </div>
       <p>Start reading the text file.</p>
     </div>
@@ -209,16 +229,15 @@ It is called when the <code>FileReader</code> object finishes its read operation
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-12'>
+  <div class='section' id='section-14'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-12'>#</a>
+        <a class='octothorpe' href='#section-14'>#</a>
       </div>
       <p>Binds all HTML controls to JavaScript logic.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="kd">function</span> <span class="nx">bindControls</span><span class="p">()</span> <span class="p">{</span>
-
         <span class="kd">var</span> <span class="nx">skinFile</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#skinFile&quot;</span><span class="p">).</span><span class="nx">get</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
             <span class="nx">jsonFile</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#jsonFile&quot;</span><span class="p">).</span><span class="nx">get</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
 
@@ -231,10 +250,10 @@ It is called when the <code>FileReader</code> object finishes its read operation
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-13'>
+  <div class='section' id='section-15'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-13'>#</a>
+        <a class='octothorpe' href='#section-15'>#</a>
       </div>
       <p>Makes some page elements draggable.</p>
     </div>
@@ -245,50 +264,32 @@ It is called when the <code>FileReader</code> object finishes its read operation
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-14'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-14'>#</a>
-      </div>
-      <p>This function initializes the ADORE application.</p>
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre>    <span class="kd">function</span> <span class="nx">init</span><span class="p">()</span> <span class="p">{</span>
-        <span class="nx">bindControls</span><span class="p">();</span>
-        <span class="nx">setUpDraggables</span><span class="p">();</span>
-    <span class="p">}</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-15'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-15'>#</a>
-      </div>
-      <p>We return an anonymous object which holds references to the functions
-we want to make public.</p>
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre>    <span class="k">return</span> <span class="p">{</span>
-        <span class="nx">init</span><span class="o">:</span> <span class="nx">init</span>
-    <span class="p">};</span>
-
-<span class="p">}());</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
   <div class='section' id='section-16'>
     <div class='docs'>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-16'>#</a>
       </div>
-      <p>We call the ADORE init function inside the <code>jQuery.ready</code> function to make sure
-the DOM is ready.</p>
+      <p>We initialize the ADORE instance.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="nx">bindControls</span><span class="p">();</span>
+    <span class="nx">setUpDraggables</span><span class="p">();</span>
+<span class="p">}</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-17'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-17'>#</a>
+      </div>
+      <p>We initialize the global ADORE instance inside the <code>jQuery.ready</code> function.
+We pass the jQuery object as well as the drawing area.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre><span class="nx">$</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
     <span class="s2">&quot;use strict&quot;</span><span class="p">;</span>
-    <span class="nx">adore</span><span class="p">.</span><span class="nx">init</span><span class="p">();</span>
+    <span class="nx">newAdore</span><span class="p">(</span><span class="nx">jQuery</span><span class="p">,</span> <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#drawingArea&quot;</span><span class="p">));</span>
 <span class="p">});</span>
 
 </pre></div>
