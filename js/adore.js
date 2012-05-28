@@ -1,6 +1,8 @@
+/*jshint browser:true,devel:true,jquery:true,strict:true */
+
 // This is the ADORE "constructor" that creates a new ADORE instance and initializes it.
 // Note that this is not a real constructor, but a slightly modified module pattern.
-function newAdore($, drawingArea) {
+function newAdore($, config) {
     // We use strict mode to prevent bad programming habits and to fix some JavaScript
     // quirks.
     "use strict";
@@ -24,17 +26,12 @@ function newAdore($, drawingArea) {
     // This function creates a `<div>` for a single path from the JSON dataset,
     // subsequently adding child-`<div>`'s for all source and target nodes as well.
     function makePathDiv(path) {
-        var pathDiv,
-            i,
-            edgeCount,
-            currEdge;
-
-        pathDiv = $("<div/>")
+        var pathDiv = $("<div/>")
             .addClass("path")
             .attr("id", path.id);
 
-        for (i = 0, edgeCount = path.edges.length; i < edgeCount; i += 1) {
-            currEdge = path.edges[i];
+        for (var i = 0, edgeCount = path.edges.length; i < edgeCount; i += 1) {
+            var currEdge = path.edges[i];
             pathDiv.append(makeNodeDiv(currEdge.from));
             pathDiv.append(makeNodeDiv(currEdge.to));
         }
@@ -44,13 +41,11 @@ function newAdore($, drawingArea) {
 
     // This function takes a JSON object and draws it.
     function drawFromJson(json) {
-        var i,
-            pathCount;
 
         // For each path in the JSON, we create a new `<div>` element and append it to
         // the drawing area.
-        for (i = 0, pathCount = json.paths.length; i < pathCount; i += 1) {
-            drawingArea.append(makePathDiv(json.paths[i]));
+        for (var i = 0, pathCount = json.paths.length; i < pathCount; i += 1) {
+            config.drawingArea.append(makePathDiv(json.paths[i]));
         }
     }
 
@@ -63,17 +58,16 @@ function newAdore($, drawingArea) {
     // This function handles the loading of a JSON data file and triggers its
     // parsing and drawing.
     function jsonFileChange(evt) {
-        var file = evt.target.files[0],
-            reader;
+        var file = evt.target.files[0];
 
         if (file) {
-            reader = new FileReader();
+            var reader = new FileReader();
 
             // We assign a callback function to the `onload` event of the `FileReader`.
             // It is called when the `FileReader` object finishes its read operation.
             reader.onload = function (f) {
-                // We display the file name on the label.
-                $("#jsonFileName").text(evt.target.value);
+                // We call the jsonFileSelectedCallback function.
+                config.jsonFileLoadedCallback(evt.target.value);
 
                 // We call the graph drawing function.
                 drawFromJson($.fromJsonRef(f.target.result));
@@ -88,29 +82,13 @@ function newAdore($, drawingArea) {
 
     // Binds all HTML controls to JavaScript logic.
     function bindControls() {
-        var skinFile = $("#skinFile").get(0),
-            jsonFile = $("#jsonFile").get(0);
+        var skinFile = config.skinFileInput.get(0),
+            jsonFile = config.jsonFileInput.get(0);
 
         skinFile.onchange = skinFileChange;
         jsonFile.onchange = jsonFileChange;
-
-        $("#skinFileBrowseButton").get(0).onclick = function () { skinFile.click(); };
-        $("#jsonFileBrowseButton").get(0).onclick = function () { jsonFile.click(); };
-    }
-
-    // Makes some page elements draggable.
-    function setUpDraggables() {
-        $("#menuBox").draggable();
     }
 
     // We initialize the ADORE instance.
     bindControls();
-    setUpDraggables();
 }
-
-// We initialize the global ADORE instance inside the `jQuery.ready` function.
-// We pass the jQuery object as well as the drawing area.
-$(function () {
-    "use strict";
-    newAdore(jQuery, $("#drawingArea"));
-});
