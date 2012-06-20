@@ -5,7 +5,7 @@
         { "id": "paperA", "label": "Paper A", "class": "paper"  },
         { "id": "paperB", "label": "Paper B", "class": "paper"  },
         { "id": "paperC", "label": "Paper C", "class": "paper"  },
-        { "id": "conferenceA", "label": "Conference A", "class": "conference" }
+        { "id": "conferenceA", "label": "Conf A", "class": "conference" }
     ],
     "edges":
     [

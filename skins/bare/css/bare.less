@@ -1,38 +1,36 @@
 /* bare.css – a minimal stylesheet to draw graphs without additional,
    domain specific style information */
 
+@nodeHeight: 60px;
+@nodeWidth: 60px;
+
 .node {
     background-color: white;
-    width: 60px;
-    height: 60px !important;
+    width: @nodeWidth;
+    height: @nodeHeight;
     text-align: center;
-    line-height: 60px;
-    display: inline;
+    line-height: @nodeHeight;
     position: absolute;
     box-shadow: 2px 2px 19px #AAAAAA;
     border-radius: 0.5em 0.5em 0.5em 0.5em;
-
-    &:nth-child(2) {
-        left: 10em;
-    }
-
-    &:nth-child(3) {
-        left: 20em;
-    }
-
-    &:nth-child(4) {
-        left: 30em;
-    }
-
-    &:nth-child(5) {
-        left: 40em;
-    }
-
-    &:nth-child(6) {
-        left: 50em;
-    }
+    margin-left: -1 * @nodeWidth / 2;
 }
 
 .path {
-    height: 10em;
+    padding-top: 1.5em;
+    padding-bottom: 1.5em;
+    height: @nodeHeight;
+}
+
+._jsPlumb_connector * {
+    stroke: grey;
+    stroke-width: 5px;
+}
+
+._jsPlumb_endpoint * {
+    fill: black;
+}
+
+._jsPlumb_endpoint {
+    z-index: 1;
 }

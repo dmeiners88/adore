@@ -11,7 +11,9 @@ function newAdore($, config) {
 
     // This function draws the given edge.
     function drawEdge(edge) {
-
+        console.log("adore: drawing edge from " + edge.from.id + " to " + edge.to.id);
+        jsPlumb.connect({ source: edge.from.id, target: edge.to.id, anchor: "AutoDefault" },
+                        { endpoint: [ "Blank" ] });
     }
 
     // This function creates a `<div>` for a single source or target node.
@@ -21,6 +23,18 @@ function newAdore($, config) {
             .addClass(node["class"])
             .attr("id", node.id)
             .text(node.label);
+    }
+
+    // This function positions the single nodes that form a path in suitable way.
+    // It tries to use as much space from the drawing area as possible.
+    // Expects the ID of the path which holds the nodes.
+    function positionNodes(pathDiv) {
+        var nodeDivs = pathDiv.children(".node");
+
+        nodeDivs.each(function (index) {
+            $(this).css("left",
+                ((100 / nodeDivs.length * (index + 1)) - 100 / nodeDivs.length / 2).toString() + "%");
+        });
     }
 
     // This function creates a `<div>` for a single path from the JSON dataset,
@@ -33,19 +47,27 @@ function newAdore($, config) {
         for (var i = 0, edgeCount = path.edges.length; i < edgeCount; i += 1) {
             var currEdge = path.edges[i];
             pathDiv.append(makeNodeDiv(currEdge.from));
-            pathDiv.append(makeNodeDiv(currEdge.to));
         }
+
+        pathDiv.append(makeNodeDiv(path.edges[path.edges.length - 1].to));
+
+        // We position the nodes on the path.
+        positionNodes(pathDiv);
 
         return pathDiv;
     }
 
-    // This function takes a JSON object and draws it.
-    function drawFromJson(json) {
+    // This function takes a JSON object and draws the specified path.
+    function drawFromJson(json, index) {
 
-        // For each path in the JSON, we create a new `<div>` element and append it to
+        // For the requested path from the JSON, we create a new `<div>` element and append it to
         // the drawing area.
-        for (var i = 0, pathCount = json.paths.length; i < pathCount; i += 1) {
-            config.drawingArea.append(makePathDiv(json.paths[i]));
+        config.drawingArea.append(makePathDiv(json.paths[index]));
+
+        // Edges
+        for (var i = 0, edgeCount = json.paths[index].edges.length; i < edgeCount; i += 1) {
+            var currEdge = json.paths[index].edges[i];
+            drawEdge(currEdge);
         }
     }
 
@@ -70,7 +92,7 @@ function newAdore($, config) {
                 config.jsonFileLoadedCallback(evt.target.value);
 
                 // We call the graph drawing function.
-                drawFromJson($.fromJsonRef(f.target.result));
+                drawFromJson($.fromJsonRef(f.target.result), 0);
             };
 
             // Start reading the text file.
