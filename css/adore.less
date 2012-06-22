@@ -23,33 +23,16 @@ h2 {
 
 /* Class styles */
 
-/* Styles for single elements (selected via ID) */
-
-#fileInputForm {
-    input[type=file] {
-        display: none;
-    }
-
-    div:first-of-type {
-        margin-bottom: 1em;
-    }
-}
-
-#header {
-    margin-top: 0em;
-    margin-bottom: 0em;
-}
-
-#menuBox {
+.common-box {
     background-color: white;
-    width: 30em;
-    padding: 1em;
-    margin-bottom: 1em;
     box-shadow: 2px 2px 19px #AAAAAA;
     border-radius: 0.5em 0.5em 0.5em 0.5em;
     z-index: 0;
     opacity: 0.5;
     -moz-transition: opacity 0.3s;
+    width: 30em;
+    padding: 1em;
+    margin-bottom: 1em;
 
     &:hover {
         z-index: 1;
@@ -57,10 +40,34 @@ h2 {
     }
 }
 
-#skinFileBrowseButton, #jsonFileBrowseButton {
-    float: right;
+/* Styles for single elements (selected via ID) */
+
+#menuBox {
+    & #header {
+        margin-top: 0em;
+        margin-bottom: 0em;
+    }
+
+    & #subHeader {
+        margin-top: 0em;
+    }
+
+    & #fileInputForm {
+        input[type=file] {
+            display: none;
+        }
+
+        div:first-of-type {
+            margin-bottom: 1em;
+        }
+    }
+
+    & #skinFileBrowseButton, #jsonFileBrowseButton {
+        float: right;
+    }
 }
 
-#subHeader {
-    margin-top: 0em;
+#pathNavigator {
+    text-align: center;
+    display: none;
 }

@@ -18,6 +18,12 @@ $(function () {
         // The file input for reading the JSON data file.
         jsonFileInput: $("#jsonFile"),
 
+        // The button that fires the previous path event.
+        previousPathButton: $("#previousPathButton"),
+
+        // The button that fires the next path event.
+        nextPathButton: $("#nextPathButton"),
+
         // A function that should be called when a CSS skin file
         // has been loaded. Supports only the file name for now.
         skinFileLoadedCallback: function (fileName) {
