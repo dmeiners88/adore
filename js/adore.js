@@ -16,10 +16,14 @@ function newAdore($, config) {
     // Here come all the function definitions.
 
     // This function connects tow elements on the screen based on their IDs
-    function connectViaId(fromID, toID) {
+    function connectViaId(fromID, toID, connClass) {
         jsPlumb.connect({ source: fromID,
                           target: toID,
-                          anchor: "AutoDefault"}, { endpoint: [ "Blank" ] });
+                          anchor: "AutoDefault",
+                          connector: ["Bezier", { curviness: 75 }],
+                          cssClass: connClass,
+                          endpoint: [ "Blank" ],
+                          overlays: [ [ "Label", { label: connClass, location: 0.5} ] ] });
     }
 
     // This function draws the given edge.
@@ -27,7 +31,7 @@ function newAdore($, config) {
         console.log("adore: trying to draw edge from " + pathID + "-" + edge.from.id + " to " +
             pathID + "-" + edge.to.id);
 
-        connectViaId(pathID + "-" + edge.from.id, pathID + "-" + edge.to.id);
+        connectViaId(pathID + "-" + edge.from.id, pathID + "-" + edge.to.id, edge["class"]);
     }
 
     // This function creates a `<div>` for a single source or target node.
@@ -143,10 +147,12 @@ function newAdore($, config) {
 
             // Common source and target node.
             connectViaId("source-" + jsonData.paths[j].edges[0].from.id,
-                jsonData.paths[j].id + "-" + jsonData.paths[j].edges[0].to.id);
+                jsonData.paths[j].id + "-" + jsonData.paths[j].edges[0].to.id,
+                jsonData.paths[j].edges[0]["class"]);
 
             connectViaId(jsonData.paths[j].id + "-" + jsonData.paths[j].edges[edgeCount - 1].from.id,
-                "target-" + jsonData.paths[j].edges[edgeCount - 1].to.id);
+                "target-" + jsonData.paths[j].edges[edgeCount - 1].to.id,
+                jsonData.paths[j].edges[edgeCount - 1]["class"]);
 
             for (var k = 1; k < edgeCount - 1; k += 1) {
                 drawEdge(jsonData.paths[j].edges[k], jsonData.paths[j].id);

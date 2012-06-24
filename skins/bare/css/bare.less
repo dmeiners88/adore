@@ -1,8 +1,8 @@
 /* bare.css – a minimal stylesheet to draw graphs without additional,
    domain specific style information */
 
-@nodeHeight: 60px;
-@nodeWidth: 60px;
+@nodeHeight: 80px;
+@nodeWidth: 80px;
 
 .node {
     background-color: white;
@@ -33,4 +33,12 @@
 
 ._jsPlumb_endpoint {
     z-index: 1;
+}
+
+._jsPlumb_overlay {
+    z-index: 1;
+    background-color: white;
+    box-shadow: 2px 2px 19px #AAAAAA;
+    border-radius: 0.5em 0.5em 0.5em 0.5em;
+    padding: 0.25em;
 }
