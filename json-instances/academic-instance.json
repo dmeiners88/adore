@@ -5,7 +5,8 @@
         { "id": "paperA", "label": "Paper A", "class": "paper"  },
         { "id": "paperB", "label": "Paper B", "class": "paper"  },
         { "id": "paperC", "label": "Paper C", "class": "paper"  },
-        { "id": "conferenceA", "label": "Conf A", "class": "conference" }
+        { "id": "conferenceA", "label": "Conf A", "class": "conference" },
+        { "id": "conferenceB", "label": "Conf B", "class": "conference" }
     ],
     "edges":
     [
@@ -13,11 +14,13 @@
         { "id": "edge2", "from": { "$ref": "paperA" }, "to": { "$ref": "paperB" }, "class": "citation" },
         { "id": "edge3", "from": { "$ref": "paperA" }, "to": { "$ref": "paperC" }, "class": "citation" },
         { "id": "edge4", "from": { "$ref": "paperB" }, "to": { "$ref": "conferenceA" }, "class": "presentation" },
-        { "id": "edge5", "from": { "$ref": "paperC" }, "to": { "$ref": "conferenceA" }, "class": "presentation" }
+        { "id": "edge5", "from": { "$ref": "paperC" }, "to": { "$ref": "conferenceA" }, "class": "presentation" },
+        { "id": "edge6", "from": { "$ref": "paperA" }, "to": { "$ref": "conferenceA" }, "class": "presentation" }
     ],
     "paths":
     [
         { "id": "path1", "edges": [ { "$ref": "edge1" }, { "$ref": "edge3" }, { "$ref": "edge5" } ] },
-        { "id": "path2", "edges": [ { "$ref": "edge1" }, { "$ref": "edge2" }, { "$ref": "edge4" } ] }
+        { "id": "path2", "edges": [ { "$ref": "edge1" }, { "$ref": "edge2" }, { "$ref": "edge4" } ] },
+        { "id": "path3", "edges": [ { "$ref": "edge1" }, { "$ref": "edge6" }] }
     ]
 }

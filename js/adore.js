@@ -10,32 +10,40 @@ function newAdore($, config) {
 
     // Private state variables
     var activePathIndex = -1;
+    var pathCount = -1;
     var jsonData = {};
 
     // Here come all the function definitions.
 
+    // This function connects tow elements on the screen based on their IDs
+    function connectViaId(fromID, toID) {
+        jsPlumb.connect({ source: fromID,
+                          target: toID,
+                          anchor: "AutoDefault"}, { endpoint: [ "Blank" ] });
+    }
+
     // This function draws the given edge.
-    function drawEdge(edge) {
-        console.log("adore: drawing edge from " + edge.from.id + " to " + edge.to.id + ".");
-        jsPlumb.connect({ source: edge.from.id, target: edge.to.id, anchor: "AutoDefault" },
-                        { endpoint: [ "Blank" ] });
+    function drawEdge(edge, pathID) {
+        console.log("adore: trying to draw edge from " + pathID + "-" + edge.from.id + " to " +
+            pathID + "-" + edge.to.id);
+
+        connectViaId(pathID + "-" + edge.from.id, pathID + "-" + edge.to.id);
     }
 
     // This function creates a `<div>` for a single source or target node.
-    function makeNodeDiv(node) {
-        console.log("adore: creating node " + node.id + ".");
+    function makeNodeDiv(node, pathID) {
         return $("<div/>")
             .addClass("node")
             .addClass(node["class"])
-            .attr("id", node.id)
+            .attr("id", pathID + "-" + node.id)
             .text(node.label);
     }
 
     // This function positions the single nodes that form a path in suitable way.
-    // It tries to use as much space from the drawing area as possible.
+    // It tries to use as much space from the drawing area as possible, reserving space
+    // on each path fore the common source and target nodes.
     // Expects the ID of the path which holds the nodes.
-    function positionNodes(pathDiv) {
-        console.log("adore: positioning nodes.");
+    function positionNodesOnPath(pathDiv) {
         var nodeDivs = pathDiv.children(".node");
 
         nodeDivs.each(function (index) {
@@ -44,69 +52,105 @@ function newAdore($, config) {
         });
     }
 
+    // This function positions the common source node.
+    function positionSourceNode(nodeDiv) {
+        if (pathCount % 2 == 1) {
+            // good, we have an odd number of paths, we can simply prepend the node
+            // to the "middle" path `div`.
+            var pathDiv = $("#" + jsonData.paths[Math.ceil(pathCount / 2) - 1].id);
+
+            pathDiv.prepend(nodeDiv);
+            positionNodesOnPath(pathDiv);
+        }
+    }
+
+    // This function positions the common target node.
+    function positionTargetNode(nodeDiv) {
+        if (pathCount % 2 == 1) {
+            // good, we have an odd number of paths, we can simply prepend the node
+            // to the "middle" path `div`.
+            var pathDiv = $("#" + jsonData.paths[Math.ceil(pathCount / 2) - 1].id);
+
+            pathDiv.append(nodeDiv);
+            positionNodesOnPath(pathDiv);
+        }
+    }
+
     // This function creates a `<div>` for a single path from the JSON dataset,
     // subsequently adding child-`<div>`'s for all source and target nodes as well.
     function makePathDiv(path) {
-        console.log("adore: creating path with ID " + path.id + ".");
         var pathDiv = $("<div/>")
             .addClass("path")
             .attr("id", path.id);
 
-        // We iterate through all edges and create a new `div` for each source node.
-        // We avoid creating duplicate nodes this way, as the target node of edge `i`
-        // is the source node of edge `i + 1`.
-        for (var i = 0, edgeCount = path.edges.length; i < edgeCount; i += 1) {
+        // We iterate through all edges and create a new `div` for each.
+        // We skip the first source node, as we want to draw the source and target nodes,
+        // which are the same for each path, seperately.
+        for (var i = 1, edgeCount = path.edges.length; i < edgeCount; i += 1) {
             var currEdge = path.edges[i];
-            pathDiv.append(makeNodeDiv(currEdge.from));
+            pathDiv.append(makeNodeDiv(currEdge.from, path.id));
         }
-
-        // To form a complete path, we also create a `div` for the target node of the last edge.
-        pathDiv.append(makeNodeDiv(path.edges[path.edges.length - 1].to));
-
-        // We position the nodes on the path.
-        positionNodes(pathDiv);
 
         return pathDiv;
     }
 
+    function getNextPathIndex() {
+        var nextIndex = ((activePathIndex + 1) <= pathCount) ? activePathIndex + 1 : pathCount;
+        activePathIndex = nextIndex;
+
+        return nextIndex;
+    }
+
+    function getPreviousPathIndex() {
+        var previousIndex = ((activePathIndex - 1) >= 0) ? activePathIndex - 1 : 0;
+        activePathIndex = previousIndex;
+
+        return previousIndex;
+    }
+
+    // This function destroys a path, identified by a given path ID.
     function destroyPath(pathID) {
         var oldPath = $("#" + pathID);
         jsPlumb.detachEveryConnection();
         oldPath.remove();
     }
 
-    // This function takes a JSON object and draws the specified path.
-    function drawFromJson(index) {
+    // This function draws all paths from the JSON dataset.
+    function drawFromJson() {
+        // We iterate through all paths, create a new path `div` and append it to the drawing area.
+        for (var i = 0; i < pathCount; i += 1) {
+            var pathDiv = makePathDiv(jsonData.paths[i]);
 
-        // If the requested path is not already on screen, we continue.
-        if (index != activePathIndex) {
-            // We first check, if there is already a path on the screen, and if remove it.
-            if (activePathIndex != -1) {
-                console.log("adore: requested new path with index " + index +
-                    ", removing current path with ID " + jsonData.paths[activePathIndex].id + " first.");
-                destroyPath(jsonData.paths[activePathIndex].id);
+            // We position the nodes on the path.
+            positionNodesOnPath(pathDiv);
+
+            config.drawingArea.append(pathDiv);
+        }
+
+        // We still need to add the soure and target node, which are the same for each path.
+        // We assume that all paths in the JSON dataset are well-formed and the source and target nodes
+        // are identical on each path.
+        var sourceNodeDiv = makeNodeDiv(jsonData.paths[0].edges[0].from, "source");
+        var targetNodeDiv = makeNodeDiv(jsonData.paths[0].edges[jsonData.paths[0].edges.length - 1].to,
+            "target");
+
+        positionSourceNode(sourceNodeDiv);
+        positionTargetNode(targetNodeDiv);
+
+        // We draw the edges specific for each path.
+        for (var j = 0; j < pathCount; j += 1) {
+            var edgeCount = jsonData.paths[j].edges.length;
+
+            // Common source and target node.
+            connectViaId("source-" + jsonData.paths[j].edges[0].from.id,
+                jsonData.paths[j].id + "-" + jsonData.paths[j].edges[0].to.id);
+
+            connectViaId(jsonData.paths[j].id + "-" + jsonData.paths[j].edges[edgeCount - 1].from.id,
+                "target-" + jsonData.paths[j].edges[edgeCount - 1].to.id);
+
+            for (var k = 1; k < edgeCount - 1; k += 1) {
+                drawEdge(jsonData.paths[j].edges[k], jsonData.paths[j].id);
             }
-
-            // Stores the index for the path displayed on screen.
-            activePathIndex = index;
-            console.log("adore: requested path with index " + index + " not on screen, drawing...");
-
-            // For the requested path from the JSON, we create a new `<div>` element and append it to
-            // the drawing area.
-            config.drawingArea.append(makePathDiv(jsonData.paths[index]));
-            console.log("adore: appending new elements to drawing area.");
-
-            // We iterate thorugh all the edges and call the edge drawing function.
-            for (var i = 0, edgeCount = jsonData.paths[index].edges.length; i < edgeCount; i += 1) {
-                var currEdge = jsonData.paths[index].edges[i];
-                drawEdge(currEdge);
-            }
-
-            console.log("adore: finished drawing of path with index " + index + ", ID " +
-                jsonData.paths[index].id + ".");
-        } else {
-            // The requested path is already on screen, we skip its drawing.
-            console.log("adore: requested path with index " + index + " already on screen, skipping...");
         }
     }
 
@@ -133,13 +177,17 @@ function newAdore($, config) {
                 // We save the file contents for immediate and future use.
                 jsonData = $.fromJsonRef(f.target.result);
 
-                // We call the graph drawing function with the index `0` to draw the first
-                // path from the file.
-                drawFromJson(0);
+                // We update some private state variables
+                pathCount = jsonData.paths.length;
+
+                console.log("adore: loaded " + evt.target.value + ", containing " + pathCount + " paths.");
+
+                // We call the graph drawing function.
+                drawFromJson();
 
                 // As we now have a single path on the screen we display the
                 // path navigation controls.
-                $("#pathNavigator").show();
+                config.pathNavigator.show();
             };
 
             // Start reading the text file.
@@ -149,7 +197,8 @@ function newAdore($, config) {
         }
     }
 
-    // Binds all HTML controls to JavaScript logic.
+    // Using the properties of the given config variable, we bind the program logic to
+    // the DOM elements.
     function bindControls() {
         var skinFile = config.skinFileInput.get(0),
             jsonFile = config.jsonFileInput.get(0);
@@ -158,11 +207,11 @@ function newAdore($, config) {
         jsonFile.onchange = jsonFileChange;
 
         config.previousPathButton.click(function () {
-            drawFromJson(activePathIndex - 1);
+            drawFromJson(getPreviousPathIndex());
         });
 
         config.nextPathButton.click(function () {
-            drawFromJson(activePathIndex + 1);
+            drawFromJson(getNextPathIndex());
         });
 
         // All jsPlumb connections need to be redrawn if the window is resized

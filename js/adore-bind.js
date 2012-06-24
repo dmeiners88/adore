@@ -12,6 +12,9 @@ $(function () {
         // The area where ADORE should draw its graphs.
         drawingArea: $("#drawingArea"),
 
+        // The path navigator
+        pathNavigator: $("#pathNavigator"),
+
         // The file input for reading the CSS skin file.
         skinFileInput: $("#skinFile"),
 
@@ -23,6 +26,9 @@ $(function () {
 
         // The button that fires the next path event.
         nextPathButton: $("#nextPathButton"),
+
+        // The `span` that shall display the current path ID
+        pathIDSpan: $("#pathIDSpan"),
 
         // A function that should be called when a CSS skin file
         // has been loaded. Supports only the file name for now.
