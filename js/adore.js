@@ -40,7 +40,7 @@ function newAdore($, config) {
             .addClass("node")
             .addClass(node["class"])
             .attr("id", pathID + "-" + node.id)
-            .text(node.label);
+            .append($("<div/>").addClass("label").text(node.label));
     }
 
     // This function positions the single nodes that form a path in suitable way.
@@ -54,6 +54,12 @@ function newAdore($, config) {
             $(this).css("left",
                 ((100 / nodeDivs.length * (index + 1)) - 100 / nodeDivs.length / 2).toString() + "%");
         });
+    }
+
+    // This function (re-) positions all nodes (e.g. in case of a domain-specific stylesheet changing
+    // sizes, etc.)
+    function positionAllNodes() {
+
     }
 
     // This function positions the common source node.
@@ -143,16 +149,17 @@ function newAdore($, config) {
 
         // We draw the edges specific for each path.
         for (var j = 0; j < pathCount; j += 1) {
-            var edgeCount = jsonData.paths[j].edges.length;
+            var edgeCount = jsonData.paths[j].edges.length,
+                currPath = jsonData.paths[j];
 
             // Common source and target node.
-            connectViaId("source-" + jsonData.paths[j].edges[0].from.id,
-                jsonData.paths[j].id + "-" + jsonData.paths[j].edges[0].to.id,
-                jsonData.paths[j].edges[0]["class"]);
+            connectViaId("source-" + currPath.edges[0].from.id,
+                currPath.id + "-" + currPath.edges[0].to.id,
+                currPath.edges[0]["class"]);
 
-            connectViaId(jsonData.paths[j].id + "-" + jsonData.paths[j].edges[edgeCount - 1].from.id,
-                "target-" + jsonData.paths[j].edges[edgeCount - 1].to.id,
-                jsonData.paths[j].edges[edgeCount - 1]["class"]);
+            connectViaId(currPath.id + "-" + currPath.edges[edgeCount - 1].from.id,
+                "target-" + currPath.edges[edgeCount - 1].to.id,
+                currPath.edges[edgeCount - 1]["class"]);
 
             for (var k = 1; k < edgeCount - 1; k += 1) {
                 drawEdge(jsonData.paths[j].edges[k], jsonData.paths[j].id);
@@ -163,7 +170,29 @@ function newAdore($, config) {
     // This function handles the loading of a CSS skin file and applies its styles
     // to the current graph.
     function skinFileChange(evt) {
+        var file = evt.target.files[0];
 
+        if (file) {
+            var reader = new FileReader();
+
+            reader.onload = function (f) {
+                config.skinFileLoadedCallback(evt.target.value);
+
+                console.log("adore: loaded " + evt.target.value + " skin file.");
+
+                var node = $("<style />")
+                    .text(f.target.result)
+                    .attr("type", "text/css")
+                    .attr("id", "domain-style");
+                $("head").append(node);
+
+                jsPlumb.repaintEverything();
+            };
+
+            reader.readAsText(file);
+        } else {
+            console.error("adore: failed to load from file" + evt.target.value);
+        }
     }
 
     // This function handles the loading of a JSON data file and triggers its

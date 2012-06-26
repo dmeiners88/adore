@@ -9,11 +9,14 @@
     width: @nodeWidth;
     height: @nodeHeight;
     text-align: center;
-    line-height: @nodeHeight;
     position: absolute;
     box-shadow: 2px 2px 19px #AAAAAA;
     border-radius: 0.5em 0.5em 0.5em 0.5em;
     margin-left: -1 * @nodeWidth / 2;
+
+    & .label {
+        padding-top: @nodeHeight + 10;
+    }
 }
 
 .path {
@@ -23,7 +26,7 @@
 }
 
 ._jsPlumb_connector * {
-    stroke: grey;
+    stroke: gray;
     stroke-width: 5px;
 }
 
@@ -38,7 +41,7 @@
 ._jsPlumb_overlay {
     z-index: 1;
     background-color: white;
-    box-shadow: 2px 2px 19px #AAAAAA;
-    border-radius: 0.5em 0.5em 0.5em 0.5em;
+    //box-shadow: 2px 2px 19px #AAAAAA;
+    //border-radius: 0.5em 0.5em 0.5em 0.5em;
     padding: 0.25em;
 }

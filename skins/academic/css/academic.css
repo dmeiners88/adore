@@ -1,0 +1,25 @@
+/* academic.css – a stylesheet to use with academic data. */
+
+/* Class styles */
+
+.node {
+    width: 60px;
+    height: 60px;
+    background-size: 60px 60px
+}
+
+.node .label {
+    padding-top: 70px;
+}
+
+.author {
+    background-image: url('skins/academic/img/author-node.png');
+}
+
+.paper {
+    background-image: url('skins/academic/img/paper-node.png');
+}
+
+.conference {
+    background-image: url('skins/academic/img/conference-node.png');
+}

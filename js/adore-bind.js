@@ -33,7 +33,7 @@ $(function () {
         // A function that should be called when a CSS skin file
         // has been loaded. Supports only the file name for now.
         skinFileLoadedCallback: function (fileName) {
-
+            $("#skinFileName").text(fileName);
         },
 
         // A function that should be called when a JSON data file
