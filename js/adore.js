@@ -20,7 +20,7 @@ function newAdore($, config) {
         jsPlumb.connect({ source: fromID,
                           target: toID,
                           anchor: "AutoDefault",
-                          connector: ["Bezier", { curviness: 75 }],
+                          connector: ["Straight", { curviness: 75 }],
                           cssClass: connClass,
                           endpoint: [ "Blank" ],
                           overlays: [ [ "Label", { label: connClass, location: 0.5} ] ] });
@@ -44,8 +44,6 @@ function newAdore($, config) {
     }
 
     // This function positions the single nodes that form a path in suitable way.
-    // It tries to use as much space from the drawing area as possible, reserving space
-    // on each path fore the common source and target nodes.
     // Expects the ID of the path which holds the nodes.
     function positionNodesOnPath(pathDiv) {
         var nodeDivs = pathDiv.children(".node");
@@ -56,36 +54,6 @@ function newAdore($, config) {
         });
     }
 
-    // This function (re-) positions all nodes (e.g. in case of a domain-specific stylesheet changing
-    // sizes, etc.)
-    function positionAllNodes() {
-
-    }
-
-    // This function positions the common source node.
-    function positionSourceNode(nodeDiv) {
-        if (pathCount % 2 == 1) {
-            // good, we have an odd number of paths, we can simply prepend the node
-            // to the "middle" path `div`.
-            var pathDiv = $("#" + jsonData.paths[Math.ceil(pathCount / 2) - 1].id);
-
-            pathDiv.prepend(nodeDiv);
-            positionNodesOnPath(pathDiv);
-        }
-    }
-
-    // This function positions the common target node.
-    function positionTargetNode(nodeDiv) {
-        if (pathCount % 2 == 1) {
-            // good, we have an odd number of paths, we can simply prepend the node
-            // to the "middle" path `div`.
-            var pathDiv = $("#" + jsonData.paths[Math.ceil(pathCount / 2) - 1].id);
-
-            pathDiv.append(nodeDiv);
-            positionNodesOnPath(pathDiv);
-        }
-    }
-
     // This function creates a `<div>` for a single path from the JSON dataset,
     // subsequently adding child-`<div>`'s for all source and target nodes as well.
     function makePathDiv(path) {
@@ -93,36 +61,60 @@ function newAdore($, config) {
             .addClass("path")
             .attr("id", path.id);
 
-        // We iterate through all edges and create a new `div` for each.
-        // We skip the first source node, as we want to draw the source and target nodes,
-        // which are the same for each path, seperately.
-        for (var i = 1, edgeCount = path.edges.length; i < edgeCount; i += 1) {
+        // We iterate through all edges and create a new `div` for each source node.
+        for (var i = 0, edgeCount = path.edges.length; i < edgeCount; i += 1) {
             var currEdge = path.edges[i];
             pathDiv.append(makeNodeDiv(currEdge.from, path.id));
         }
+
+        // For the last edge, we also create the target node.
+        pathDiv.append(makeNodeDiv(path.edges[path.edges.length - 1].to, path.id));
 
         return pathDiv;
     }
 
     function getNextPathIndex() {
-        var nextIndex = ((activePathIndex + 1) <= pathCount) ? activePathIndex + 1 : pathCount;
-        activePathIndex = nextIndex;
+        var nextIndex = ((activePathIndex + 1) < pathCount) ? activePathIndex + 1 : activePathIndex;
 
+        console.log("Next path index is " + nextIndex);
         return nextIndex;
     }
 
     function getPreviousPathIndex() {
-        var previousIndex = ((activePathIndex - 1) >= 0) ? activePathIndex - 1 : 0;
-        activePathIndex = previousIndex;
+        var previousIndex = ((activePathIndex - 1) >= 0) ? activePathIndex - 1 : activePathIndex;
 
+        console.log("Previous path index is " + previousIndex);
         return previousIndex;
     }
 
-    // This function destroys a path, identified by a given path ID.
-    function destroyPath(pathID) {
-        var oldPath = $("#" + pathID);
-        jsPlumb.detachEveryConnection();
-        oldPath.remove();
+    function switchToPreviousPath() {
+        var currentPathID = jsonData.paths[activePathIndex].id,
+            previousIndex = getPreviousPathIndex(),
+            previousPathID = jsonData.paths[previousIndex].id;
+
+        if (currentPathID != previousPathID) {
+            $("#" + currentPathID).fadeOut("slow", function () {
+                $("#" + previousPathID).fadeIn("slow");
+                jsPlumb.repaintEverything();
+            });
+
+            activePathIndex = previousIndex;
+        }
+    }
+
+    function switchToNextPath() {
+        var currentPathID = jsonData.paths[activePathIndex].id,
+            nextIndex = getNextPathIndex(),
+            nextPathID = jsonData.paths[nextIndex].id;
+
+        if (currentPathID != nextPathID) {
+            $("#" + currentPathID).fadeOut("slow", function () {
+                $("#" + nextPathID).fadeIn("slow");
+                jsPlumb.repaintEverything();
+            });
+
+            activePathIndex = nextIndex;
+        }
     }
 
     // This function draws all paths from the JSON dataset.
@@ -135,36 +127,25 @@ function newAdore($, config) {
             positionNodesOnPath(pathDiv);
 
             config.drawingArea.append(pathDiv);
+
+            // We hide all but the first path.
+            if (i > 0) {
+                $(pathDiv).hide();
+            }
         }
-
-        // We still need to add the soure and target node, which are the same for each path.
-        // We assume that all paths in the JSON dataset are well-formed and the source and target nodes
-        // are identical on each path.
-        var sourceNodeDiv = makeNodeDiv(jsonData.paths[0].edges[0].from, "source");
-        var targetNodeDiv = makeNodeDiv(jsonData.paths[0].edges[jsonData.paths[0].edges.length - 1].to,
-            "target");
-
-        positionSourceNode(sourceNodeDiv);
-        positionTargetNode(targetNodeDiv);
 
         // We draw the edges specific for each path.
         for (var j = 0; j < pathCount; j += 1) {
-            var edgeCount = jsonData.paths[j].edges.length,
-                currPath = jsonData.paths[j];
+            var currPath = jsonData.paths[j],
+                edgeCount = currPath.edges.length;
 
-            // Common source and target node.
-            connectViaId("source-" + currPath.edges[0].from.id,
-                currPath.id + "-" + currPath.edges[0].to.id,
-                currPath.edges[0]["class"]);
-
-            connectViaId(currPath.id + "-" + currPath.edges[edgeCount - 1].from.id,
-                "target-" + currPath.edges[edgeCount - 1].to.id,
-                currPath.edges[edgeCount - 1]["class"]);
-
-            for (var k = 1; k < edgeCount - 1; k += 1) {
-                drawEdge(jsonData.paths[j].edges[k], jsonData.paths[j].id);
+            for (var k = 0; k < edgeCount; k += 1) {
+                drawEdge(currPath.edges[k], currPath.id);
             }
         }
+
+        // We are finished, lastly we set some internal state variables
+        activePathIndex = 0;
     }
 
     // This function handles the loading of a CSS skin file and applies its styles
@@ -242,11 +223,19 @@ function newAdore($, config) {
         jsonFile.onchange = jsonFileChange;
 
         config.previousPathButton.click(function () {
-            drawFromJson(getPreviousPathIndex());
+            console.log($(this).get(0).id + " clicked");
+            $(this).get(0).disabled = true;
+            switchToPreviousPath();
+            $(this).get(0).disabled = false;
+            $("#pathIDSpan").text((activePathIndex + 1).toString() + " of " + pathCount);
         });
 
         config.nextPathButton.click(function () {
-            drawFromJson(getNextPathIndex());
+            console.log($(this).get(0).id + " clicked");
+            $(this).get(0).disabled = true;
+            switchToNextPath();
+            $(this).get(0).disabled = false;
+            $("#pathIDSpan").text((activePathIndex + 1).toString() + " of " + pathCount);
         });
 
         // All jsPlumb connections need to be redrawn if the window is resized
