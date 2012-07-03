@@ -23,7 +23,9 @@ function newAdore($, config) {
                           connector: ["Straight", { curviness: 75 }],
                           cssClass: connClass,
                           endpoint: [ "Blank" ],
-                          overlays: [ [ "Label", { label: connClass, location: 0.5} ] ] });
+                          overlays: [ [ "Label", { label: connClass,
+                                                   location: 0.5,
+                                                   cssClass: connClass} ] ] });
     }
 
     // This function draws the given edge.
