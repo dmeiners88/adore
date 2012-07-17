@@ -1,52 +1,92 @@
 /*jshint browser:true,devel:true,jquery:true,strict:true */
 /*global jsPlumb:true */
 
-// This is the ADORE "constructor" that creates a new ADORE instance and initializes it.
-// Note that this is not a real constructor, but a slightly modified module pattern.
-function newAdore($, config) {
+// ADORE is using the Revealing Module Pattern as described at
+// [Learning JavaScript Design Patterns](http://addyosmani.com/resources/essentialjsdesignpatterns/book/#revealingmodulepatternjavascript)
+
+var adore = function () {
     // We use strict mode to prevent bad programming habits and to fix some JavaScript
     // quirks.
     "use strict";
 
     // Private state variables
+
+    // The config object with its default values.
+    var config = {
+        drawingArea: $("#drawingArea"),
+    };
+
+    // The index in the JSON data set of the active path on screen.
     var activePathIndex = -1;
+
+    // The total number of paths in the current JSON data set.
     var pathCount = -1;
+
+    // The current JSON data set.
     var jsonData = {};
+
+    // We set some default settings for our jsPlumb instance.
+    jsPlumb.importDefaults({
+        Anchor: "AutoDefault",
+        Connector: [ "Straight" ],
+        Endpoints: [ "Blank", "Blank" ],
+        ConnectionOverlays: [
+            // BUG: Location of overlay is only partially effective. Text is displaced.
+            [ "Label", { location: 0.5 } ]
+        ]
+    });
+
+    // If the window gets resized, jsPlump needs to repaint all the SVG edges.
+    $(window).resize(function () { jsPlumb.repaintEverything(); });
 
     // Here come all the function definitions.
 
-    // This function connects tow elements on the screen based on their IDs
-    function connectViaId(fromID, toID, connClass) {
-        jsPlumb.connect({ source: fromID,
-                          target: toID,
-                          anchor: "AutoDefault",
-                          connector: ["Straight", { curviness: 75 }],
-                          cssClass: connClass,
-                          endpoint: [ "Blank" ],
-                          overlays: [ [ "Label", { label: connClass,
-                                                   location: 0.5,
-                                                   cssClass: connClass} ] ] });
-    }
-
-    // This function draws the given edge.
+    // This function draws the given edge. Expects an edge object from the JSON data set like
+    //
+    //     {
+    //       "id"    : "edge1",
+    //       "from"  : { "id" : "author2", ... },
+    //       "to"    : { "id" : "paperA", ... },
+    //       "class" : "authorship"
+    //     }
+    //
+    // and the ID of the path the two nodes are on.
     function drawEdge(edge, pathID) {
-        console.log("adore: trying to draw edge from " + pathID + "-" + edge.from.id + " to " +
+        console.log("adore: drawing edge from " + pathID + "-" + edge.from.id + " to " +
             pathID + "-" + edge.to.id);
 
-        connectViaId(pathID + "-" + edge.from.id, pathID + "-" + edge.to.id, edge["class"]);
+        jsPlumb.connect({
+            source: pathID + "-" + edge.from.id,
+            target: pathID + "-" + edge.to.id,
+            cssClass: edge["class"],
+            overlays: [
+                [ "Label", { label: edge["class"], cssClass: edge["class"] } ]
+            ]
+        });
     }
 
     // This function creates a `<div>` for a single source or target node.
+    // Expects a node object from the JSON data set like
+    //
+    //     {
+    //       "id"    : "author2",
+    //       "label" : "Author 2",
+    //       "class" : "author"
+    //     }
+    //
+    // and the ID of the path that contains the node.
     function makeNodeDiv(node, pathID) {
         return $("<div/>")
             .addClass("node")
             .addClass(node["class"])
             .attr("id", pathID + "-" + node.id)
+            .data("pathID", pathID)
+            .data("nodeID", node.id)
             .append($("<div/>").addClass("label").text(node.label));
     }
 
     // This function positions the single nodes that form a path in suitable way.
-    // Expects the ID of the path which holds the nodes.
+    // Expects the jQuery object that represents the path `div`.
     function positionNodesOnPath(pathDiv) {
         var nodeDivs = pathDiv.children(".node");
 
@@ -58,6 +98,18 @@ function newAdore($, config) {
 
     // This function creates a `<div>` for a single path from the JSON dataset,
     // subsequently adding child-`<div>`'s for all source and target nodes as well.
+    // Expects a path object from the JSON data set like
+    //
+    //     {
+    //       "id": "path1",
+    //       "edges":
+    //         [
+    //           { "id": "edge1", ... },
+    //           { "id": "edge3", ... },
+    //           ...
+    //         ]
+    //     }
+    //
     function makePathDiv(path) {
         var pathDiv = $("<div/>")
             .addClass("path")
@@ -75,6 +127,8 @@ function newAdore($, config) {
         return pathDiv;
     }
 
+    // Calculates the next path index. If the next path index would be out of bounds, returns
+    // the maximum path index.
     function getNextPathIndex() {
         var nextIndex = ((activePathIndex + 1) < pathCount) ? activePathIndex + 1 : activePathIndex;
 
@@ -82,6 +136,7 @@ function newAdore($, config) {
         return nextIndex;
     }
 
+    // Calculates the previous path index. Analogous to `getNextPathIndex`.
     function getPreviousPathIndex() {
         var previousIndex = ((activePathIndex - 1) >= 0) ? activePathIndex - 1 : activePathIndex;
 
@@ -89,10 +144,16 @@ function newAdore($, config) {
         return previousIndex;
     }
 
+    // Returns a path ID for a given path index.
+    function getPathIdByIndex(index) {
+        return jsonData.paths[index].id;
+    }
+
+    // Switches to the previous path.
     function switchToPreviousPath() {
-        var currentPathID = jsonData.paths[activePathIndex].id,
+        var currentPathID = getPathIdByIndex(activePathIndex),
             previousIndex = getPreviousPathIndex(),
-            previousPathID = jsonData.paths[previousIndex].id;
+            previousPathID = getPathIdByIndex(previousIndex);
 
         if (currentPathID != previousPathID) {
             $("#" + currentPathID).fadeOut("slow", function () {
@@ -104,10 +165,11 @@ function newAdore($, config) {
         }
     }
 
+    // Switches to the next path.
     function switchToNextPath() {
-        var currentPathID = jsonData.paths[activePathIndex].id,
+        var currentPathID = getPathIdByIndex(activePathIndex),
             nextIndex = getNextPathIndex(),
-            nextPathID = jsonData.paths[nextIndex].id;
+            nextPathID = getPathIdByIndex(nextIndex);
 
         if (currentPathID != nextPathID) {
             $("#" + currentPathID).fadeOut("slow", function () {
@@ -128,6 +190,7 @@ function newAdore($, config) {
             // We position the nodes on the path.
             positionNodesOnPath(pathDiv);
 
+            // We append the generated path `div` to the drawing area `div`.
             config.drawingArea.append(pathDiv);
 
             // We hide all but the first path.
@@ -146,7 +209,7 @@ function newAdore($, config) {
             }
         }
 
-        // We are finished, lastly we set some internal state variables
+        // We are finished. We store the current path index.
         activePathIndex = 0;
     }
 
@@ -166,7 +229,7 @@ function newAdore($, config) {
                 var node = $("<style />")
                     .text(f.target.result)
                     .attr("type", "text/css")
-                    .attr("id", "domain-style");
+                    .attr("id", "domain-specific-style");
                 $("head").append(node);
 
                 jsPlumb.repaintEverything();
@@ -202,10 +265,6 @@ function newAdore($, config) {
 
                 // We call the graph drawing function.
                 drawFromJson();
-
-                // As we now have a single path on the screen we display the
-                // path navigation controls.
-                config.pathNavigator.show();
             };
 
             // Start reading the text file.
@@ -215,37 +274,27 @@ function newAdore($, config) {
         }
     }
 
-    // Using the properties of the given config variable, we bind the program logic to
-    // the DOM elements.
-    function bindControls() {
-        var skinFile = config.skinFileInput.get(0),
-            jsonFile = config.jsonFileInput.get(0);
-
-        skinFile.onchange = skinFileChange;
-        jsonFile.onchange = jsonFileChange;
-
-        config.previousPathButton.click(function () {
-            console.log($(this).get(0).id + " clicked");
-            $(this).get(0).disabled = true;
-            switchToPreviousPath();
-            $(this).get(0).disabled = false;
-            $("#pathIDSpan").text((activePathIndex + 1).toString() + " of " + pathCount);
-        });
-
-        config.nextPathButton.click(function () {
-            console.log($(this).get(0).id + " clicked");
-            $(this).get(0).disabled = true;
-            switchToNextPath();
-            $(this).get(0).disabled = false;
-            $("#pathIDSpan").text((activePathIndex + 1).toString() + " of " + pathCount);
-        });
-
-        // All jsPlumb connections need to be redrawn if the window is resized
-        $(window).resize(function () {
-            jsPlumb.repaintEverything();
-        });
+    // Sets a new config object for ADORE. Missing properties retain their default values.
+    // Uses jQuery to merge the two objects into the first.
+    function setConfig(c) {
+        $.extend(config, c);
     }
 
-    // We initialize the ADORE instance.
-    bindControls();
-}
+    // Sets the JSON date set, ADORE should operate on.
+    //
+    // TODO: When a new JSON data set is given, all paths on screen should be deleted
+    // and the internal state of ADORE should be reset.
+    function setJsonData(json) {
+        jsonData = json;
+    }
+
+    // Some functions need to be public, so we export (reveal) them.
+    return {
+        switchToPreviousPath: switchToPreviousPath,
+        switchToNextPath: switchToNextPath,
+        setConfig: setConfig,
+        skinFileChange: skinFileChange,
+        jsonFileChange: jsonFileChange,
+        setJsonData: setJsonData
+    };
+}();
