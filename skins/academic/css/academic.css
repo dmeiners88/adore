@@ -2,15 +2,23 @@
 
 /* Class styles */
 
+/* General style */
+
 .node {
     width: 60px;
     height: 60px;
-    background-size: 60px 60px
+    background-size: 60px 60px;
+
+    box-shadow: 0px 0px;
+    border-radius: 0em 0em 0em 0em;
 }
 
 .node .label {
     padding-top: 70px;
 }
+
+
+/* Node styles */
 
 .author {
     background-image: url('skins/academic/img/author-node.png');
@@ -22,4 +30,32 @@
 
 .conference {
     background-image: url('skins/academic/img/conference-node.png');
+}
+
+/* Edge styles */
+
+._jsPlumb_connector.authorship path {
+    stroke: black;
+}
+
+._jsPlumb_connector.citation path {
+    stroke: green;
+    stroke-dasharray: 5,5;
+}
+
+._jsPlumb_connector.presentation path {
+    stroke: red;
+    stroke-width: 1;
+}
+
+/* Overlay styles */
+
+._jsPlumb_overlay.authorship {
+    background-image: url('skins/academic/img/authorship-edge.png');
+    width: 30px;
+    height: 30px;
+    background-size: 30px 30px;
+    background-position: center;
+    background-repeat: no-repeat;
+    color: transparent;
 }
