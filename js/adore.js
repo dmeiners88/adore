@@ -86,7 +86,8 @@ var adore = function () {
     }
 
     // This function positions the single nodes that form a path in suitable way.
-    // Expects the jQuery object that represents the path `div`.
+    // All nodes are distributed on the available space evenly.
+    // Expects the jQuery object that represents the path `<div>`.
     function positionNodesOnPath(pathDiv) {
         var nodeDivs = pathDiv.children(".node");
 
@@ -190,7 +191,7 @@ var adore = function () {
             // We position the nodes on the path.
             positionNodesOnPath(pathDiv);
 
-            // We append the generated path `div` to the drawing area `div`.
+            // We append the generated path `<div>` to the drawing area `<div>`.
             config.drawingArea.append(pathDiv);
 
             // We hide all but the first path.
@@ -199,7 +200,8 @@ var adore = function () {
             }
         }
 
-        // We draw the edges specific for each path.
+        // We draw all edges. Only the edges of the currently visible path on screen
+        // will be visible.
         for (var j = 0; j < pathCount; j += 1) {
             var currPath = jsonData.paths[j],
                 edgeCount = currPath.edges.length;
@@ -213,79 +215,30 @@ var adore = function () {
         activePathIndex = 0;
     }
 
-    // This function handles the loading of a CSS skin file and applies its styles
-    // to the current graph.
-    function skinFileChange(evt) {
-        var file = evt.target.files[0];
-
-        if (file) {
-            var reader = new FileReader();
-
-            reader.onload = function (f) {
-                config.skinFileLoadedCallback(evt.target.value);
-
-                console.log("adore: loaded " + evt.target.value + " skin file.");
-
-                var node = $("<style />")
-                    .text(f.target.result)
-                    .attr("type", "text/css")
-                    .attr("id", "domain-specific-style");
-                $("head").append(node);
-
-                jsPlumb.repaintEverything();
-            };
-
-            reader.readAsText(file);
-        } else {
-            console.error("adore: failed to load from file" + evt.target.value);
-        }
-    }
-
-    // This function handles the loading of a JSON data file and triggers its
-    // parsing and drawing.
-    function jsonFileChange(evt) {
-        var file = evt.target.files[0];
-
-        if (file) {
-            var reader = new FileReader();
-
-            // We assign a callback function to the `onload` event of the `FileReader`.
-            // It is called when the `FileReader` object finishes its read operation.
-            reader.onload = function (f) {
-                // We call the jsonFileSelectedCallback function.
-                config.jsonFileLoadedCallback(evt.target.value);
-
-                // We save the file contents for immediate and future use.
-                jsonData = $.fromJsonRef(f.target.result);
-
-                // We update some private state variables
-                pathCount = jsonData.paths.length;
-
-                console.log("adore: loaded " + evt.target.value + ", containing " + pathCount + " paths.");
-
-                // We call the graph drawing function.
-                drawFromJson();
-            };
-
-            // Start reading the text file.
-            reader.readAsText(file);
-        } else {
-            console.error("adore: failed to load from file" + evt.target.value);
-        }
-    }
-
     // Sets a new config object for ADORE. Missing properties retain their default values.
     // Uses jQuery to merge the two objects into the first.
     function setConfig(c) {
         $.extend(config, c);
     }
 
-    // Sets the JSON date set, ADORE should operate on.
-    //
-    // TODO: When a new JSON data set is given, all paths on screen should be deleted
-    // and the internal state of ADORE should be reset.
+    // Resets the internal ADORE state and destroys any drawings on screen.
+    function reset() {
+        activePathIndex = -1;
+        pathCount = -1;
+        jsonData = {};
+        config.drawingArea.empty();
+    }
+
+    // Sets the JSON data set ADORE should operate on.
     function setJsonData(json) {
-        jsonData = json;
+        reset();
+
+        jsonData = $.fromJsonRef(json);
+        pathCount = jsonData.paths.length;
+    }
+
+    function repaint() {
+        jsPlumb.repaintEverything();
     }
 
     // Some functions need to be public, so we export (reveal) them.
@@ -293,8 +246,9 @@ var adore = function () {
         switchToPreviousPath: switchToPreviousPath,
         switchToNextPath: switchToNextPath,
         setConfig: setConfig,
-        skinFileChange: skinFileChange,
-        jsonFileChange: jsonFileChange,
-        setJsonData: setJsonData
+        setJsonData: setJsonData,
+        drawFromJson: drawFromJson,
+        reset: reset,
+        repaint: repaint
     };
 }();

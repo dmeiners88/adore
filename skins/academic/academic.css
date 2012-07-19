@@ -21,15 +21,15 @@
 /* Node styles */
 
 .author {
-    background-image: url('skins/academic/img/author-node.png');
+    background-image: url('skins/academic/author-node.png');
 }
 
 .paper {
-    background-image: url('skins/academic/img/paper-node.png');
+    background-image: url('skins/academic/paper-node.png');
 }
 
 .conference {
-    background-image: url('skins/academic/img/conference-node.png');
+    background-image: url('skins/academic/conference-node.png');
 }
 
 /* Edge styles */
@@ -51,7 +51,7 @@
 /* Overlay styles */
 
 ._jsPlumb_overlay.authorship {
-    background-image: url('skins/academic/img/authorship-edge.png');
+    background-image: url('skins/academic/authorship-edge.png');
     width: 30px;
     height: 30px;
     background-size: 30px 30px;

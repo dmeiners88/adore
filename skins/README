@@ -1,16 +1,12 @@
 This is the skins folder.
 For each skin there should be a separate folder named after the skin.
 
-Inside each skin folder are the img and css folders for the skin, e.g.
+E.g.
 
 skins/
 skins/academic/
-skins/academic/css/
-skins/academic/css/academic-nodes.css
-skins/academic/css/academic-edges.css
-
-skins/academic/img/
-skins/academic/img/author-node.png
-skins/academic/img/paper-node.png
-skins/academic/img/conference-node.png
-skins/academic/img/citation-edge.png
+skins/academic/academic.css
+skins/academic/author-node.png
+skins/academic/paper-node.png
+skins/academic/conference-node.png
+skins/academic/citation-edge.png
