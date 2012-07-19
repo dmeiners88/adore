@@ -363,17 +363,23 @@ the maximum path index.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="kd">function</span> <span class="nx">switchToPreviousPath</span><span class="p">()</span> <span class="p">{</span>
-        <span class="kd">var</span> <span class="nx">currentPathID</span> <span class="o">=</span> <span class="nx">getPathIdByIndex</span><span class="p">(</span><span class="nx">activePathIndex</span><span class="p">),</span>
-            <span class="nx">previousIndex</span> <span class="o">=</span> <span class="nx">getPreviousPathIndex</span><span class="p">(),</span>
+        <span class="kd">var</span> <span class="nx">currentPathID</span><span class="p">,</span>
+            <span class="nx">previousIndex</span><span class="p">,</span>
+            <span class="nx">previousPathID</span><span class="p">;</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="nx">activePathIndex</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">currentPathID</span> <span class="o">=</span> <span class="nx">getPathIdByIndex</span><span class="p">(</span><span class="nx">activePathIndex</span><span class="p">);</span>
+            <span class="nx">previousIndex</span> <span class="o">=</span> <span class="nx">getPreviousPathIndex</span><span class="p">();</span>
             <span class="nx">previousPathID</span> <span class="o">=</span> <span class="nx">getPathIdByIndex</span><span class="p">(</span><span class="nx">previousIndex</span><span class="p">);</span>
 
-        <span class="k">if</span> <span class="p">(</span><span class="nx">currentPathID</span> <span class="o">!=</span> <span class="nx">previousPathID</span><span class="p">)</span> <span class="p">{</span>
-            <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#&quot;</span> <span class="o">+</span> <span class="nx">currentPathID</span><span class="p">).</span><span class="nx">fadeOut</span><span class="p">(</span><span class="s2">&quot;slow&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
-                <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#&quot;</span> <span class="o">+</span> <span class="nx">previousPathID</span><span class="p">).</span><span class="nx">fadeIn</span><span class="p">(</span><span class="s2">&quot;slow&quot;</span><span class="p">);</span>
-                <span class="nx">jsPlumb</span><span class="p">.</span><span class="nx">repaintEverything</span><span class="p">();</span>
-            <span class="p">});</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">currentPathID</span> <span class="o">!=</span> <span class="nx">previousPathID</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#&quot;</span> <span class="o">+</span> <span class="nx">currentPathID</span><span class="p">).</span><span class="nx">fadeOut</span><span class="p">(</span><span class="s2">&quot;slow&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+                    <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#&quot;</span> <span class="o">+</span> <span class="nx">previousPathID</span><span class="p">).</span><span class="nx">fadeIn</span><span class="p">(</span><span class="s2">&quot;slow&quot;</span><span class="p">);</span>
+                    <span class="nx">jsPlumb</span><span class="p">.</span><span class="nx">repaintEverything</span><span class="p">();</span>
+                <span class="p">});</span>
 
-            <span class="nx">activePathIndex</span> <span class="o">=</span> <span class="nx">previousIndex</span><span class="p">;</span>
+                <span class="nx">activePathIndex</span> <span class="o">=</span> <span class="nx">previousIndex</span><span class="p">;</span>
+            <span class="p">}</span>
         <span class="p">}</span>
     <span class="p">}</span></pre></div>
     </div>
@@ -388,17 +394,24 @@ the maximum path index.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="kd">function</span> <span class="nx">switchToNextPath</span><span class="p">()</span> <span class="p">{</span>
-        <span class="kd">var</span> <span class="nx">currentPathID</span> <span class="o">=</span> <span class="nx">getPathIdByIndex</span><span class="p">(</span><span class="nx">activePathIndex</span><span class="p">),</span>
-            <span class="nx">nextIndex</span> <span class="o">=</span> <span class="nx">getNextPathIndex</span><span class="p">(),</span>
+        <span class="kd">var</span> <span class="nx">currentPathID</span><span class="p">,</span>
+            <span class="nx">nextIndex</span><span class="p">,</span>
+            <span class="nx">nextPathID</span><span class="p">;</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="nx">activePathIndex</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;here&quot;</span><span class="p">);</span>
+            <span class="nx">currentPathID</span> <span class="o">=</span> <span class="nx">getPathIdByIndex</span><span class="p">(</span><span class="nx">activePathIndex</span><span class="p">);</span>
+            <span class="nx">nextIndex</span> <span class="o">=</span> <span class="nx">getNextPathIndex</span><span class="p">();</span>
             <span class="nx">nextPathID</span> <span class="o">=</span> <span class="nx">getPathIdByIndex</span><span class="p">(</span><span class="nx">nextIndex</span><span class="p">);</span>
 
-        <span class="k">if</span> <span class="p">(</span><span class="nx">currentPathID</span> <span class="o">!=</span> <span class="nx">nextPathID</span><span class="p">)</span> <span class="p">{</span>
-            <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#&quot;</span> <span class="o">+</span> <span class="nx">currentPathID</span><span class="p">).</span><span class="nx">fadeOut</span><span class="p">(</span><span class="s2">&quot;slow&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
-                <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#&quot;</span> <span class="o">+</span> <span class="nx">nextPathID</span><span class="p">).</span><span class="nx">fadeIn</span><span class="p">(</span><span class="s2">&quot;slow&quot;</span><span class="p">);</span>
-                <span class="nx">jsPlumb</span><span class="p">.</span><span class="nx">repaintEverything</span><span class="p">();</span>
-            <span class="p">});</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">currentPathID</span> <span class="o">!=</span> <span class="nx">nextPathID</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#&quot;</span> <span class="o">+</span> <span class="nx">currentPathID</span><span class="p">).</span><span class="nx">fadeOut</span><span class="p">(</span><span class="s2">&quot;slow&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+                    <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#&quot;</span> <span class="o">+</span> <span class="nx">nextPathID</span><span class="p">).</span><span class="nx">fadeIn</span><span class="p">(</span><span class="s2">&quot;slow&quot;</span><span class="p">);</span>
+                    <span class="nx">jsPlumb</span><span class="p">.</span><span class="nx">repaintEverything</span><span class="p">();</span>
+                <span class="p">});</span>
 
-            <span class="nx">activePathIndex</span> <span class="o">=</span> <span class="nx">nextIndex</span><span class="p">;</span>
+                <span class="nx">activePathIndex</span> <span class="o">=</span> <span class="nx">nextIndex</span><span class="p">;</span>
+            <span class="p">}</span>
         <span class="p">}</span>
     <span class="p">}</span></pre></div>
     </div>
@@ -545,11 +558,24 @@ Uses jQuery to merge the two objects into the first.</p>
         <span class="nx">reset</span><span class="p">();</span>
 
         <span class="nx">jsonData</span> <span class="o">=</span> <span class="nx">$</span><span class="p">.</span><span class="nx">fromJsonRef</span><span class="p">(</span><span class="nx">json</span><span class="p">);</span>
-        <span class="nx">pathCount</span> <span class="o">=</span> <span class="nx">jsonData</span><span class="p">.</span><span class="nx">paths</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">jsonData</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="s2">&quot;paths&quot;</span><span class="p">))</span> <span class="p">{</span>
+            <span class="nx">pathCount</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="nx">pathCount</span> <span class="o">=</span> <span class="nx">jsonData</span><span class="p">.</span><span class="nx">paths</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+        <span class="p">}</span>
     <span class="p">}</span>
 
     <span class="kd">function</span> <span class="nx">repaint</span><span class="p">()</span> <span class="p">{</span>
         <span class="nx">jsPlumb</span><span class="p">.</span><span class="nx">repaintEverything</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="kd">function</span> <span class="nx">getActivePathIndex</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">activePathIndex</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="kd">function</span> <span class="nx">getPathCount</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">pathCount</span><span class="p">;</span>
     <span class="p">}</span></pre></div>
     </div>
   </div>
@@ -569,7 +595,9 @@ Uses jQuery to merge the two objects into the first.</p>
         <span class="nx">setJsonData</span><span class="o">:</span> <span class="nx">setJsonData</span><span class="p">,</span>
         <span class="nx">drawFromJson</span><span class="o">:</span> <span class="nx">drawFromJson</span><span class="p">,</span>
         <span class="nx">reset</span><span class="o">:</span> <span class="nx">reset</span><span class="p">,</span>
-        <span class="nx">repaint</span><span class="o">:</span> <span class="nx">repaint</span>
+        <span class="nx">repaint</span><span class="o">:</span> <span class="nx">repaint</span><span class="p">,</span>
+        <span class="nx">getActivePathIndex</span><span class="o">:</span> <span class="nx">getActivePathIndex</span><span class="p">,</span>
+        <span class="nx">getPathCount</span><span class="o">:</span> <span class="nx">getPathCount</span>
     <span class="p">};</span>
 <span class="p">}();</span>
 
