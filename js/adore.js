@@ -152,33 +152,46 @@ var adore = function () {
 
     // Switches to the previous path.
     function switchToPreviousPath() {
-        var currentPathID = getPathIdByIndex(activePathIndex),
-            previousIndex = getPreviousPathIndex(),
+        var currentPathID,
+            previousIndex,
+            previousPathID;
+
+        if (activePathIndex > -1) {
+            currentPathID = getPathIdByIndex(activePathIndex);
+            previousIndex = getPreviousPathIndex();
             previousPathID = getPathIdByIndex(previousIndex);
 
-        if (currentPathID != previousPathID) {
-            $("#" + currentPathID).fadeOut("slow", function () {
-                $("#" + previousPathID).fadeIn("slow");
-                jsPlumb.repaintEverything();
-            });
+            if (currentPathID != previousPathID) {
+                $("#" + currentPathID).fadeOut("slow", function () {
+                    $("#" + previousPathID).fadeIn("slow");
+                    jsPlumb.repaintEverything();
+                });
 
-            activePathIndex = previousIndex;
+                activePathIndex = previousIndex;
+            }
         }
     }
 
     // Switches to the next path.
     function switchToNextPath() {
-        var currentPathID = getPathIdByIndex(activePathIndex),
-            nextIndex = getNextPathIndex(),
+        var currentPathID,
+            nextIndex,
+            nextPathID;
+
+        if (activePathIndex > -1) {
+            console.log("here");
+            currentPathID = getPathIdByIndex(activePathIndex);
+            nextIndex = getNextPathIndex();
             nextPathID = getPathIdByIndex(nextIndex);
 
-        if (currentPathID != nextPathID) {
-            $("#" + currentPathID).fadeOut("slow", function () {
-                $("#" + nextPathID).fadeIn("slow");
-                jsPlumb.repaintEverything();
-            });
+            if (currentPathID != nextPathID) {
+                $("#" + currentPathID).fadeOut("slow", function () {
+                    $("#" + nextPathID).fadeIn("slow");
+                    jsPlumb.repaintEverything();
+                });
 
-            activePathIndex = nextIndex;
+                activePathIndex = nextIndex;
+            }
         }
     }
 
@@ -234,7 +247,12 @@ var adore = function () {
         reset();
 
         jsonData = $.fromJsonRef(json);
-        pathCount = jsonData.paths.length;
+
+        if (!jsonData.hasOwnProperty("paths")) {
+            pathCount = 0;
+        } else {
+            pathCount = jsonData.paths.length;
+        }
     }
 
     function repaint() {
