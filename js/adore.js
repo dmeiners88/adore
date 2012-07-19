@@ -241,6 +241,14 @@ var adore = function () {
         jsPlumb.repaintEverything();
     }
 
+    function getActivePathIndex() {
+        return activePathIndex;
+    }
+
+    function getPathCount() {
+        return pathCount;
+    }
+
     // Some functions need to be public, so we export (reveal) them.
     return {
         switchToPreviousPath: switchToPreviousPath,
@@ -249,6 +257,8 @@ var adore = function () {
         setJsonData: setJsonData,
         drawFromJson: drawFromJson,
         reset: reset,
-        repaint: repaint
+        repaint: repaint,
+        getActivePathIndex: getActivePathIndex,
+        getPathCount: getPathCount
     };
 }();
