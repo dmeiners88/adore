@@ -6,31 +6,39 @@ module("Empty JSON data set is processed correctly.", {
 
         ok(adore, "Global ADORE object exists.");
 
-        equal(adore.getActivePathIndex(), -1, "activePathIndex has correct initial value of -1.");
-        equal(adore.getPathCount(), -1, "pathCount has correct initial value of -1.");
+        equal(adore.getActivePathIndex(), -1,
+            "activePathIndex has correct initial value of -1.");
+        equal(adore.getPathCount(), -1,
+            "pathCount has correct initial value of -1.");
 
         adore.setConfig(c);
         adore.setJsonData(emptyJson);
 
-        equal(adore.getPathCount(), 0, "after setJsonData() pathCount hat correct value of 0.");
-        equal(adore.getActivePathIndex(), -1, "and activePathIndex has correct value of -1.");
+        equal(adore.getPathCount(), 0,
+            "after setJsonData() pathCount hat correct value of 0.");
+        equal(adore.getActivePathIndex(), -1,
+            "and activePathIndex has correct value of -1.");
 
         adore.drawFromJson();
-        equal($fixture.children().length, 0, "after drawFromJson() no paths are appended to the drawing area.")
+        equal($fixture.children().length, 0,
+            "after drawFromJson() no paths are appended to the drawing area.")
     },
     teardown: function () {
         var $fixture = $("#qunit-fixture");
         adore.reset();
-        equal(adore.getActivePathIndex(), -1, "after reset() activePathIndex has correct value of -1.");
-        equal(adore.getPathCount(), -1, "and pathCount has correct value of -1.");
-        equal($fixture.children().length, 0, "and no paths are appended to the drawing area.");
+        equal(adore.getActivePathIndex(), -1,
+            "after reset() activePathIndex has correct value of -1.");
+        equal(adore.getPathCount(), -1,
+            "and pathCount has correct value of -1.");
+        equal($fixture.children().length, 0,
+            "and no paths are appended to the drawing area.");
     }
 });
 
-test("Paths are created correctly.", function () {
+test("Paths are created correctly.", 9, function () {
 });
 
-test("Path switching works correctly (internal state is updated correctly).", function () {
+test("Path switching works correctly (internal state is updated correctly).", 9+2, function () {
     adore.switchToNextPath();
     equal(adore.getActivePathIndex(), -1,
         "after switchToNextPath() activePathIndex retains correct value of -1.");
@@ -73,57 +81,91 @@ module("Complex JSON data set is processed correctly.", {
 
         ok(adore, "Global ADORE object exists.");
 
-        equal(adore.getActivePathIndex(), -1, "activePathIndex has correct initial value of -1.");
-        equal(adore.getPathCount(), -1, "pathCount has correct initial value of -1.");
+        equal(adore.getActivePathIndex(), -1,
+            "activePathIndex has correct initial value of -1.");
+        equal(adore.getPathCount(), -1,
+            "pathCount has correct initial value of -1.");
 
         adore.setConfig(c);
         adore.setJsonData(complexJson);
 
-        equal(adore.getPathCount(), 3, "after setJsonData() pathCount has correct value of 3.");
-        equal(adore.getActivePathIndex(), -1, "and activePathIndex has correct value of -1");
+        equal(adore.getPathCount(), 3,
+            "after setJsonData() pathCount has correct value of 3.");
+        equal(adore.getActivePathIndex(), -1,
+            "and activePathIndex has correct value of -1");
 
         adore.drawFromJson();
-        equal(adore.getActivePathIndex(), 0, " after drawfromJson() activePathIndex has correct value of 0.");
+        equal(adore.getActivePathIndex(), 0,
+            "after drawfromJson() activePathIndex has correct value of 0.");
         equal($fixture.children(".path").length, 3,
             "and 3 paths div's have been appended to the drawing area.");
     },
     teardown: function () {
         var $fixture = $("#qunit-fixture");
         adore.reset();
-        equal(adore.getActivePathIndex(), -1, "after reset() activePathIndex has correct value of -1.");
-        equal(adore.getPathCount(), -1, "and pathCount has correct value of -1.");
-        equal($fixture.children().length, 0, "and no paths are appended to the drawing area.");
+        equal(adore.getActivePathIndex(), -1,
+            "after reset() activePathIndex has correct value of -1.");
+        equal(adore.getPathCount(), -1,
+            "and pathCount has correct value of -1.");
+        equal($fixture.children().length, 0,
+            "and no paths are appended to the drawing area.");
     }
 });
 
-test("Paths are created correctly.", function () {
+test("Paths are created correctly.", 10+6, function () {
+
+    equal($("#path1").children(".node").length, 4,
+        "first path has 4 nodes.");
+
+    equal($("#path1").find("._jsPlumb_connector").length, 3,
+        "and 3 edges.");
+
+    equal($("#path2").children(".node").length, 4,
+        "second path has 4 nodes.");
+
+    equal($("#path2").find("._jsPlumb_connector").length, 3,
+        "and 3 edges.");
+
+    equal($("#path3").children(".node").length, 3,
+        "third path has 3 nodes.");
+
+    equal($("#path3").find("._jsPlumb_connector").length, 2,
+        "and 2 edges.");
 });
 
-test("Path switching works correctly (internal state is updated correctly).", function () {
+test("Path switching works correctly (internal state is updated correctly).", 10+6, function () {
     adore.switchToNextPath();
-    equal(adore.getActivePathIndex(), 1, "after switchToNextPath() activePathIndex has correct value of 1.");
+    equal(adore.getActivePathIndex(), 1,
+        "after switchToNextPath() activePathIndex has correct value of 1.");
 
     adore.switchToNextPath();
-    equal(adore.getActivePathIndex(), 2, "after switchToNextPath() activePathIndex has correct value of 2.");
+    equal(adore.getActivePathIndex(), 2,
+        "after switchToNextPath() activePathIndex has correct value of 2.");
 
     adore.switchToNextPath();
     equal(adore.getActivePathIndex(), 2,
         "after switchToNextPath() activePathIndex retains correct value of 2 (maximum path index was hit).");
 
     adore.switchToPreviousPath();
-    equal(adore.getActivePathIndex(), 1, "after switchToPreviousPath() activePathIndex has correct value of 1.");
+    equal(adore.getActivePathIndex(), 1,
+        "after switchToPreviousPath() activePathIndex has correct value of 1.");
 
     adore.switchToPreviousPath();
-    equal(adore.getActivePathIndex(), 0, "after switchToPreviousPath() activePathIndex has correct value of 0.");
+    equal(adore.getActivePathIndex(), 0,
+        "after switchToPreviousPath() activePathIndex has correct value of 0.");
 
     adore.switchToPreviousPath();
     equal(adore.getActivePathIndex(), 0,
         "after switchToPreviousPath() activePathIndex retains correct value of 0 (minimum path index was hit).");
 });
 
-test("Path switching  works correctly (visibility of paths on screen is changed correctly).", function () {
-    var $fixture = $("#qunit-fixture");
-    equal($fixture.children(".path:visible")[0].id, "path1", "after drawFromJson() the first path is visible.");
-    equal($fixture.children(".path:hidden")[0].id, "path2", "and the second path is hidden.");
-    equal($fixture.children(".path:hidden")[1].id, "path3", "and the third path is hidden.");
+test("Path switching  works correctly (visibility of paths on screen is changed correctly).", 10+6, function () {
+    ok($("#path1").is(":visible"), "and the first path is visible.");
+    ok($("#path2").is(":hidden"), "and the second path is hidden.");
+    ok($("#path3").is(":hidden"), "and the third path is hidden.");
+
+    adore.switchToNextPath();
+    ok($("#path1").is(":hidden"), "after switchToNextPath() the first path is hidden.");
+    ok($("#path2").is(":visible"), "and the second path is visible.");
+    ok($("#path3").is(":hidden"), "and the third path is hidden.");
 });
