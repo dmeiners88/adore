@@ -62,19 +62,24 @@ $(function () {
     var pathIDSpan = $("#pathIDSpan");
 
     // We setup a button that enables the user to switch to the previous path.
-    $("#previousPathButton").click(function () {
-        $(this).get(0).disabled = true;
-        adore.switchToPreviousPath();
+
+    var previousPathButton = $("#previousPathButton");
+    previousPathButton.click(function () {
+        previousPathButton.attr("disabled", "disabled");
+        adore.switchToPreviousPath(function () {
+            previousPathButton.removeAttr("disabled");
+        });
         pathIDSpan.text((adore.getActivePathIndex() + 1).toString() + " of " + adore.getPathCount());
-        $(this).get(0).disabled = false;
     });
 
     // The same to navigate to the next path.
-    $("#nextPathButton").click(function () {
-        $("#nextPathButton").prop("disabled", true)
-        adore.switchToNextPath();
+    var nextPathButton = $("#nextPathButton");
+    nextPathButton.click(function () {
+        nextPathButton.attr("disabled", "disabled");
+        adore.switchToNextPath(function () {
+            nextPathButton.removeAttr("disabled");
+        });
         pathIDSpan.text((adore.getActivePathIndex() + 1).toString() + " of " + adore.getPathCount());
-        $("#nextPathButton").prop("disabled", false);
     });
 
     // We set up a new pair of buttons to invoke the file select dialog

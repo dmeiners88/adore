@@ -150,8 +150,9 @@ var adore = function () {
         return jsonData.paths[index].id;
     }
 
-    // Switches to the previous path.
-    function switchToPreviousPath() {
+    // Switches to the previous path. Expects a callback function that is executed
+    // when the path fade-out and fade-in animations have finished.
+    function switchToPreviousPath(callback) {
         var currentPathID,
             previousIndex,
             previousPathID;
@@ -163,7 +164,7 @@ var adore = function () {
 
             if (currentPathID != previousPathID) {
                 $("#" + currentPathID).fadeOut("slow", function () {
-                    $("#" + previousPathID).fadeIn("slow");
+                    $("#" + previousPathID).fadeIn("slow", callback);
                     jsPlumb.repaintEverything();
                 });
 
@@ -172,21 +173,21 @@ var adore = function () {
         }
     }
 
-    // Switches to the next path.
-    function switchToNextPath() {
+    // Switches to the next path. Analogous to `switchToPreviousPath`
+    function switchToNextPath(callback) {
         var currentPathID,
             nextIndex,
             nextPathID;
 
         if (activePathIndex > -1) {
-            console.log("here");
+            console.log("activePathIndex = " + activePathIndex);
             currentPathID = getPathIdByIndex(activePathIndex);
             nextIndex = getNextPathIndex();
             nextPathID = getPathIdByIndex(nextIndex);
 
             if (currentPathID != nextPathID) {
                 $("#" + currentPathID).fadeOut("slow", function () {
-                    $("#" + nextPathID).fadeIn("slow");
+                    $("#" + nextPathID).fadeIn("slow", callback);
                     jsPlumb.repaintEverything();
                 });
 
@@ -225,7 +226,9 @@ var adore = function () {
         }
 
         // We are finished. We store the current path index.
-        activePathIndex = 0;
+        if (pathCount > 0) {
+            activePathIndex = 0;
+        }
     }
 
     // Sets a new config object for ADORE. Missing properties retain their default values.

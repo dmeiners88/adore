@@ -15,13 +15,17 @@ module("Empty JSON data set is processed correctly.", {
         adore.setJsonData(emptyJson);
 
         equal(adore.getPathCount(), 0,
-            "after setJsonData() pathCount hat correct value of 0.");
+            "after setJsonData() pathCount has correct value of 0.");
         equal(adore.getActivePathIndex(), -1,
             "and activePathIndex has correct value of -1.");
 
         adore.drawFromJson();
         equal($fixture.children().length, 0,
             "after drawFromJson() no paths are appended to the drawing area.")
+        equal(adore.getPathCount(), 0,
+            "and pathCount has correct value of 0.");
+        equal(adore.getActivePathIndex(), -1,
+            "and activePathIndex has correct value of -1");
     },
     teardown: function () {
         var $fixture = $("#qunit-fixture");
@@ -35,10 +39,10 @@ module("Empty JSON data set is processed correctly.", {
     }
 });
 
-test("Paths are created correctly.", 9, function () {
+test("Paths are created correctly.", 11, function () {
 });
 
-test("Path switching works correctly (internal state is updated correctly).", 9+2, function () {
+test("Path switching works correctly (internal state is updated correctly).", 11+2, function () {
     adore.switchToNextPath();
     equal(adore.getActivePathIndex(), -1,
         "after switchToNextPath() activePathIndex retains correct value of -1.");
@@ -97,6 +101,8 @@ module("Complex JSON data set is processed correctly.", {
         adore.drawFromJson();
         equal(adore.getActivePathIndex(), 0,
             "after drawfromJson() activePathIndex has correct value of 0.");
+        equal(adore.getPathCount(), 3,
+            "and pathCount has correct value of 3.");
         equal($fixture.children(".path").length, 3,
             "and 3 paths div's have been appended to the drawing area.");
     },
@@ -112,7 +118,7 @@ module("Complex JSON data set is processed correctly.", {
     }
 });
 
-test("Paths are created correctly.", 10+6, function () {
+test("Paths, nodes and edges are created correctly.", 11+6, function () {
 
     equal($("#path1").children(".node").length, 4,
         "first path has 4 nodes.");
@@ -133,7 +139,7 @@ test("Paths are created correctly.", 10+6, function () {
         "and 2 edges.");
 });
 
-test("Path switching works correctly (internal state is updated correctly).", 10+6, function () {
+test("Path switching updates internal state correctly.", 11+6, function () {
     adore.switchToNextPath();
     equal(adore.getActivePathIndex(), 1,
         "after switchToNextPath() activePathIndex has correct value of 1.");
@@ -159,13 +165,32 @@ test("Path switching works correctly (internal state is updated correctly).", 10
         "after switchToPreviousPath() activePathIndex retains correct value of 0 (minimum path index was hit).");
 });
 
-test("Path switching  works correctly (visibility of paths on screen is changed correctly).", 10+6, function () {
+test("Path switching  updated visibility of paths on screen correctly.", 11+15, function () {
+    // We disable all jQuery animations as they interfer with the test runner.
+    $.fx.off = true;
+
     ok($("#path1").is(":visible"), "and the first path is visible.");
     ok($("#path2").is(":hidden"), "and the second path is hidden.");
     ok($("#path3").is(":hidden"), "and the third path is hidden.");
 
     adore.switchToNextPath();
     ok($("#path1").is(":hidden"), "after switchToNextPath() the first path is hidden.");
+    ok($("#path2").is(":visible"), "and the second path is visible.");
+    ok($("#path3").is(":hidden"), "and the third path is hidden.");
+
+    adore.switchToNextPath();
+    ok($("#path1").is(":hidden"), "after switchToNextPath() the first path is hidden.");
+    ok($("#path2").is(":hidden"), "and the second path is hidden.");
+    ok($("#path3").is(":visible"), "and the third path is visible.");
+
+    adore.switchToNextPath();
+    ok($("#path1").is(":hidden"),
+        "after switchToNextPath() the first path stays hidden (maximum path index was hit).");
+    ok($("#path2").is(":hidden"), "and the second path is hidden.");
+    ok($("#path3").is(":visible"), "and the third path is visible.");
+
+    adore.switchToPreviousPath();
+    ok($("#path1").is(":hidden"), "after switchToPreviousPath() the first path is hidden.");
     ok($("#path2").is(":visible"), "and the second path is visible.");
     ok($("#path3").is(":hidden"), "and the third path is hidden.");
 });
