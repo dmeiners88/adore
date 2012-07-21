@@ -39,10 +39,10 @@ module("Empty JSON data set is processed correctly.", {
     }
 });
 
-test("Paths are created correctly.", 11, function () {
+test("No paths are created.", 11, function () {
 });
 
-test("Path switching works correctly (internal state is updated correctly).", 11+2, function () {
+test("Path switching updates internal state correctly.", 11+2, function () {
     adore.switchToNextPath();
     equal(adore.getActivePathIndex(), -1,
         "after switchToNextPath() activePathIndex retains correct value of -1.");
@@ -165,7 +165,7 @@ test("Path switching updates internal state correctly.", 11+6, function () {
         "after switchToPreviousPath() activePathIndex retains correct value of 0 (minimum path index was hit).");
 });
 
-test("Path switching  updated visibility of paths on screen correctly.", 11+15, function () {
+test("Path switching  updates visibility of paths on screen correctly.", 11+15, function () {
     // We disable all jQuery animations as they interfer with the test runner.
     $.fx.off = true;
 

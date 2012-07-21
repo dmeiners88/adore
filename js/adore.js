@@ -169,6 +169,10 @@ var adore = function () {
                 });
 
                 activePathIndex = previousIndex;
+            } else {
+                if ($.isFunction(callback)) {
+                    callback();
+                }
             }
         }
     }
@@ -192,6 +196,10 @@ var adore = function () {
                 });
 
                 activePathIndex = nextIndex;
+            } else {
+                if ($.isFunction(callback)) {
+                    callback();
+                }
             }
         }
     }
