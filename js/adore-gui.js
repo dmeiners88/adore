@@ -31,6 +31,7 @@ $(function () {
                     adore.setJsonData(f.target.result);
                     adore.drawFromJson();
                     $("#jsonFileName").text(fileName);
+                    $("#pathIDSpan").text((adore.getActivePathIndex() + 1).toString() + " of " + adore.getPathCount());
                 }
 
                 // If a CSS skin file has been loaded, build a `<style>` tag that holds the

@@ -29,11 +29,7 @@ var adore = function () {
     jsPlumb.importDefaults({
         Anchor: "AutoDefault",
         Connector: [ "Straight" ],
-        Endpoints: [ "Blank", "Blank" ],
-        ConnectionOverlays: [
-            // BUG: Location of overlay is only partially effective. Text is displaced.
-            [ "Label", { location: 0.5 } ]
-        ]
+        Endpoints: [ "Blank", "Blank" ]
     });
 
     // If the window gets resized, jsPlump needs to repaint all the SVG edges.
