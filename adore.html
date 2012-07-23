@@ -28,16 +28,15 @@
             <div>
                 <form id="fileInputForm">
                     <div>
-                        <label for="skinFile">CSS Skin File:</label>
-                        <span id="skinFileName"></span>
-                        <input type="file" id="skinFile">
-                        <button id="skinFileBrowseButton" type="button">Browse...</button>
+                        <label for="scenario">Demo Scenario:</label>
+                        <select id="scenario">
+                            <option value=""></option>
+                            <option value="academic-instance.json">Academic Research Network</option>
+                            <option value="metal-instance.json">Genealogy of Metal Genres</option>
+                        </select>
                     </div>
                     <div>
-                        <label for="jsonFile">JSON Data File:</label>
-                        <span id="jsonFileName"></span>
-                        <input type="file" id="jsonFile">
-                        <button id="jsonFileBrowseButton" type="button">Browse...</button>
+                        <button id="activateStyleButton">Activate Style</button>
                     </div>
                 </form>
             </div>
