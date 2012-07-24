@@ -56,7 +56,8 @@ var adore = function () {
             target: pathID + "-" + edge.to.id,
             cssClass: edge["class"],
             overlays: [
-                [ "Label", { label: edge["class"], cssClass: edge["class"] } ]
+                [ "Label", { label: edge["class"], cssClass: edge["class"] + " label" } ],
+                [ "Label", { label: "", cssClass: edge["class"] + " icon" } ]
             ]
         });
     }

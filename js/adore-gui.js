@@ -42,6 +42,19 @@ $(function () {
                 // We also update the label indicating the CSS file name.
                 $("#skinFileName").text(fileName);
             });
+        } else if (fileName == "social-instance.json") {
+            $.ajax("skins/social/social.css").done(function (data) {
+                var styleNode = $("<style />")
+                .attr("type", "text/css")
+                .attr("id", "domain-specific-style")
+                .text(data);
+                $("head").append(styleNode);
+                // A repaint is needed because the appliance of the CSS file may have changed
+                // the size and position of the nodes.
+                adore.repaint();
+                // We also update the label indicating the CSS file name.
+                $("#skinFileName").text(fileName);
+            });
         }
     }
 
@@ -54,21 +67,12 @@ $(function () {
         $("#domain-specific-style").remove();
         $("#activateStyleButton").get(0).disabled = false;
 
-        if (fileName == "academic-instance.json") {
-            $.ajax("json-instances/academic-instance.json").done(function (data) {
-                adore.setJsonData(data);
-                adore.drawFromJson();
-                $("#jsonFileName").text(fileName);
-                $("#pathIDSpan").text((adore.getActivePathIndex() + 1).toString() + " of " + adore.getPathCount());
-            });
-        } else if (fileName == "metal-instance.json") {
-            $.ajax("json-instances/" + fileName).done(function (data) {
-                adore.setJsonData(data);
-                adore.drawFromJson();
-                $("#jsonFileName").text(fileName);
-                $("#pathIDSpan").text((adore.getActivePathIndex() + 1).toString() + " of " + adore.getPathCount());
-            });
-        }
+        $.ajax("json-instances/" + fileName).done(function (data) {
+            adore.setJsonData(data);
+            adore.drawFromJson();
+            $("#jsonFileName").text(fileName);
+            $("#pathIDSpan").text((adore.getActivePathIndex() + 1).toString() + " of " + adore.getPathCount());
+        });
     }
 
     adore.setConfig(config);
@@ -80,8 +84,10 @@ $(function () {
     var previousPathButton = $("#previousPathButton");
     previousPathButton.click(function () {
         previousPathButton.attr("disabled", "disabled");
+        nextPathButton.attr("disabled", "disabled");
         adore.switchToPreviousPath(function () {
             previousPathButton.removeAttr("disabled");
+            nextPathButton.removeAttr("disabled");
         });
         pathIDSpan.text((adore.getActivePathIndex() + 1).toString() + " of " + adore.getPathCount());
     });
@@ -90,8 +96,10 @@ $(function () {
     var nextPathButton = $("#nextPathButton");
     nextPathButton.click(function () {
         nextPathButton.attr("disabled", "disabled");
+        previousPathButton.attr("disabled", "disabled");
         adore.switchToNextPath(function () {
             nextPathButton.removeAttr("disabled");
+            previousPathButton.removeAttr("disabled");
         });
         pathIDSpan.text((adore.getActivePathIndex() + 1).toString() + " of " + adore.getPathCount());
     });
