@@ -67,8 +67,10 @@ $(function () {
     var previousPathButton = $("#previousPathButton");
     previousPathButton.click(function () {
         previousPathButton.attr("disabled", "disabled");
+        nextPathButton.attr("disabled", "disabled");
         adore.switchToPreviousPath(function () {
             previousPathButton.removeAttr("disabled");
+            nextPathButton.removeAttr("disabled");
         });
         pathIDSpan.text((adore.getActivePathIndex() + 1).toString() + " of " + adore.getPathCount());
     });
@@ -77,8 +79,10 @@ $(function () {
     var nextPathButton = $("#nextPathButton");
     nextPathButton.click(function () {
         nextPathButton.attr("disabled", "disabled");
+        previousPathButton.attr("disabled", "disabled");
         adore.switchToNextPath(function () {
             nextPathButton.removeAttr("disabled");
+            previousPathButton.removeAttr("disabled");
         });
         pathIDSpan.text((adore.getActivePathIndex() + 1).toString() + " of " + adore.getPathCount());
     });
