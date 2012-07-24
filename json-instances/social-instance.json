@@ -1,0 +1,27 @@
+{
+    "nodes":
+    [
+        { "id": "person1", "label": "Person 1",  "class": "person male" },
+        { "id": "person2", "label": "Person 2", "class": "person female" },
+        { "id": "person3", "label": "Person 3", "class": "person male" },
+        { "id": "movieA", "label": "Movie A", "class": "movie" },
+        { "id": "bandB", "label": "Music Band B", "class": "musicBand" }
+    ],
+    "edges":
+    [
+        { "id": "person1-person2", "from": { "$ref": "person1" }, "to": { "$ref": "person2" }, "class": "friendship" },
+        { "id": "person1-movieA", "from": { "$ref": "person1" }, "to": { "$ref": "movieA" }, "class": "likes" },
+        { "id": "movieA-person2", "from": { "$ref": "movieA" }, "to": { "$ref": "person2" }, "class": "is-liked-by" },
+        { "id": "person1-bandB", "from": { "$ref": "person1" }, "to": { "$ref": "bandB" }, "class": "likes" },
+        { "id": "bandB-person2", "from": { "$ref": "bandB" }, "to": { "$ref": "person2" }, "class": "is-liked-by" },
+        { "id": "person1-person3", "from": { "$ref": "person1" }, "to": { "$ref": "person3" }, "class": "friendship" },
+        { "id": "person3-person2", "from": { "$ref": "person3" }, "to": { "$ref": "person2" }, "class": "friendship" }
+    ],
+    "paths":
+    [
+        { "id": "path1", "edges": [ { "$ref": "person1-person2" } ] },
+        { "id": "path2", "edges": [ { "$ref": "person1-movieA" }, { "$ref": "movieA-person2" } ] },
+        { "id": "path3", "edges": [ { "$ref": "person1-bandB" }, { "$ref": "bandB-person2" }] },
+        { "id": "path4", "edges": [ { "$ref": "person1-person3" }, { "$ref": "person3-person2" }] }
+    ]
+}
