@@ -13,6 +13,9 @@
     border-radius: 0em 0em 0em 0em;
 }
 
+
+/* Node styles */
+
 .node.primary {
     width: 200px;
     height: 200px;
@@ -52,76 +55,50 @@
     padding-top: 140px;
 }
 
-/* Node styles */
-
-.node.primary.heavy {
-    background-image: url('skins/metal/heavy-node.png');
+.node {
     background-repeat: no-repeat;
     background-position: center;
     background-size: contain;
+}
+
+.node.primary.heavy {
+    background-image: url('skins/metal/heavy-node.png');
 }
 
 .node.metal.nwobhm {
     background-image: url('skins/metal/nwobhm-node.png');
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: contain;
 }
 
 .node.primary.speed {
     background-image: url('skins/metal/speed-node.png');
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: contain;
 }
 
 .node.primary.thrash {
     background-image: url('skins/metal/thrash-node.png');
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: contain;
 }
 
 .node.primary.deathmetal {
     background-image: url('skins/metal/death-node.png');
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: contain;
 }
 
 .node.metal.brutaldeath {
     background-image: url('skins/metal/brutaldeath-node.png');
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: contain;
 }
 
 .node.related.punkrock {
     background-image: url('skins/metal/punkrock-node.png');
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: contain;
 }
 
 .node.related.hardcorepunk {
     background-image: url('skins/metal/hardcorepunk-node.png');
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: contain;
 }
 
 .node.fusion.progressive {
     background-image: url('skins/metal/progressive-node.png');
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: contain;
 }
 
 .node.fusion.neoclassical {
     background-image: url('skins/metal/neoclassical-node.png');
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: contain;
 }
 
 /* Edge styles */
