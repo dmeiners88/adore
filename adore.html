@@ -7,11 +7,28 @@
         <link href="css/normalize.css" type="text/css" rel="stylesheet">
         <link href="css/adore.less" type="text/css" rel="stylesheet/less">
 
+        <!-- jQuery / jQueryUI -->
         <script src="js/jquery.js" type="text/javascript"></script>
         <script src="js/jquery-ui.js" type="text/javascript"></script>
+
+        <!-- jsPlumb -->
         <script src="js/jsPlumb.js" type="text/javascript"></script>
+
+        <!-- JSON Referencing capable parser from DojoToolkit -->
         <script src="js/json.ref.js" type="text/javascript"></script>
+
+        <!-- JSV JSON Schema Validator -->
+        <script src="js/JSV/lib/uri/uri.js"></script>
+        <script src="js/JSV/lib/uri/schemes/urn.js"></script>
+        <script src="js/JSV/lib/jsv.js"></script>
+        <script src="js/JSV/lib/json-schema-draft-01.js"></script>
+        <script src="js/JSV/lib/json-schema-draft-02.js"></script>
+        <script src="js/JSV/lib/json-schema-draft-03.js"></script>
+
+        <!-- LESS CSS -->
         <script src="js/less.js" type="text/javascript"></script>
+
+        <!-- ADORE specific scripts -->
         <script src="js/adore.js" type="text/javascript"></script>
         <script src="js/adore-gui.js" type="text/javascript"></script>
     </head>
@@ -45,6 +62,11 @@
 
         <!-- Drawing area -->
         <div id="drawingArea">
+        </div>
+
+        <!-- JSON Schema validation result panel -->
+        <div id="reportBox" class="common-box">
+            <h2>There were errors validating the JSON data set...</h2>
         </div>
 
         <!-- Path navigator box -->

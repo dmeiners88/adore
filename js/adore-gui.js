@@ -13,6 +13,23 @@ $(function () {
         drawingArea: $("#drawingArea"),
     };
 
+    // This function receives the JSON schema validation report and displays it.
+    function validationCallback(report) {
+        var reportBox = $("#reportBox"),
+            errorList = $("<ul/>");
+
+        if (report.errors.length > 0) {
+            for (var i = 0; i < report.errors.length; i += 1) {
+                var currError = report.errors[i];
+
+                errorList.append($("<li/>").text(currError.message + " – " + currError.uri));
+            }
+
+            reportBox.append(errorList);
+            reportBox.dialog( { modal: true, width: 500 } );
+        }
+    }
+
     // We handle the file upload of the JSON data set and the CSS skin file
     // in the same function.
     function handleFileUpload(evt) {
@@ -29,9 +46,12 @@ $(function () {
                 // draw the contents of the file and update the label indicating the file name.
                 if (sourceControl == "jsonFile") {
                     adore.setJsonData(f.target.result);
-                    adore.drawFromJson();
+                    adore.drawFromJson(validationCallback);
                     $("#jsonFileName").text(fileName);
                     $("#pathIDSpan").text((adore.getActivePathIndex() + 1).toString() + " of " + adore.getPathCount());
+
+                    // We show the path navigator
+                    $("#pathNavigator").show();
                 }
 
                 // If a CSS skin file has been loaded, build a `<style>` tag that holds the
