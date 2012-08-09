@@ -4,7 +4,7 @@
 // into your user interface (in this case `adore.html`). That way we keep logic,
 // presentation and the glue in between separate.
 
-$(function () {
+define(["jquery", "adore", "less"], function ($, adore, less) {
     "use strict";
     // This is the ADORE configuration object that binds the ADORE backend functionality
     // to the presentation.

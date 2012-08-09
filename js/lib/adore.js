@@ -4,7 +4,7 @@
 // ADORE is using the Revealing Module Pattern as described at
 // [Learning JavaScript Design Patterns](http://addyosmani.com/resources/essentialjsdesignpatterns/book/#revealingmodulepatternjavascript)
 
-var adore = function () {
+define(["jquery", "jsPlumb", "json.ref"], function ($, jsPlumb) {
     // We use strict mode to prevent bad programming habits and to fix some JavaScript
     // quirks.
     "use strict";
@@ -245,7 +245,7 @@ var adore = function () {
     // This function draws all paths from the JSON dataset.
     function drawFromJson(validationCallback) {
         // First we validate the JSON instance against our JSON schema.
-        validateJsonData(validationCallback);
+        //validateJsonData(validationCallback);
 
         // We iterate through all paths, create a new path `div` and append it to the drawing area.
         for (var i = 0; i < pathCount; i += 1) {
@@ -331,4 +331,4 @@ var adore = function () {
         getActivePathIndex: getActivePathIndex,
         getPathCount: getPathCount
     };
-}();
+});
