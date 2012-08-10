@@ -14,4 +14,6 @@ requirejs.config({
     }
 });
 
-requirejs(['adore-gui'], function () {});
+requirejs(['adore-gui'], function (adoreGui) {
+    adoreGui.setup();
+});
