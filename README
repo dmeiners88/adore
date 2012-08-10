@@ -1,5 +1,7 @@
 Quickstart manual:
 
-1) Open adore.html in your browser.
+0) Start mongoose.exe
+1) Open http://localhost:8080/adore.html in your browser.
 2) Load a JSON data set from the json-instances folder, e.g. json-instances\social-instance.json
 3) Load a CSS skin file from the skins folder, e.g. skins\social\social.css
+4) Unit-Tests are at http://localhost:8080/tests/tests.html
