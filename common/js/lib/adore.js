@@ -4,9 +4,16 @@
 // ADORE is using the Revealing Module Pattern as described at
 // [Learning JavaScript Design Patterns](http://addyosmani.com/resources/essentialjsdesignpatterns/book/#revealingmodulepatternjavascript)
 
-define(["jquery", "jsPlumb", "schema", "json.ref"], function ($, jsPlumb, jsonSchema) {
-    // We use strict mode to prevent bad programming habits and to fix some JavaScript
-    // quirks.
+(function (root, factory) {
+    if (typeof define === "function" && define.amd) {
+        // We are in an AMD-compliant environment. We register ADORE as an
+        // anonymous AMD module.
+        define(["jquery", "jsPlumb", "schema", "json.ref"], factory);
+    } else {
+        // No AMD-compliant evironment :-( Registering ADORE as a browser global.
+        root.adore = factory(root.$, root.jsPlumb);
+    }
+}(this, function ($, jsPlumb, jsonSchema) {
     "use strict";
 
     // Private state variables
@@ -210,13 +217,10 @@ define(["jquery", "jsPlumb", "schema", "json.ref"], function ($, jsPlumb, jsonSc
         var environmentId = "json-schema-draft-03",
             jsonUri = "JsonInstance",
             schemaUri = "JsonSchema";
-
-        // If the JSON schema has not been loaded yet, we load it with an AJAX request
-        // TODO: Test seems not to work at the moment.
-        if (!jsonSchema.hasOwnProperty("properties")) {
-        } else {
-
-           console.dir(jsonSchema);
+        if (!jsonSchema) {
+            // JSON Schema is not set, must be Non-AMD environment.
+            // Retrieve JSON Schema from browser global.
+            jsonSchema = adore.schema;
         }
     }
 
@@ -309,4 +313,4 @@ define(["jquery", "jsPlumb", "schema", "json.ref"], function ($, jsPlumb, jsonSc
         getActivePathIndex: getActivePathIndex,
         getPathCount: getPathCount
     };
-});
+}));

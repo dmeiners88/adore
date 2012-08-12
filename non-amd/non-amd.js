@@ -1,10 +1,10 @@
 /*jshint browser:true,devel:true,jquery:true,strict:true */
 
-// This is `standalone.js`. This file integrates the logic from `adore.js`
-// into your user interface (in this case `standalone.html`). That way we keep logic,
+// This is `non-amd.js`. This file integrates the logic from `adore.js`
+// into your user interface (in this case `non-amd.html`). That way we keep logic,
 // presentation and the glue in between separate.
 
-define(["jquery", "adore", "less"], function ($, adore, less) {
+$(function () {
     "use strict";
     // This is the ADORE configuration object that binds the ADORE backend functionality
     // to the presentation.
@@ -79,54 +79,42 @@ define(["jquery", "adore", "less"], function ($, adore, less) {
     }
 
     function init() {
-        $(function () {
-
-            adore.setConfig(config);
-
-            var pathIDSpan = $("#pathIDSpan");
-
-            // We setup a button that enables the user to switch to the previous path.
-
-            var previousPathButton = $("#previousPathButton");
-            previousPathButton.click(function () {
-                previousPathButton.attr("disabled", "disabled");
-                nextPathButton.attr("disabled", "disabled");
-                adore.switchToPreviousPath(function () {
-                    previousPathButton.removeAttr("disabled");
-                    nextPathButton.removeAttr("disabled");
-                });
-                pathIDSpan.text((adore.getActivePathIndex() + 1).toString() + " of " + adore.getPathCount());
+        adore.setConfig(config);
+        var pathIDSpan = $("#pathIDSpan");
+        // We setup a button that enables the user to switch to the previous path.
+        var previousPathButton = $("#previousPathButton");
+        previousPathButton.click(function () {
+            previousPathButton.attr("disabled", "disabled");
+            nextPathButton.attr("disabled", "disabled");
+            adore.switchToPreviousPath(function () {
+                previousPathButton.removeAttr("disabled");
+                nextPathButton.removeAttr("disabled");
             });
-
-            // The same to navigate to the next path.
-            var nextPathButton = $("#nextPathButton");
-            nextPathButton.click(function () {
-                nextPathButton.attr("disabled", "disabled");
-                previousPathButton.attr("disabled", "disabled");
-                adore.switchToNextPath(function () {
-                    nextPathButton.removeAttr("disabled");
-                    previousPathButton.removeAttr("disabled");
-                });
-                pathIDSpan.text((adore.getActivePathIndex() + 1).toString() + " of " + adore.getPathCount());
-            });
-
-            // We set up a new pair of buttons to invoke the file select dialog
-            // boxes. The original, ugly buttons have been hidden via CSS.
-            var skinFileInput = $("#skinFile"),
-                jsonFileInput = $("#jsonFile");
-
-            // The ugly, hidden buttons are bound to their corresponding functions.
-            skinFileInput.get(0).onchange = handleFileUpload;
-            jsonFileInput.get(0).onchange = handleFileUpload;
-
-            // The new, cool buttons fire the click event of the hidden buttons, if they themselves
-            // are clicked.
-            $("#skinFileBrowseButton").get(0).onclick = function () { skinFileInput.click(); };
-            $("#jsonFileBrowseButton").get(0).onclick = function () { jsonFileInput.click(); };
+            pathIDSpan.text((adore.getActivePathIndex() + 1).toString() + " of " + adore.getPathCount());
         });
+        // The same to navigate to the next path.
+        var nextPathButton = $("#nextPathButton");
+        nextPathButton.click(function () {
+            nextPathButton.attr("disabled", "disabled");
+            previousPathButton.attr("disabled", "disabled");
+            adore.switchToNextPath(function () {
+                nextPathButton.removeAttr("disabled");
+                previousPathButton.removeAttr("disabled");
+            });
+            pathIDSpan.text((adore.getActivePathIndex() + 1).toString() + " of " + adore.getPathCount());
+        });
+        // We set up a new pair of buttons to invoke the file select dialog
+        // boxes. The original, ugly buttons have been hidden via CSS.
+        var skinFileInput = $("#skinFile"),
+            jsonFileInput = $("#jsonFile");
+        // The ugly, hidden buttons are bound to their corresponding functions.
+        skinFileInput.get(0).onchange = handleFileUpload;
+        jsonFileInput.get(0).onchange = handleFileUpload;
+        // The new, cool buttons fire the click event of the hidden buttons, if they themselves
+        // are clicked.
+        $("#skinFileBrowseButton").get(0).onclick = function () { skinFileInput.click(); };
+        $("#jsonFileBrowseButton").get(0).onclick = function () { jsonFileInput.click(); };
     };
 
-    return {
-        init: init
-    };
+    init();
 });

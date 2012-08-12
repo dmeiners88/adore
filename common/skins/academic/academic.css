@@ -21,15 +21,15 @@
 /* Node styles */
 
 .author {
-    background-image: url('skins/academic/author-node.png');
+    background-image: url('../common/skins/academic/author-node.png');
 }
 
 .paper {
-    background-image: url('skins/academic/paper-node.png');
+    background-image: url('../common/skins/academic/paper-node.png');
 }
 
 .conference {
-    background-image: url('skins/academic/conference-node.png');
+    background-image: url('../common/skins/academic/conference-node.png');
 }
 
 /* Edge styles */
@@ -65,13 +65,13 @@
 }
 
 ._jsPlumb_overlay.wrote.icon {
-    background-image: url('skins/academic/wrote-edge.png');
+    background-image: url('../common/skins/academic/wrote-edge.png');
 }
 
 ._jsPlumb_overlay.cites.icon {
-    background-image: url('skins/academic/cites-edge.png');
+    background-image: url('../common/skins/academic/cites-edge.png');
 }
 
 ._jsPlumb_overlay.presented-at.icon {
-    background-image: url('skins/academic/presented-at-edge.png');
+    background-image: url('../common/skins/academic/presented-at-edge.png');
 }

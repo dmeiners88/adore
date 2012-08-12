@@ -1,7 +1,15 @@
 // Although this is a JSON schema, it is notated like an AMD-compliant module.
 // This way it can be loaded easily with require.js
 
-define ({
+(function (root, factory) {
+    if (typeof define === "function" && define.amd) {
+        define(factory);
+    } else {
+        // Non-AMD. Store JSON Schema as browser global.
+        root.adore = root.adore || {};
+        root.adore.schema = factory;
+    }
+}(this, {
     "name": "data",
     "properties":
     {
@@ -126,4 +134,4 @@ define ({
             }
         }
     }
-});
+}));

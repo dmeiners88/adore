@@ -21,19 +21,19 @@
 /* Node styles */
 
 .male {
-    background-image: url('skins/social/male-node.png');
+    background-image: url('../common/skins/social/male-node.png');
 }
 
 .female {
-    background-image: url('skins/social/female-node.png');
+    background-image: url('../common/skins/social/female-node.png');
 }
 
 .movie {
-    background-image: url('skins/social/movie-node.png');
+    background-image: url('../common/skins/social/movie-node.png');
 }
 
 .musicBand {
-    background-image: url('skins/social/musicBand-node.png');
+    background-image: url('../common/skins/social/musicBand-node.png');
 }
 
 /* Edge styles */
@@ -59,15 +59,15 @@
 }
 
 ._jsPlumb_overlay.friendship.icon {
-    background-image: url('skins/social/friendship-edge.png');
+    background-image: url('../common/skins/social/friendship-edge.png');
 }
 
 ._jsPlumb_overlay.likes.icon {
-    background-image: url('skins/social/is-liked-by-edge.png');
+    background-image: url('../common/skins/social/is-liked-by-edge.png');
     transform: scale(-1,1);
     -moz-transform: scale(-1,1);
 }
 
 ._jsPlumb_overlay.is-liked-by.icon {
-    background-image: url('skins/social/is-liked-by-edge.png');
+    background-image: url('../common/skins/social/is-liked-by-edge.png');
 }
