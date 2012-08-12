@@ -13,7 +13,7 @@ requirejs.config({
     // For your client-specific JavaScript code, adjust this path. This path is
     // relative to baseUrl (above).
     paths: {
-        qunit: "../../../tests/qunit"
+        standalone: "../../../standalone"
     },
 
     // Non-AMD-compliant JavaScript dependencies are configured here. Do not touch.
@@ -27,4 +27,8 @@ requirejs.config({
     }
 });
 
-requirejs(["qunit/qunit", "qunit/tests"], function () { });
+// This requires your client-specific JavaScript module. Bootstrapping code
+// is therefore in standalone.js.
+require(["standalone/standalone"], function (standalone) {
+    standalone.init();
+});

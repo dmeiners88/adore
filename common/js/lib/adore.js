@@ -4,7 +4,7 @@
 // ADORE is using the Revealing Module Pattern as described at
 // [Learning JavaScript Design Patterns](http://addyosmani.com/resources/essentialjsdesignpatterns/book/#revealingmodulepatternjavascript)
 
-define(["jquery", "jsPlumb", "json.ref"], function ($, jsPlumb) {
+define(["jquery", "jsPlumb", "schema", "json.ref"], function ($, jsPlumb, jsonSchema) {
     // We use strict mode to prevent bad programming habits and to fix some JavaScript
     // quirks.
     "use strict";
@@ -26,7 +26,7 @@ define(["jquery", "jsPlumb", "json.ref"], function ($, jsPlumb) {
     var jsonData = {};
 
     // The JSON schema
-    var jsonSchema = {};
+    var jsonSchema = jsonSchema;
 
     // We set some default settings for our jsPlumb instance.
     jsPlumb.importDefaults({
@@ -214,38 +214,16 @@ define(["jquery", "jsPlumb", "json.ref"], function ($, jsPlumb) {
         // If the JSON schema has not been loaded yet, we load it with an AJAX request
         // TODO: Test seems not to work at the moment.
         if (!jsonSchema.hasOwnProperty("properties")) {
-            $.ajax({
-                success: function (data, textStatus, jqXHR) {
-                    jsonSchema = data;
-                    console.log("adore: scuccessfully loaded JSON schema via AJAX.");
+        } else {
 
-                    var environment = JSV.createEnvironment(environmentId);
-                    var jsonInstance = environment.createInstance(jsonData, jsonUri);
-                    var jsonSchemaInstance = environment.createSchema(jsonSchema, null, schemaUri);
-
-                    var report = environment.validate(jsonInstance, jsonSchemaInstance);
-
-                    if ($.isFunction(validationCallback)) {
-                        validationCallback(report);
-                    }
-
-                    return report.errors.length;
-                },
-                dataType: "json",
-                error: function (jqXHR, textStatus, errorThrown) {
-                    console.error("adore: error loading JSON schema via AJAX. Status was: " + textStatus
-                        + ". Error was: " + errorThrown + ".");
-                },
-                // TODO: BAD! Hard-coded path!
-                url: "http://localhost:8080/json-schema/schema.json"
-            });
+           console.dir(jsonSchema);
         }
     }
 
     // This function draws all paths from the JSON dataset.
     function drawFromJson(validationCallback) {
         // First we validate the JSON instance against our JSON schema.
-        //validateJsonData(validationCallback);
+        validateJsonData(validationCallback);
 
         // We iterate through all paths, create a new path `div` and append it to the drawing area.
         for (var i = 0; i < pathCount; i += 1) {

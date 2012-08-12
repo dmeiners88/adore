@@ -1,4 +1,7 @@
-{
+// Although this is a JSON schema, it is notated like an AMD-compliant module.
+// This way it can be loaded easily with require.js
+
+define ({
     "name": "data",
     "properties":
     {
@@ -123,4 +126,4 @@
             }
         }
     }
-}
+});
