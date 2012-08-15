@@ -45,6 +45,8 @@ $(function () {
                 // If a JSON file has been loaded, pass the JSON data set to ADORE,
                 // draw the contents of the file and update the label indicating the file name.
                 if (sourceControl == "jsonFile") {
+                    $("#domain-specific-style").remove();
+
                     adore.setJsonData(f.target.result);
                     adore.drawFromJson(validationCallback);
                     $("#jsonFileName").text(fileName);
@@ -57,11 +59,15 @@ $(function () {
                 // If a CSS skin file has been loaded, build a `<style>` tag that holds the
                 // contents of the CSS file and append it to the `<head>` tag of the document.
                 if (sourceControl == "skinFile") {
+                    $("#domain-specific-style").remove();
+
                     var styleNode = $("<style />")
-                        .attr("type", "text/css")
+                        .attr("type", "text/less")
                         .attr("id", "domain-specific-style")
                         .text(f.target.result);
                     $("head").append(styleNode);
+
+                    less.refresh();
 
                     // A repaint is needed because the appliance of the CSS file may have changed
                     // the size and position of the nodes.
