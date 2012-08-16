@@ -157,6 +157,33 @@
         return jsonData.paths[index].id;
     }
 
+    // This is a helper function for switchToMultiPathView, that merges the source and target nodes,
+    // that are common to all paths. To achieve this impression, we hide all source and target nodes
+    // but the ones on the "middle" path. Than we replace the relevant edges.
+    function mergeSourceAndTargetNodes() {
+        var middleIndex = pathCount % 2;
+        config.drawingArea.children
+    }
+
+    // Switches to multi path view. Does not change the internal state variable `activePathIndex`, so
+    // we can easily switch back to single path view if we need to.
+    function switchToMultiPathView() {
+        // As the drawing area `div` has only path `div`s as direct descendants, we simply need
+        // to display the immediate children.
+
+        config.drawingArea.children().fadeIn("500");
+        jsPlumb.repaintEverything();
+    }
+
+    // Switches back to single path view.
+    function switchToSinglePathView() {
+        config.drawingArea.children().filter(function (index) {
+                return (index != activePathIndex);
+        }).fadeOut("500", function () {
+            jsPlumb.repaintEverything();
+        });
+    }
+
     // Switches to the previous path. Expects a callback function that is executed
     // when the path fade-out and fade-in animations have finished.
     function switchToPreviousPath(callback) {
@@ -311,6 +338,8 @@
         reset: reset,
         repaint: repaint,
         getActivePathIndex: getActivePathIndex,
-        getPathCount: getPathCount
+        getPathCount: getPathCount,
+        switchToMultiPathView: switchToMultiPathView,
+        switchToSinglePathView: switchToSinglePathView
     };
 }));
