@@ -31,18 +31,29 @@
         //
         // and the ID of the path the two nodes are on.
         function drawEdge(edge, pathID) {
-            console.log("adore: drawing edge from " + pathID + "-" + edge.from.id + " to " +
-                pathID + "-" + edge.to.id);
+            var src, dest, common = {};
+
+            if (pathID.hasOwnProperty("src")) {
+                src = pathID.src;
+                dest = pathID.dest;
+                common = { connector: [ "Bezier", { curviness: 250 } ] };
+            } else {
+                src = pathID;
+                dest = pathID;
+            }
+
+            console.log("adore: drawing edge from " + src + "-" + edge.from.id + " to " +
+                    dest + "-" + edge.to.id);
 
             jsPlumb.connect({
-                source: pathID + "-" + edge.from.id,
-                target: pathID + "-" + edge.to.id,
+                source: src + "-" + edge.from.id,
+                target: dest + "-" + edge.to.id,
                 cssClass: edge["class"],
                 overlays: [
                     [ "Label", { label: edge["class"], cssClass: edge["class"] + " label" } ],
                     [ "Label", { label: "", cssClass: edge["class"] + " icon" } ]
                 ]
-            });
+            }, common);
         }
 
         // This function creates and returns a `<div>` for a single source or target node.
@@ -94,6 +105,48 @@
             pathDiv.append(makeNodeDiv(path.edges[path.edges.length - 1].to, path.id));
 
             return pathDiv;
+        }
+
+        // This is a helper function for switchToMultiPathView, that merges the source and target nodes,
+        // that are common to all paths. To achieve this impression, we hide all source and target nodes
+        // but the ones on the "middle" path. Than we replace the relevant edges.
+        function mergeSourceAndTargetNodes() {
+            var state = adore.state,
+                config = adore.config,
+                middleIndex,
+                middlePathId;
+
+            if (!state.jsonData.hasOwnProperty("paths")) {
+                // No JSON Data set - nothing to do.
+            } else {
+                middleIndex = Math.ceil(state.pathCount / 2) - 1;
+                middlePathId = adore.getPathIdByIndex(middleIndex);
+
+                config.drawingArea.children().filter(function (index) {
+                    return (index != middleIndex);
+                }).each(function () {
+                    $(this).children("div.node:first").css("visibility", "hidden");
+                    $(this).children("div.node:last").css("visibility", "hidden");
+                });
+
+                // We destroy all connections.
+                jsPlumb.reset();
+
+                // Now we iterate thorugh all edged in the dataset an connect the edges accordingly.
+                for (var j = 0; j < state.pathCount; j += 1) {
+                    var currPath = state.jsonData.paths[j],
+                        edgeCount = currPath.edges.length;
+                    for (var k = 0; k < edgeCount; k += 1) {
+                        if (k == 0) {
+                            drawEdge(currPath.edges[k], { src: middlePathId, dest: currPath.id });
+                        } else if (k == edgeCount - 1) {
+                            drawEdge(currPath.edges[k], { src: currPath.id, dest: middlePathId });
+                        } else {
+                            drawEdge(currPath.edges[k], currPath.id);
+                        }
+                    }
+                }
+            }
         }
 
         // This function positions the single nodes that form a path in suitable way.
@@ -165,6 +218,7 @@
         }
 
         function destroyAll() {
+            jsPlumb.reset();
             adore.config.drawingArea.empty();
         }
 
@@ -172,5 +226,6 @@
         drawing.draw = draw;
         drawing.repaint = repaint;
         drawing.destroyAll = destroyAll;
+        drawing.mergeSourceAndTargetNodes = mergeSourceAndTargetNodes;
     });
 }(window.adore = window.adore || {}));

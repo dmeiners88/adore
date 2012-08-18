@@ -15,13 +15,13 @@ module("Empty JSON data set is processed correctly.", {
         adore.json.set(emptyJson);
 
         equal(adore.state.pathCount, 0,
-            "after setJsonData() pathCount has correct value of 0.");
+            "after adore.json.set pathCount has correct value of 0.");
         equal(adore.state.activePathIndex, -1,
             "and activePathIndex has correct value of -1.");
 
-        adore.drawing.draw();
+        adore.drawing.draw(function () {});
         equal($fixture.children().length, 0,
-            "after drawFromJson() no paths are appended to the drawing area.")
+            "after adore.drawing.draw() no paths are appended to the drawing area.")
         equal(adore.state.pathCount, 0,
             "and pathCount has correct value of 0.");
         equal(adore.state.activePathIndex, -1,
@@ -31,7 +31,7 @@ module("Empty JSON data set is processed correctly.", {
         var $fixture = $("#qunit-fixture");
         adore.reset();
         equal(adore.state.activePathIndex, -1,
-            "after reset() activePathIndex has correct value of -1.");
+            "after adore.reset() activePathIndex has correct value of -1.");
         equal(adore.state.pathCount, -1,
             "and pathCount has correct value of -1.");
         equal($fixture.children().length, 0,
@@ -42,7 +42,7 @@ module("Empty JSON data set is processed correctly.", {
 test("No paths are created.", 11, function () {
 });
 
-test("Path switching updates internal state correctly.", 11+2, function () {
+test("Path switching updates internal state correctly.", 11+4, function () {
     adore.navigation.switchToNextPath();
     equal(adore.state.activePathIndex, -1,
         "after switchToNextPath() activePathIndex retains correct value of -1.");
@@ -50,6 +50,15 @@ test("Path switching updates internal state correctly.", 11+2, function () {
     adore.navigation.switchToPreviousPath();
     equal(adore.state.activePathIndex, -1,
         "after switchToPreviousPath() activePathIndex retains correct value of -1.");
+
+    adore.navigation.switchToSinglePathView();
+    equal(adore.state.activePathIndex, -1,
+        "after switchToSinglePathView() activePathIndex retains correct value of -1");
+
+    adore.navigation.switchToMultiPathView();
+    equal(adore.state.activePathIndex, -1,
+        "adter switchToMultiPathView() activePathIndex retains correct value of -1");
+
 });
 
 module("Complex JSON data set is processed correctly.", {
@@ -98,9 +107,9 @@ module("Complex JSON data set is processed correctly.", {
         equal(adore.state.activePathIndex, -1,
             "and activePathIndex has correct value of -1");
 
-        adore.drawing.draw();
+        adore.drawing.draw(function () {});
         equal(adore.state.activePathIndex, 0,
-            "after drawfromJson() activePathIndex has correct value of 0.");
+            "after adore.drawing.draw() activePathIndex has correct value of 0.");
         equal(adore.state.pathCount, 3,
             "and pathCount has correct value of 3.");
         equal($fixture.children(".path").length, 3,
@@ -139,7 +148,7 @@ test("Paths, nodes and edges are created correctly.", 11+6, function () {
         "and 2 edges.");
 });
 
-test("Path switching updates internal state correctly.", 11+6, function () {
+test("Path switching updates internal state correctly.", 11+8, function () {
     adore.navigation.switchToNextPath();
     equal(adore.state.activePathIndex, 1,
         "after switchToNextPath() activePathIndex has correct value of 1.");
@@ -152,20 +161,28 @@ test("Path switching updates internal state correctly.", 11+6, function () {
     equal(adore.state.activePathIndex, 2,
         "after switchToNextPath() activePathIndex retains correct value of 2 (maximum path index was hit).");
 
-    adore.navigation.switchToPreviousPath();
+    adore.navigation.switchToPreviousPath(function () {});
     equal(adore.state.activePathIndex, 1,
         "after switchToPreviousPath() activePathIndex has correct value of 1.");
 
-    adore.navigation.switchToPreviousPath();
+    adore.navigation.switchToPreviousPath(function () {});
     equal(adore.state.activePathIndex, 0,
         "after switchToPreviousPath() activePathIndex has correct value of 0.");
 
-    adore.navigation.switchToPreviousPath();
+    adore.navigation.switchToPreviousPath(function () {});
     equal(adore.state.activePathIndex, 0,
         "after switchToPreviousPath() activePathIndex retains correct value of 0 (minimum path index was hit).");
+
+    adore.navigation.switchToSinglePathView();
+    equal(adore.state.activePathIndex, 0,
+        "after switchToSinglePathView() activePathIndex retains correct value of 0");
+
+    adore.navigation.switchToMultiPathView();
+    equal(adore.state.activePathIndex, 0,
+        "after switchToMultiPathView() activePathIndex retains correct value of 0");
 });
 
-test("Path switching  updates visibility of paths on screen correctly.", 11+15, function () {
+test("Path switching updates visibility of paths on screen correctly.", 11+21, function () {
     // We disable all jQuery animations as they interfer with the test runner.
     $.fx.off = true;
 
@@ -173,24 +190,34 @@ test("Path switching  updates visibility of paths on screen correctly.", 11+15, 
     ok($("#path2").is(":hidden"), "and the second path is hidden.");
     ok($("#path3").is(":hidden"), "and the third path is hidden.");
 
-    adore.navigation.switchToNextPath();
+    adore.navigation.switchToNextPath(function () {});
     ok($("#path1").is(":hidden"), "after switchToNextPath() the first path is hidden.");
     ok($("#path2").is(":visible"), "and the second path is visible.");
     ok($("#path3").is(":hidden"), "and the third path is hidden.");
 
-    adore.navigation.switchToNextPath();
+    adore.navigation.switchToNextPath(function () {});
     ok($("#path1").is(":hidden"), "after switchToNextPath() the first path is hidden.");
     ok($("#path2").is(":hidden"), "and the second path is hidden.");
     ok($("#path3").is(":visible"), "and the third path is visible.");
 
-    adore.navigation.switchToNextPath();
+    adore.navigation.switchToNextPath(function () {});
     ok($("#path1").is(":hidden"),
         "after switchToNextPath() the first path stays hidden (maximum path index was hit).");
     ok($("#path2").is(":hidden"), "and the second path is hidden.");
     ok($("#path3").is(":visible"), "and the third path is visible.");
 
-    adore.navigation.switchToPreviousPath();
+    adore.navigation.switchToPreviousPath(function () {});
     ok($("#path1").is(":hidden"), "after switchToPreviousPath() the first path is hidden.");
+    ok($("#path2").is(":visible"), "and the second path is visible.");
+    ok($("#path3").is(":hidden"), "and the third path is hidden.");
+
+    adore.navigation.switchToMultiPathView();
+    ok($("#path1").is(":visible"), "after switchToMultiPathView() the first path is visible.");
+    ok($("#path2").is(":visible"), "and the second path is visible.");
+    ok($("#path3").is(":visible"), "and the third path is visible.");
+
+    adore.navigation.switchToSinglePathView();
+    ok($("#path1").is(":hidden"), "after switchToSinglePathView() the first path is hidden.");
     ok($("#path2").is(":visible"), "and the second path is visible.");
     ok($("#path3").is(":hidden"), "and the third path is hidden.");
 });

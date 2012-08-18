@@ -72,7 +72,7 @@
             // to display the immediate children.
 
             config.drawingArea.children().fadeIn("500");
-            jsPlumb.repaintEverything();
+            adore.drawing.mergeSourceAndTargetNodes();
         }
 
         // Switches back to single path view.
@@ -83,7 +83,7 @@
             config.drawingArea.children().filter(function (index) {
                     return (index != state.activePathIndex);
             }).fadeOut("500", function () {
-                jsPlumb.repaintEverything();
+                adore.drawing.repaint();
             });
         }
 

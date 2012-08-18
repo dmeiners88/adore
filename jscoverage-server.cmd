@@ -1,0 +1,1 @@
+jscoverage-server.exe --no-instrument=/standalone/main.js --no-instrument=/common/js/require.js --no-instrument=/common/js/lib/jquery.js --no-instrument=/common/js/lib/jquery-ui.js --no-instrument=/common/js/lib/json.ref.js --no-instrument=/common/js/lib/jsPlumb.js --no-instrument=/common/js/lib/less.js --no-instrument=/tests/main.js --no-instrument=/tests/qunit.js

@@ -53,14 +53,6 @@
             return state.jsonData.paths[index].id;
         }
 
-        // This is a helper function for switchToMultiPathView, that merges the source and target nodes,
-        // that are common to all paths. To achieve this impression, we hide all source and target nodes
-        // but the ones on the "middle" path. Than we replace the relevant edges.
-        function mergeSourceAndTargetNodes() {
-            var middleIndex = pathCount % 2;
-            config.drawingArea.children
-        }
-
         // Resets the internal ADORE state and destroys any drawings on screen.
         function reset() {
             state.activePathIndex = -1;
