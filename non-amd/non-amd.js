@@ -1,9 +1,10 @@
 /*jshint browser:true,devel:true,jquery:true,strict:true */
 
-// This is `non-amd.js`. This file integrates the logic from `adore.js`
-// into your user interface (in this case `non-amd.html`). That way we keep logic,
+// This is `standalone.js`. This file integrates the logic from `adore`
+// into your user interface (in this case `standalone.html`). That way we keep logic,
 // presentation and the glue in between separate.
 
+// We wait for jQuery being ready.
 $(function () {
     "use strict";
     // This is the ADORE configuration object that binds the ADORE backend functionality
@@ -14,7 +15,7 @@ $(function () {
     };
 
     // This function receives the JSON schema validation report and displays it.
-    function validationCallback(report) {
+    function displayReport(error) {
         var reportBox = $("#reportBox"),
             errorList = $("<ul/>");
 
@@ -36,7 +37,8 @@ $(function () {
         var fileObject = evt.target.files[0],
             fileName = evt.target.value,
             // The user control that fired the event.
-            sourceControl = evt.target.id;
+            sourceControl = evt.target.id,
+            state = adore.state;
 
         if (fileObject) {
             var reader = new FileReader();
@@ -47,10 +49,10 @@ $(function () {
                 if (sourceControl == "jsonFile") {
                     $("#domain-specific-style").remove();
 
-                    adore.setJsonData(f.target.result);
-                    adore.drawFromJson(validationCallback);
+                    adore.json.set(f.target.result);
+                    adore.drawing.draw(undefined, displayReport);
                     $("#jsonFileName").text(fileName);
-                    $("#pathIDSpan").text((adore.getActivePathIndex() + 1).toString() + " of " + adore.getPathCount());
+                    $("#pathIDSpan").text((state.activePathIndex + 1).toString() + " of " + state.pathCount);
 
                     // We show the path navigator
                     $("#pathNavigator").show();
@@ -71,7 +73,7 @@ $(function () {
 
                     // A repaint is needed because the appliance of the CSS file may have changed
                     // the size and position of the nodes.
-                    adore.repaint();
+                    adore.drawing.repaint();
 
                     // We also update the label indicating the CSS file name.
                     $("#skinFileName").text(fileName);
@@ -80,47 +82,71 @@ $(function () {
 
             reader.readAsText(fileObject);
         } else {
-            console.error("adore: failed to load from file" + evt.target.value);
+            console.error("adore: failed to load from file " + evt.target.value + ".");
         }
     }
 
     function init() {
-        adore.setConfig(config);
-        var pathIDSpan = $("#pathIDSpan");
+        $.extend(adore.config, config);
+
+        var pathIDSpan = $("#pathIDSpan"),
+            state = adore.state,
+            navigation = adore.navigation;
+
         // We setup a button that enables the user to switch to the previous path.
         var previousPathButton = $("#previousPathButton");
         previousPathButton.click(function () {
             previousPathButton.attr("disabled", "disabled");
             nextPathButton.attr("disabled", "disabled");
-            adore.switchToPreviousPath(function () {
+            adore.navigation.switchToPreviousPath(function () {
                 previousPathButton.removeAttr("disabled");
                 nextPathButton.removeAttr("disabled");
             });
-            pathIDSpan.text((adore.getActivePathIndex() + 1).toString() + " of " + adore.getPathCount());
+            pathIDSpan.text((state.activePathIndex + 1).toString() + " of " + state.pathCount);
         });
+
         // The same to navigate to the next path.
         var nextPathButton = $("#nextPathButton");
         nextPathButton.click(function () {
             nextPathButton.attr("disabled", "disabled");
             previousPathButton.attr("disabled", "disabled");
-            adore.switchToNextPath(function () {
+            adore.navigation.switchToNextPath(function () {
                 nextPathButton.removeAttr("disabled");
                 previousPathButton.removeAttr("disabled");
             });
-            pathIDSpan.text((adore.getActivePathIndex() + 1).toString() + " of " + adore.getPathCount());
+            pathIDSpan.text((state.activePathIndex + 1).toString() + " of " + state.pathCount);
         });
+
+        // We setup the "All Paths" checkbox.
+        var allPathsToggle = $("#allPathsToggle");
+        allPathsToggle.change(function () {
+            if ($(this).is(":checked")) {
+                nextPathButton.attr("disabled", "disabled");
+                previousPathButton.attr("disabled", "disabled");
+                $("#pathIDSpan").hide();
+                navigation.switchToMultiPathView();
+            } else {
+                nextPathButton.removeAttr("disabled");
+                previousPathButton.removeAttr("disabled");
+                $("#pathIDSpan").show();
+                navigation.switchToSinglePathView();
+            }
+        });
+
         // We set up a new pair of buttons to invoke the file select dialog
         // boxes. The original, ugly buttons have been hidden via CSS.
         var skinFileInput = $("#skinFile"),
             jsonFileInput = $("#jsonFile");
+
         // The ugly, hidden buttons are bound to their corresponding functions.
         skinFileInput.get(0).onchange = handleFileUpload;
         jsonFileInput.get(0).onchange = handleFileUpload;
+
         // The new, cool buttons fire the click event of the hidden buttons, if they themselves
         // are clicked.
         $("#skinFileBrowseButton").get(0).onclick = function () { skinFileInput.click(); };
         $("#jsonFileBrowseButton").get(0).onclick = function () { jsonFileInput.click(); };
-    };
+    }
 
     init();
 });

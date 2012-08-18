@@ -12,8 +12,14 @@
         <script src="../common/js/lib/jsPlumb.js"></script>
         <script src="../common/js/lib/less.js"></script>
         <script src="../common/js/lib/json.ref.js"></script>
-        <script src="../common/js/lib/adore.js"></script>
-        <script src="../common/js/lib/schema.js"></script>
+
+        <script src="../common/js/lib/adore/adore.js"></script>
+        <script src="../common/js/lib/adore/adore.json.js"></script>
+        <script src="../common/js/lib/adore/adore.json.schema.js"></script>
+        <script src="../common/js/lib/adore/adore.drawing.js"></script>
+        <script src="../common/js/lib/adore/adore.navigation.js"></script>
+
+
         <script src="non-amd.js"></script>
     </head>
     <body>
@@ -59,6 +65,7 @@
             <span id="pathNavButtonSpan">
                 <button id="previousPathButton" type="button">Previous path</button>
                 <button id="nextPathButton" type="button">Next path</button>
+                <input id="allPathsToggle" type="checkbox" /> All Paths
             </span>
         </div>
     </body>

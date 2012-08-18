@@ -23,12 +23,18 @@ requirejs.config({
         "jsPlumb": {
             deps: ["jquery", "jquery-ui"],
             exports: "jsPlumb"
-        }
+        },
+        "standalone/standalone": ["jquery", "adore/adore", "less"],
+        "adore/adore": {
+            deps: ["jquery", "adore/adore.drawing", "adore/adore.json", "adore/adore.navigation"],
+            exports: "adore"
+        },
+        "adore/adore.drawing": ["jsPlumb"],
+        "adore/adore.navigation": ["jquery"],
+        "adore/adore.json": ["jquery", "json.ref", "adore/adore.json.schema"]
     }
 });
 
 // This requires your client-specific JavaScript module. Bootstrapping code
 // is therefore in standalone.js.
-require(["standalone/standalone"], function (standalone) {
-    standalone.init();
-});
+require(["standalone/standalone"]);
