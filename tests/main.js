@@ -23,7 +23,15 @@ requirejs.config({
         "jsPlumb": {
             deps: ["jquery", "jquery-ui"],
             exports: "jsPlumb"
-        }
+        },
+        "adore/adore": {
+            deps: ["jquery", "adore/adore.drawing", "adore/adore.json", "adore/adore.navigation"],
+            exports: "adore"
+        },
+        "adore/adore.drawing": ["jsPlumb"],
+        "adore/adore.navigation": ["jquery"],
+        "adore/adore.json": ["jquery", "json.ref", "adore/adore.json.schema"],
+        "qunit/tests": ["adore/adore"]
     }
 });
 
