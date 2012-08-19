@@ -119,14 +119,25 @@
             if (!state.jsonData.hasOwnProperty("paths")) {
                 // No JSON Data set - nothing to do.
             } else {
+                // We assume the middle path as optimal for holding the common source
+                // and target nodes.
                 middleIndex = Math.ceil(state.pathCount / 2) - 1;
+
+                // But if we have a path with length 1 in our data set, we choose
+                // that path instead.
+                for (var i = 0; i < state.pathCount; i += 1) {
+                    if (state.jsonData.paths[i].edges.length == 1) {
+                        middleIndex = i;
+                    }
+                }
+
                 middlePathId = adore.getPathIdByIndex(middleIndex);
 
                 config.drawingArea.children().filter(function (index) {
                     return (index != middleIndex);
                 }).each(function () {
-                    $(this).children("div.node:first").css("visibility", "hidden");
-                    $(this).children("div.node:last").css("visibility", "hidden");
+                    $(this).children("div.node:first").animate({ opacity: 0 }, "500")
+                    $(this).children("div.node:last").animate({ opacity: 0 }, "500")
                 });
 
                 // We destroy all connections.
@@ -137,14 +148,41 @@
                     var currPath = state.jsonData.paths[j],
                         edgeCount = currPath.edges.length;
                     for (var k = 0; k < edgeCount; k += 1) {
-                        if (k == 0) {
+                        if (edgeCount == 1) {
+                            drawEdge(currPath.edges[k], { src: middlePathId, dest: middlePathId });
+                        } else if (k == 0) {
+                            // The first edge has to go from the common source node to
+                            // the path-specific follow-up node.
+                            // There is one exception: if there is only one edge, than
+                            // we want to connect this edge the common source and target nodes.
                             drawEdge(currPath.edges[k], { src: middlePathId, dest: currPath.id });
                         } else if (k == edgeCount - 1) {
+                            // The last edge has to go from the path-specific node to the common
+                            // destination node.
                             drawEdge(currPath.edges[k], { src: currPath.id, dest: middlePathId });
                         } else {
+                            // All other edges connect path-specific nodes.
                             drawEdge(currPath.edges[k], currPath.id);
                         }
                     }
+                }
+            }
+        }
+
+        function expandSourceAndTargetNodes() {
+            var config = adore.config,
+                state = adore.state;
+
+            config.drawingArea.find("div.node").animate({ opacity: 1 }, "500");
+            jsPlumb.reset();
+
+            // We draw all edges. Only the edges of the currently visible path on screen
+            // will be visible.
+            for (var j = 0; j < state.pathCount; j += 1) {
+                var currPath = state.jsonData.paths[j],
+                    edgeCount = currPath.edges.length;
+                for (var k = 0; k < edgeCount; k += 1) {
+                    drawEdge(currPath.edges[k], currPath.id);
                 }
             }
         }
@@ -227,5 +265,6 @@
         drawing.repaint = repaint;
         drawing.destroyAll = destroyAll;
         drawing.mergeSourceAndTargetNodes = mergeSourceAndTargetNodes;
+        drawing.expandSourceAndTargetNodes = expandSourceAndTargetNodes;
     });
 }(window.adore = window.adore || {}));

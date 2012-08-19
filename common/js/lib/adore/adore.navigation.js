@@ -23,8 +23,8 @@
                 previousPathID = adore.getPathIdByIndex(previousIndex);
 
                 if (currentPathID != previousPathID) {
-                    $("#" + currentPathID).fadeOut("slow", function () {
-                        $("#" + previousPathID).fadeIn("slow", onCompletion);
+                    $("#" + currentPathID).fadeOut("150", function () {
+                        $("#" + previousPathID).fadeIn("150", onCompletion);
                         adore.drawing.repaint();
                     });
 
@@ -50,8 +50,8 @@
                 nextPathID = adore.getPathIdByIndex(nextIndex);
 
                 if (currentPathID != nextPathID) {
-                    $("#" + currentPathID).fadeOut("slow", function () {
-                        $("#" + nextPathID).fadeIn("slow", onCompletion);
+                    $("#" + currentPathID).fadeOut("150", function () {
+                        $("#" + nextPathID).fadeIn("150", onCompletion);
                         adore.drawing.repaint();
                     });
 
@@ -71,7 +71,7 @@
             // As the drawing area `div` has only path `div`s as direct descendants, we simply need
             // to display the immediate children.
 
-            config.drawingArea.children().fadeIn("500");
+            config.drawingArea.children().fadeIn("150");
             adore.drawing.mergeSourceAndTargetNodes();
         }
 
@@ -80,11 +80,12 @@
             var config = adore.config,
                 state = adore.state;
 
+            adore.drawing.expandSourceAndTargetNodes();
             config.drawingArea.children().filter(function (index) {
                     return (index != state.activePathIndex);
-            }).fadeOut("500", function () {
-                adore.drawing.repaint();
-            });
+            }).hide();
+
+            adore.drawing.repaint();
         }
 
         navigation.switchToNextPath = switchToNextPath;
