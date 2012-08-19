@@ -125,11 +125,11 @@
 
                 // But if we have a path with length 1 in our data set, we choose
                 // that path instead.
-                for (var i = 0; i < state.pathCount; i += 1) {
-                    if (state.jsonData.paths[i].edges.length == 1) {
-                        middleIndex = i;
-                    }
-                }
+                //for (var i = 0; i < state.pathCount; i += 1) {
+                //    if (state.jsonData.paths[i].edges.length == 1) {
+                //        middleIndex = i;
+                //    }
+                //}
 
                 middlePathId = adore.getPathIdByIndex(middleIndex);
 
