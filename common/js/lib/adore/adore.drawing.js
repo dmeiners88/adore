@@ -31,12 +31,12 @@
         //
         // and the ID of the path the two nodes are on.
         function drawEdge(edge, pathID) {
-            var src, dest, common = {};
+            var src, dest, alternate = {};
 
             if (pathID.hasOwnProperty("src")) {
                 src = pathID.src;
                 dest = pathID.dest;
-                common = { connector: [ "Bezier", { curviness: 250 } ] };
+                alternate = { connector: [ "Bezier", { curviness: 250 } ] };
             } else {
                 src = pathID;
                 dest = pathID;
@@ -53,7 +53,7 @@
                     [ "Label", { label: edge["class"] + (!edge.label || (" (" + edge.label + ")").toString()), cssClass: edge["class"] + " class" } ],
                     [ "Label", { label: "", cssClass: edge["class"] + " icon" } ]
                 ]
-            }, common);
+            }, alternate);
         }
 
         // This function creates and returns a `<div>` for a single source or target node.
@@ -113,59 +113,65 @@
         function mergeSourceAndTargetNodes() {
             var state = adore.state,
                 config = adore.config,
-                middleIndex,
-                middlePathId;
+                paths = config.drawingArea.children(),
+                nodeHeight = paths.children(".node:first").height(),
+                newTop;
 
             if (!state.jsonData.hasOwnProperty("paths")) {
                 // No JSON Data set - nothing to do.
             } else {
-                // We assume the middle path as optimal for holding the common source
-                // and target nodes.
-                middleIndex = Math.ceil(state.pathCount / 2) - 1;
+                // We determine the new top position for the merged nodes.
+                if (state.pathCount % 2 == 0) {
+                    // Even number of paths.
+                    var firstTop = paths.eq((state.pathCount / 2) - 1).children(".node:first").position().top,
+                        secondTop = paths.eq((state.pathCount / 2)).children(".node:first").position().top;
 
-                // But if we have a path with length 1 in our data set, we choose
-                // that path instead.
-                for (var i = 0; i < state.pathCount; i += 1) {
-                    if (state.jsonData.paths[i].edges.length == 1) {
-                        middleIndex = i;
-                    }
+                    newTop = firstTop + ((secondTop - firstTop) / 2);
+                } else {
+                    // Odd number of paths.
+                    newTop = paths.eq(Math.floor(state.pathCount / 2)).children(":first").position().top;
                 }
 
-                middlePathId = adore.getPathIdByIndex(middleIndex);
+                console.log("adore: top position of merged nodes: " + newTop + "px");
 
-                config.drawingArea.children().filter(function (index) {
-                    return (index != middleIndex);
-                }).each(function () {
-                    $(this).children("div.node:first").animate({ opacity: 0 }, "500")
-                    $(this).children("div.node:last").animate({ opacity: 0 }, "500")
-                });
+                // The source and target nodes are moved to the new top position and are faded out.
+                paths.each(function () {
+                    $(this).each(function (index) {
+                        if (index != Math.floor(state.pathCount / 2)) {
+                            jsPlumb.animate($(this).children("div.node:first"), {
+                                top: newTop + "px"
+                            }, {
+                                duration: 500
+                            });
 
-                // We destroy all connections.
-                jsPlumb.reset();
-
-                // Now we iterate thorugh all edged in the dataset an connect the edges accordingly.
-                for (var j = 0; j < state.pathCount; j += 1) {
-                    var currPath = state.jsonData.paths[j],
-                        edgeCount = currPath.edges.length;
-                    for (var k = 0; k < edgeCount; k += 1) {
-                        if (edgeCount == 1) {
-                            drawEdge(currPath.edges[k], { src: middlePathId, dest: middlePathId });
-                        } else if (k == 0) {
-                            // The first edge has to go from the common source node to
-                            // the path-specific follow-up node.
-                            // There is one exception: if there is only one edge, than
-                            // we want to connect this edge the common source and target nodes.
-                            drawEdge(currPath.edges[k], { src: middlePathId, dest: currPath.id });
-                        } else if (k == edgeCount - 1) {
-                            // The last edge has to go from the path-specific node to the common
-                            // destination node.
-                            drawEdge(currPath.edges[k], { src: currPath.id, dest: middlePathId });
+                            jsPlumb.animate($(this).children("div.node:last"), {
+                                top: newTop + "px"
+                            }, {
+                                duration: 500
+                            });
                         } else {
-                            // All other edges connect path-specific nodes.
-                            drawEdge(currPath.edges[k], currPath.id);
+                            jsPlumb.animate($(this).children("div.node:first"), {
+                                top: newTop + "px",
+                                opacity: 0
+                            }, {
+                                duration: 500,
+                                complete: function () {
+                                    $(this).hide();
+                                }
+                            });
+
+                            jsPlumb.animate($(this).children("div.node:last"), {
+                                top: newTop + "px",
+                                opacity: 0
+                            }, {
+                                duration: 500,
+                                complete: function () {
+                                    $(this).hide();
+                                }
+                            });
                         }
-                    }
-                }
+                    });
+                });
             }
         }
 
