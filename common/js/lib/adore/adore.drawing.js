@@ -18,7 +18,7 @@
         });
 
         // If the window gets resized, jsPlump needs to repaint all the SVG edges.
-        $(window).resize(function () { jsPlumb.repaintEverything(); });
+        $(window).resize(repaint);
 
         // This function draws the given edge. Expects an edge object from the JSON data set like
         //
@@ -50,7 +50,7 @@
                 target: dest + "-" + edge.to.id,
                 cssClass: edge["class"],
                 overlays: [
-                    [ "Label", { label: edge["class"], cssClass: edge["class"] + " label" } ],
+                    [ "Label", { label: edge["class"] + (!edge.label || (" (" + edge.label + ")").toString()), cssClass: edge["class"] + " class" } ],
                     [ "Label", { label: "", cssClass: edge["class"] + " icon" } ]
                 ]
             }, common);
@@ -125,11 +125,11 @@
 
                 // But if we have a path with length 1 in our data set, we choose
                 // that path instead.
-                //for (var i = 0; i < state.pathCount; i += 1) {
-                //    if (state.jsonData.paths[i].edges.length == 1) {
-                //        middleIndex = i;
-                //    }
-                //}
+                for (var i = 0; i < state.pathCount; i += 1) {
+                    if (state.jsonData.paths[i].edges.length == 1) {
+                        middleIndex = i;
+                    }
+                }
 
                 middlePathId = adore.getPathIdByIndex(middleIndex);
 
@@ -191,12 +191,15 @@
         // All nodes are distributed on the available space evenly.
         // Expects the jQuery object that represents the path `<div>`.
         function positionNodesOnPath(pathDiv) {
-            var nodeDivs = pathDiv.children(".node");
+            var nodeDivs = pathDiv.children(".node"),
+                nodeWidth = nodeDivs.first().width(),
+                nodeCount = nodeDivs.length,
+                margin = (pathDiv.width() - (nodeCount * nodeWidth)) / (nodeCount - 1);
+
 
             nodeDivs.each(function (index) {
-                $(this).css("left",
-                    ((100 / nodeDivs.length * (index + 1)) - 100 / nodeDivs.length / 2).toString() + "%");
-            });
+                $(this).css("margin-left", index * (nodeWidth + margin));
+            })
         }
 
         // This function draws all paths from the JSON dataset.
@@ -213,11 +216,11 @@
                 for (var i = 0; i < state.pathCount; i += 1) {
                     var pathDiv = makePathDiv(state.jsonData.paths[i]);
 
-                    // We position the nodes on the path.
-                    positionNodesOnPath(pathDiv);
-
                     // We append the generated path `<div>` to the drawing area `<div>`.
                     config.drawingArea.append(pathDiv);
+
+                    // We position the nodes on the path.
+                    positionNodesOnPath(pathDiv);
 
                     // We hide all but the first path.
                     if (i > 0) {
@@ -252,6 +255,9 @@
         }
 
         function repaint() {
+            namespace.config.drawingArea.children().each(function () {
+                positionNodesOnPath($(this));
+            });
             jsPlumb.repaintEverything();
         }
 

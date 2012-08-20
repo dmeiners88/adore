@@ -19,7 +19,9 @@
 .node {
     width: @nodeSize;
     height: @nodeSize;
-    background-size: @nodeSize @nodeSize;
+    background-size: @nodeSize;
+    background-repeat: no-repeat;
+    background-position: center;
 
     box-shadow: 0px 0px;
     border-radius: 0em 0em 0em 0em;
@@ -32,38 +34,34 @@
         .nodeBackground('author');
     }
 
+    &.upb {
+        .nodeBackground('upb');
+    }
+
     &.paper {
         .nodeBackground('paper');
     }
 
-    &.conference {
-        .nodeBackground('conference');
+    &.mit {
+        .nodeBackground('mit');
+    }
+
+    &.keyword {
+       .nodeBackground('keyword');
     }
 }
 
-._jsPlumb_connector {
-    &.wrote path {
-        stroke: black;
-    }
-
-    &.cites path {
-        stroke: green;
-        stroke-dasharray: 5,5;
-    }
-
-    &.presented-at path {
-        stroke: red;
-        stroke-width: 1;
-    }
+._jsPlumb_connector path {
+    stroke-width: 1;
 }
 
 ._jsPlumb_overlay {
-    &.label {
-        margin-top: @iconSize;
+    &.class {
+        display: block;
     }
 
     &.icon {
-        display: block;
+        display: none;
         width: @iconSize;
         height: @iconSize;
         background-size: @iconSize;
@@ -71,16 +69,13 @@
         background-color: white;
         background-position: center;
 
-        &.wrote {
+        &.authored {
             .overlayBackground('wrote');
+            z-index: 2;
         }
 
-        &.cites {
-            .overlayBackground('wrote');
-        }
-
-        &.presented-at {
-            .overlayBackground('presented-at');
+        &.associated-with {
+            display: none;
         }
     }
 }

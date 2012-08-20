@@ -72,7 +72,8 @@
             // to display the immediate children.
 
             config.drawingArea.children().fadeIn("150");
-            adore.drawing.mergeSourceAndTargetNodes();
+            //adore.drawing.mergeSourceAndTargetNodes();
+            adore.drawing.repaint();
         }
 
         // Switches back to single path view.

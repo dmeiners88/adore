@@ -5,11 +5,11 @@
 @nodeWidth: 80px;
 
 .node {
+    position: absolute;
     background-color: white;
     width: @nodeWidth;
     height: @nodeHeight;
     text-align: center;
-    position: absolute;
     box-shadow: 2px 2px 19px #AAAAAA;
     border-radius: 0.5em 0.5em 0.5em 0.5em;
 
@@ -36,5 +36,9 @@
 }
 
 ._jsPlumb_overlay.icon {
+    display: none;
+}
+
+._jsPlumb_overlay.label {
     display: none;
 }
