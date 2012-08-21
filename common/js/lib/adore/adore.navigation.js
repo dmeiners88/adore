@@ -27,6 +27,10 @@
                     $("#" + previousPathID).animate({ opacity: 1 }, { duration: 500, complete: onCompletion });
 
                     state.activePathIndex = previousIndex;
+                } else {
+                    if ($.isFunction(onCompletion)) {
+                        onCompletion();
+                    }
                 }
             }
         }
@@ -48,6 +52,10 @@
                     $("#" + nextPathID).animate({ opacity: 1 }, { duration: 500, complete: onCompletion });
 
                     state.activePathIndex = nextIndex;
+                } else {
+                    if ($.isFunction(onCompletion)) {
+                        onCompletion();
+                    }
                 }
             }
         }

@@ -181,7 +181,8 @@
         // `onFailure` is executed if there is an error, e.g. validating the JSON dataset.
         function draw(onSuccess, onFailure) {
             var state = adore.state,
-                config = adore.config;
+                config = adore.config,
+                top;
 
             // This function is later called if the JSON schema validation succeeds.
             function continueDrawing() {
@@ -197,7 +198,13 @@
 
                     // We hide all but the first path.
                     if (i > 0) {
-                        $(pathDiv).css("opacity", 0);
+                        pathDiv.css("opacity", 0);
+                    }
+
+                    if (i == 0) {
+                        top = pathDiv.children("div.node").position().top;
+                    } else {
+                        pathDiv.children("div.node").css("top", top + "px");
                     }
                 }
 
