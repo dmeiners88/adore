@@ -23,16 +23,10 @@
                 previousPathID = adore.getPathIdByIndex(previousIndex);
 
                 if (currentPathID != previousPathID) {
-                    $("#" + currentPathID).fadeOut("150", function () {
-                        $("#" + previousPathID).fadeIn("150", onCompletion);
-                        adore.drawing.repaint();
-                    });
+                    $("#" + currentPathID).animate({ opacity: 0 }, { duration: 500 });
+                    $("#" + previousPathID).animate({ opacity: 1 }, { duration: 500, complete: onCompletion });
 
                     state.activePathIndex = previousIndex;
-                } else {
-                    if ($.isFunction(onCompletion)) {
-                        onCompletion();
-                    }
                 }
             }
         }
@@ -50,16 +44,10 @@
                 nextPathID = adore.getPathIdByIndex(nextIndex);
 
                 if (currentPathID != nextPathID) {
-                    $("#" + currentPathID).fadeOut("150", function () {
-                        $("#" + nextPathID).fadeIn("150", onCompletion);
-                        adore.drawing.repaint();
-                    });
+                    $("#" + currentPathID).animate({ opacity: 0 }, { duration: 500 });
+                    $("#" + nextPathID).animate({ opacity: 1 }, { duration: 500, complete: onCompletion });
 
                     state.activePathIndex = nextIndex;
-                } else {
-                    if ($.isFunction(onCompletion)) {
-                        onCompletion();
-                    }
                 }
             }
         }
@@ -71,9 +59,7 @@
             // As the drawing area `div` has only path `div`s as direct descendants, we simply need
             // to display the immediate children.
 
-            config.drawingArea.children().fadeIn("150");
-            adore.drawing.mergeSourceAndTargetNodes();
-            adore.drawing.repaint();
+            config.drawingArea.children().fadeIn("150").promise().done(adore.drawing.mergeSourceAndTargetNodes);
         }
 
         // Switches back to single path view.
@@ -81,7 +67,10 @@
             var config = adore.config,
                 state = adore.state;
 
+            // We expand the previously merged nodes...
             adore.drawing.expandSourceAndTargetNodes();
+
+            // ...and hide all inactive paths.
             config.drawingArea.children().filter(function (index) {
                     return (index != state.activePathIndex);
             }).hide();

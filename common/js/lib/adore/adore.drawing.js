@@ -118,79 +118,46 @@
                 newTop;
 
             if (!state.jsonData.hasOwnProperty("paths")) {
-                // No JSON Data set - nothing to do.
-            } else {
-                // We determine the new top position for the merged nodes.
-                if (state.pathCount % 2 == 0) {
-                    // Even number of paths.
-                    var firstTop = paths.eq((state.pathCount / 2) - 1).children(".node:first").position().top,
-                        secondTop = paths.eq((state.pathCount / 2)).children(".node:first").position().top;
-
-                    newTop = firstTop + ((secondTop - firstTop) / 2);
-                } else {
-                    // Odd number of paths.
-                    newTop = paths.eq(Math.floor(state.pathCount / 2)).children(":first").position().top;
-                }
-
-                console.log("adore: top position of merged nodes: " + newTop + "px");
-
-                // The source and target nodes are moved to the new top position and are faded out.
-                paths.each(function () {
-                    $(this).each(function (index) {
-                        if (index != Math.floor(state.pathCount / 2)) {
-                            jsPlumb.animate($(this).children("div.node:first"), {
-                                top: newTop + "px"
-                            }, {
-                                duration: 500
-                            });
-
-                            jsPlumb.animate($(this).children("div.node:last"), {
-                                top: newTop + "px"
-                            }, {
-                                duration: 500
-                            });
-                        } else {
-                            jsPlumb.animate($(this).children("div.node:first"), {
-                                top: newTop + "px",
-                                opacity: 0
-                            }, {
-                                duration: 500,
-                                complete: function () {
-                                    $(this).hide();
-                                }
-                            });
-
-                            jsPlumb.animate($(this).children("div.node:last"), {
-                                top: newTop + "px",
-                                opacity: 0
-                            }, {
-                                duration: 500,
-                                complete: function () {
-                                    $(this).hide();
-                                }
-                            });
-                        }
-                    });
-                });
+                return;
             }
+
+            // We determine the new top position for the merged nodes.
+            if (state.pathCount % 2 == 0) {
+                // Even number of paths.
+                var firstTop = paths.eq((state.pathCount / 2) - 1).children(".node:first").position().top,
+                    secondTop = paths.eq((state.pathCount / 2)).children(".node:first").position().top;
+                newTop = firstTop + ((secondTop - firstTop) / 2);
+            } else {
+                // Odd number of paths.
+                newTop = paths.eq(Math.floor(state.pathCount / 2)).children(".node:first").position().top;
+            }
+            console.log("adore: top position of merged nodes: " + newTop + "px");
+
+            // The source and target nodes are moved to the new top position and are faded out.
+            paths.each(function (index) {
+                var nodes = $(this).children("div.node:first,div.node:last");
+                // We store the original top position to restore the nodes later
+                // when needed.
+                nodes.data("oldTop", nodes.position().top);
+                if (index != Math.floor(state.pathCount / 2)) {
+                    jsPlumb.animate(nodes, { top: newTop + "px" }, { duration: 500, complete: repaint });
+                } else {
+                    jsPlumb.animate(nodes, { top: newTop + "px", opacity: 0 }, { duration: 500, complete: repaint });
+                }
+            });
         }
 
         function expandSourceAndTargetNodes() {
             var config = adore.config,
-                state = adore.state;
+                state = adore.state,
+                paths = config.drawingArea.children();
 
-            config.drawingArea.find("div.node").animate({ opacity: 1 }, "500");
-            jsPlumb.reset();
-
-            // We draw all edges. Only the edges of the currently visible path on screen
-            // will be visible.
-            for (var j = 0; j < state.pathCount; j += 1) {
-                var currPath = state.jsonData.paths[j],
-                    edgeCount = currPath.edges.length;
-                for (var k = 0; k < edgeCount; k += 1) {
-                    drawEdge(currPath.edges[k], currPath.id);
-                }
-            }
+            // We can restore the merged nodes to their original position by
+            // setting their CSS property "top" to nothing.
+            paths.each(function () {
+                var nodes = $(this).children("div.node");
+                jsPlumb.animate(nodes, { top: nodes.data("oldTop"), opacity: 1 }, { duration: 500, complete: repaint });
+            });
         }
 
         // This function positions the single nodes that form a path in suitable way.
@@ -230,7 +197,7 @@
 
                     // We hide all but the first path.
                     if (i > 0) {
-                        $(pathDiv).hide();
+                        $(pathDiv).css("opacity", 0);
                     }
                 }
 
