@@ -5,69 +5,56 @@
     namespace.navigation = namespace.navigation || {};
 
     // We store a local reference to save lookup times.
-    var navigation = namespace.navigation;
+    var navigation = namespace.navigation,
+        drawing = namespace.drawing;
 
     $(function () {
 
-        // Switches to the previous path. Expects a callback function that is executed
-        // when the path fade-out and fade-in animations have finished.
-        function switchToPreviousPath(onCompletion) {
-            var currentPathID,
-                previousIndex,
-                previousPathID,
-                state = adore.state;
+        function navigatePaths(offset, onCompletion) {
+            var oldPathID,
+                newIndex,
+                newPathID,
+                state = adore.state,
+                oldPath,
+                newPath;
 
-            if (state.activePathIndex > -1) {
-                currentPathID = adore.getPathIdByIndex(state.activePathIndex);
-                previousIndex = adore.getPreviousPathIndex();
-                previousPathID = adore.getPathIdByIndex(previousIndex);
+            newIndex = state.activePathIndex + offset;
 
-                if (currentPathID != previousPathID) {
-                    $("#" + currentPathID).animate({ opacity: 0 }, { duration: 500 });
-                    $("#" + previousPathID).animate({ opacity: 1 }, { duration: 500, complete: onCompletion });
-
-                    state.activePathIndex = previousIndex;
-                } else {
-                    if ($.isFunction(onCompletion)) {
-                        onCompletion();
-                    }
-                }
+            if (newIndex >= state.pathCount) {
+                newIndex = state.pathCount - 1;
+            } else if (newIndex < 0) {
+                newIndex = 0;
             }
-        }
 
-        // Switches to the next path. Analogous to `switchToPreviousPath`
-        function switchToNextPath(onCompletion) {
-            var currentPathID,
-                nextIndex,
-                nextPathID,
-                state = adore.state;
+            if (state.activePathIndex > -1 && state.activePathIndex != newIndex) {
+                oldPathID = adore.getPathIdByIndex(state.activePathIndex);
+                newPathID = adore.getPathIdByIndex(newIndex);
+                oldPath = $("#" + oldPathID);
+                newPath = $("#" + newPathID);
 
-            if (state.activePathIndex > -1) {
-                currentPathID = adore.getPathIdByIndex(state.activePathIndex);
-                nextIndex = adore.getNextPathIndex();
-                nextPathID = adore.getPathIdByIndex(nextIndex);
+                drawing.switchPaths(oldPath, newPath, onCompletion);
+                state.activePathIndex = newIndex;
 
-                if (currentPathID != nextPathID) {
-                    $("#" + currentPathID).animate({ opacity: 0 }, { duration: 500 });
-                    $("#" + nextPathID).animate({ opacity: 1 }, { duration: 500, complete: onCompletion });
-
-                    state.activePathIndex = nextIndex;
-                } else {
-                    if ($.isFunction(onCompletion)) {
-                        onCompletion();
-                    }
-                }
+            } else if ($.isFunction(onCompletion)) {
+                onCompletion();
             }
         }
 
         // Switches to multi path view. Does not change the internal state variable `activePathIndex`, so
         // we can easily switch back to single path view if we need to.
         function switchToMultiPathView() {
-            var config = adore.config;
+            var config = adore.config,
+                pathDivs = config.drawingArea.children();
             // As the drawing area `div` has only path `div`s as direct descendants, we simply need
             // to display the immediate children.
 
-            config.drawingArea.children().fadeIn("150").promise().done(adore.drawing.mergeSourceAndTargetNodes);
+            pathDivs.each(function () {
+                $(this).css("display", "block");
+            });
+
+            drawing.repaint();
+
+            jsPlumb.animate(pathDivs, { opacity: 1 }, { duration: 500 });
         }
 
         // Switches back to single path view.
@@ -80,14 +67,13 @@
 
             // ...and hide all inactive paths.
             config.drawingArea.children().filter(function (index) {
-                    return (index != state.activePathIndex);
+                return (index != state.activePathIndex);
             }).hide();
 
             adore.drawing.repaint();
         }
 
-        navigation.switchToNextPath = switchToNextPath;
-        navigation.switchToPreviousPath = switchToPreviousPath;
+        navigation.navigatePaths = navigatePaths;
         navigation.switchToSinglePathView = switchToSinglePathView;
         navigation.switchToMultiPathView = switchToMultiPathView;
     });

@@ -98,7 +98,7 @@ $(function () {
         previousPathButton.click(function () {
             previousPathButton.attr("disabled", "disabled");
             nextPathButton.attr("disabled", "disabled");
-            adore.navigation.switchToPreviousPath(function () {
+            adore.navigation.navigatePaths(-1, function () {
                 previousPathButton.removeAttr("disabled");
                 nextPathButton.removeAttr("disabled");
             });
@@ -110,7 +110,7 @@ $(function () {
         nextPathButton.click(function () {
             nextPathButton.attr("disabled", "disabled");
             previousPathButton.attr("disabled", "disabled");
-            adore.navigation.switchToNextPath(function () {
+            adore.navigation.navigatePaths(1, function () {
                 nextPathButton.removeAttr("disabled");
                 previousPathButton.removeAttr("disabled");
             });

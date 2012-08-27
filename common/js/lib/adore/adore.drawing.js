@@ -175,14 +175,25 @@
             })
         }
 
+        function switchPaths(oldPathDiv, newPathDiv, onCompletion) {
+            jsPlumb.animate(oldPathDiv, { opacity: 0 }, { duration: 500, complete: function () {
+                oldPathDiv.hide();
+                newPathDiv.show();
+
+                positionNodesOnPath(newPathDiv);
+                repaint();
+
+                jsPlumb.animate(newPathDiv, { opacity: 1 }, { duration: 500, complete: onCompletion });
+            } });
+        }
+
         // This function draws all paths from the JSON dataset.
         // It expects the current internal state, the config and two functions.
         // `onSuccess` is executed if the drawing succeeds properly.
         // `onFailure` is executed if there is an error, e.g. validating the JSON dataset.
         function draw(onSuccess, onFailure) {
             var state = adore.state,
-                config = adore.config,
-                top;
+                config = adore.config;
 
             // This function is later called if the JSON schema validation succeeds.
             function continueDrawing() {
@@ -198,13 +209,8 @@
 
                     // We hide all but the first path.
                     if (i > 0) {
+                        pathDiv.hide();
                         pathDiv.css("opacity", 0);
-                    }
-
-                    if (i == 0) {
-                        top = pathDiv.children("div.node").position().top;
-                    } else {
-                        pathDiv.children("div.node").css("top", top + "px");
                     }
                 }
 
@@ -252,5 +258,6 @@
         drawing.destroyAll = destroyAll;
         drawing.mergeSourceAndTargetNodes = mergeSourceAndTargetNodes;
         drawing.expandSourceAndTargetNodes = expandSourceAndTargetNodes;
+        drawing.switchPaths = switchPaths;
     });
 }(window.adore = window.adore || {}));
