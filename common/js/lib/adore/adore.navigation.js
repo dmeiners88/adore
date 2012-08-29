@@ -54,7 +54,7 @@
 
             drawing.repaint();
 
-            jsPlumb.animate(pathDivs, { opacity: 1 }, { duration: 500 });
+            $.when(jsPlumb.animate(pathDivs, { opacity: 1 }, { duration: 500 })).done(drawing.mergeSourceAndTargetNodes());
         }
 
         // Switches back to single path view.

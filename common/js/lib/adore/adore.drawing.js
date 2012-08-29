@@ -114,7 +114,6 @@
             var state = adore.state,
                 config = adore.config,
                 paths = config.drawingArea.children(),
-                nodeHeight = paths.children(".node:first").height(),
                 newTop;
 
             if (!state.jsonData.hasOwnProperty("paths")) {
@@ -136,15 +135,18 @@
             // The source and target nodes are moved to the new top position and are faded out.
             paths.each(function (index) {
                 var nodes = $(this).children("div.node:first,div.node:last");
-                // We store the original top position to restore the nodes later
-                // when needed.
-                nodes.data("oldTop", nodes.position().top);
-                if (index != Math.floor(state.pathCount / 2)) {
+                if (index == 0) {
                     jsPlumb.animate(nodes, { top: newTop + "px" }, { duration: 500, complete: repaint });
                 } else {
                     jsPlumb.animate(nodes, { top: newTop + "px", opacity: 0 }, { duration: 500, complete: repaint });
                 }
             });
+
+            var allConns = jsPlumb.getAllConnections().jsPlumb_DefaultScope;
+
+            for (var i = 0; i < allConns.length; i += 1) {
+                allConns[i].setConnector("Bezier", { curviness: 300 });
+            }
         }
 
         function expandSourceAndTargetNodes() {
@@ -156,7 +158,7 @@
             // setting their CSS property "top" to nothing.
             paths.each(function () {
                 var nodes = $(this).children("div.node");
-                jsPlumb.animate(nodes, { top: nodes.data("oldTop"), opacity: 1 }, { duration: 500, complete: repaint });
+                jsPlumb.animate(nodes, { top: nodes.data("oldTop") + "px", opacity: 1 }, { duration: 500, complete: repaint });
             });
         }
 
