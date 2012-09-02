@@ -10,6 +10,8 @@
 // @require     http://localhost:8080/common/js/lib/adore/adore.drawing.js
 // @require     http://localhost:8080/common/js/lib/adore/adore.json.js
 // @require     http://localhost:8080/common/js/lib/adore/adore.navigation.js
+// @require     http://lesscss.googlecode.com/files/less-1.3.0.min.js
+// @resource    standalone-less http://localhost:8080/standalone/standalone.less
 // @version     0.1
 // @updateURL   http://localhost:8080/userscript/themoviedb.org.meta.js
 // ==/UserScript==
@@ -75,10 +77,12 @@ function getPersonCredits(id) {
     return dfd.promise();
 }
 
+// Actual logic, asks API and builds ADORE compatible dataset
 function getCommonMovies(firstId, secondId) {
     var dfd = $.Deferred();
 
-    $.when(getPersonCredits(firstId), getPersonCredits(secondId)).then(function (credits1, credits2) {
+    $.when(getPersonCredits(firstId), getPersonCredits(secondId),
+        getPersonInfo(firstId), getPersonInfo(secondId)).then(function (credits1, credits2, info1, info2) {
         var arr1 = makeFlatArray(credits1.cast),
             arr2 = makeFlatArray(credits2.cast),
             common = arrayMatcher(arr1, arr2);
@@ -87,19 +91,47 @@ function getCommonMovies(firstId, secondId) {
         var dataset = {
             nodes: [
                 // Both actors need to be added as nodes
-                {
-                    id: "person-" + firstId
-                }
+                { id: "person-" + firstId, label: info1.name, "class": "person person-id-" + firstId },
+                { id: "person-" + secondId, label: info2.name, "class": "person person-id-" + secondId }
             ],
             edges: [],
             paths: []
         };
 
+        // Add the movie nodes
         for (var i = 0; i < common.length; i += 1) {
-            dataset.nodes.push({
+            // Add a movie node to the dataset
+            var newLength = dataset.nodes.push({
                 id: "movie-" + common[i],
                 label: getEntryViaId(credits1.cast, common[i]).title,
-                "class": "movie id-" + common[i]
+                "class": "movie movie-id-" + common[i]
+            });
+
+            var firstEdgeId = "person-" + firstId + "-" + "movie-" + common[i],
+                secondEdgeId = "movie-" + common[i] + "-" + "person-" + secondId;
+
+            // Add the edges connecting this movie to both actors
+            var firstEdgeCount = dataset.edges.push({
+                id: firstEdgeId,
+                from: dataset.nodes[0],
+                to: dataset.nodes[newLength - 1],
+                "class": "stars-in"
+            });
+
+            var secondEdgeCount = dataset.edges.push({
+                id: secondEdgeId,
+                from: dataset.nodes[newLength - 1],
+                to: dataset.nodes[1],
+                "class": "has-actor"
+            });
+
+            // Lastly, we build the paths
+            dataset.paths.push({
+                id: "path-" + i,
+                edges: [
+                    dataset.edges[firstEdgeCount - 1],
+                    dataset.edges[secondEdgeCount - 1]
+                ]
             });
         }
 
@@ -109,6 +141,13 @@ function getCommonMovies(firstId, secondId) {
     return dfd.promise();
 }
 
+function fire(firstId, secondId) {
+    getCommonMovies(firstId, secondId).done(function (dataset) {
+        adore.json.setObject(dataset);
+        adore.drawing.draw();
+    });
+}
+
 // We check if the current page is an actors page.
 if (result = actor_page.exec(document.location.pathname)) {
     var currentId = result[1],
@@ -116,6 +155,11 @@ if (result = actor_page.exec(document.location.pathname)) {
 
     if (currentId != previousId) {
         GM_setValue("previousId", currentId);
-        getCommonMovies(previousId, currentId);
     }
+
+    $("#mainCol").prepend($("<div />").attr("id", "drawingArea"));
+
+    less.sheets.push(GM_getResourceURL(standalone-less));
+
+    fire(currentId, previousId);
 }

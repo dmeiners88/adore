@@ -70,5 +70,6 @@
         // Some functions are privileged (public) and get exported here.
         json.validate = validate;
         json.set = set;
+        json.setObject = setObject;
     });
 }(window.adore = window.adore || {}));;
