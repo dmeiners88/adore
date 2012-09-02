@@ -52,6 +52,21 @@
             }
         }
 
+        // Alternate way to set the data set. This function expects a JavaScritp object
+        // instead of a JSON text.
+        function setObject(object) {
+            namespace.reset();
+
+            var state = adore.state;
+            state.jsonData = object;
+
+            if (!state.jsonData.hasOwnProperty("paths")) {
+                state.pathCount = 0;
+            } else {
+                state.pathCount = state.jsonData.paths.length;
+            }
+        }
+
         // Some functions are privileged (public) and get exported here.
         json.validate = validate;
         json.set = set;
