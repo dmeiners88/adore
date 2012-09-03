@@ -72,4 +72,4 @@
         json.set = set;
         json.setObject = setObject;
     });
-}(window.adore = window.adore || {}));;
+}(window.adore = window.adore || {}));

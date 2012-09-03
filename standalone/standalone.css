@@ -1,0 +1,103 @@
+/* In case no domain specific is loaded, we load very basic 'bare'
+   skin to make nodes and edges at least visible. */
+/* bare.css – a minimal stylesheet to draw graphs without additional,
+   domain specific style information */
+.node {
+  position: absolute;
+  background-color: white;
+  width: 80px;
+  height: 80px;
+  text-align: center;
+  box-shadow: 2px 2px 19px #AAAAAA;
+  border-radius: 0.5em 0.5em 0.5em 0.5em;
+}
+.node .label {
+  padding-top: 90px;
+}
+.path {
+  padding-top: 1.5em;
+  padding-bottom: 1.5em;
+  height: 80px;
+}
+._jsPlumb_connector path {
+  stroke: gray;
+  stroke-width: 5px;
+}
+._jsPlumb_overlay {
+  z-index: 1;
+  background-color: white;
+  padding: 0.25em;
+}
+._jsPlumb_overlay.icon {
+  display: none;
+}
+._jsPlumb_overlay.label {
+  display: none;
+}
+/* Element styles */
+body {
+  margin-left: 1em;
+  margin-top: 1em;
+  font-size: small;
+}
+h2 {
+  font-weight: normal;
+  font-size: medium;
+  color: gray;
+}
+h2 span {
+  font-weight: bold;
+  color: black;
+}
+/* Class styles */
+.path {
+  margin-left: 1em;
+  margin-right: 2em;
+}
+.common-box {
+  background-color: white;
+  box-shadow: 2px 2px 19px #AAAAAA;
+  border-radius: 0.5em 0.5em 0.5em 0.5em;
+  z-index: 0;
+  opacity: 0.5;
+  -moz-transition: opacity 0.3s;
+  -webkit-transition: opacity 0.3s;
+  width: 30em;
+  padding: 1em;
+  margin-bottom: 1em;
+}
+.common-box:hover {
+  z-index: 1;
+  opacity: 1.0;
+}
+/* Styles for single elements (selected via ID) */
+#menuBox #header {
+  margin-top: 0em;
+  margin-bottom: 0em;
+}
+#menuBox #subHeader {
+  margin-top: 0em;
+}
+#menuBox #fileInputForm input[type=file] {
+  display: none;
+}
+#menuBox #fileInputForm div {
+  margin-bottom: 1em;
+}
+#menuBox #skinFileBrowseButton,
+#menuBox #jsonFileBrowseButton {
+  float: right;
+}
+#pathNavigator {
+  margin-top: 2em;
+  display: none;
+}
+#pathNavigator #pathNavButtonSpan {
+  float: right;
+}
+#reportBox {
+  display: none;
+}
+#reportBox h2 {
+  color: red;
+}
