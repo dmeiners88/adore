@@ -40,6 +40,32 @@
                             "required": false,
                             "description": "The CSS class of this node. Used for skinning purposes."
                         },
+                        "style":
+                        {
+                            "type": "array",
+                            "required": false,
+                            "description": "An array of CSS rules for this node.",
+                            "items":
+                            {
+                                "type": "object",
+                                "description": "A single CSS property-value pair.",
+                                "properties":
+                                {
+                                    "property":
+                                    {
+                                        "type": "string",
+                                        "required": true,
+                                        "description": "A CSS property name, e.g. background-image"
+                                    },
+                                    "value":
+                                    {
+                                        "type": "string",
+                                        "required": true,
+                                        "description": "A CSS property value e.g. url('image.png')"
+                                    }
+                                }
+                            }
+                        },
                         "attributes":
                         {
                             "type": "array",

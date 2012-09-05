@@ -101,8 +101,7 @@
 
         function getCommonMovies(firstId, secondId) {
             var dfd = $.Deferred(),
-                dataset = {},
-                nodeImages = [];
+                dataset = {};
         
             $.when(getPersonCredits(firstId),
                 getPersonCredits(secondId),
@@ -123,12 +122,6 @@
                         edges: [],
                         paths: []
                     };
-
-                    $.when(buildPersonImagePath(info1), buildPersonImagePath(info2)).then(function (image1, image2) {
-                        // We push the person-id's and the corresponding image urls to nodeImages array.
-                        nodeImages.push({ id: "person-" + firstId, url: image1 });
-                        nodeImages.push({ id: "person-" + secondId, url: image2 });
-                    });
             
                     // Add the movie nodes
                     for (var i = 0; i < common.length; i += 1) {
@@ -137,11 +130,6 @@
                             id: "movie-" + common[i],
                             label: getEntryViaId(credits1.cast, common[i]).title,
                             "class": "movie movie-id-" + common[i]
-                        });
-
-                        buildMovieImagePath(credits1, common[i]).done(function (image) {
-                            // We push the movie-id's and the corresonding image urls to the nodeImages array.
-                            nodeImages.push({ id: "movie-" + common[i], url: image });
                         });
             
                         // Add the edges connecting this movie to both actors
