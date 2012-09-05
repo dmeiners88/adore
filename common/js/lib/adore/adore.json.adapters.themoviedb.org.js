@@ -6,8 +6,7 @@
     namespace.json.adapters.themoviedb = namespace.json.adapters.themoviedb || {};
     
     var themoviedb = namespace.json.adapters.themoviedb.org = {},
-        api_key = "",
-        configuration = null;
+        api_key = "";
 
     $(function () {
 
@@ -42,14 +41,38 @@
             }   
             return results;
         }
+
+        function updateCache(cache) {
+            var oldCache = $.jStorage.get("tmdb-cache"),
+                newCache = $.extend(oldCache, cache);
+
+            $.jStorage.set("tmdb-cache", newCache);
+        }
+
+        function getCache() {
+            return $.jStorage.get("tmdb-cache", {});
+        }
         
         // API wrappers
         function getPersonInfo(id) {
             var dfd = $.Deferred();
 
-            $.getJSON("http://api.themoviedb.org/3/person/" + id + "?api_key=" + api_key, function (result) {
-                dfd.resolve(result);
-            });
+            // Get current cache value.
+            var cache = getCache();
+
+            if (!cache["personInfo-" + id]) {
+                $.getJSON("http://api.themoviedb.org/3/person/" + id + "?api_key=" + api_key, function (result) {
+                    cache["personInfo-" + id] = result;
+
+                    // Update cache.
+                    updateCache(cache);
+
+                    dfd.resolve(result);
+                });
+            } else {
+                dfd.resolve(cache["personInfo-" + id]);
+
+            }
 
             return dfd.promise();
         }
@@ -57,9 +80,21 @@
         function getPersonCredits(id) {
             var dfd = $.Deferred();
         
-            $.getJSON("http://api.themoviedb.org/3/person/" + id + "/credits?api_key=" + api_key, function (result) {
-                dfd.resolve(result);
-            });
+            // Get current cache value.
+            var cache = getCache();
+
+            if (!cache["personCredits-" + id]) {
+                $.getJSON("http://api.themoviedb.org/3/person/" + id + "/credits?api_key=" + api_key, function (result) {
+                    cache["personCredits-" + id] = result;
+
+                    // Update cache.
+                    updateCache(cache);
+
+                    dfd.resolve(result);
+                });
+            } else {
+                dfd.resolve(cache["personCredits-" + id]);
+            }
         
             return dfd.promise();
         }
@@ -67,13 +102,20 @@
         function getConfiguration() {
             var dfd = $.Deferred();
 
-            if (!configuration) {
+            // Get current cache value.
+            var cache = getCache();
+
+            if (!cache["configuration"]) {
                 $.getJSON("http://api.themoviedb.org/3/configuration?api_key=" + api_key, function (result) {
-                    configuration = result;
+                    cache["configuration"] = result;
+
+                    // Update cache.
+                    updateCache(cache);
+
                     dfd.resolve(result);
                 });
             } else {
-                dfd.resolve(configuration);
+                dfd.resolve(cache["configuration"]);
             }
 
             return dfd.promise();
@@ -101,13 +143,20 @@
 
         function getCommonMovies(firstId, secondId) {
             var dfd = $.Deferred(),
-                dataset = {};
-        
-            $.when(getPersonCredits(firstId),
-                getPersonCredits(secondId),
-                getPersonInfo(firstId),
-                getPersonInfo(secondId))
-            .then(function (credits1, credits2, info1, info2) {
+                dataset = {},
+                personInfo1 = getPersonInfo(firstId),
+                personInfo2 = getPersonInfo(secondId),
+                personCredits1 = getPersonCredits(firstId),
+                personCredits2 = getPersonCredits(secondId),
+                personImage1 = personInfo1.pipe(function (data) {
+                    return buildPersonImagePath(data);
+                }),
+                personImage2 = personInfo2.pipe(function (data) {
+                    return buildPersonImagePath(data);
+                });
+
+            $.when(personInfo1, personInfo2, personCredits1, personCredits2, personImage1, personImage2)
+            .then(function (info1, info2, credits1, credits2, image1, image2) {
                     var arr1 = makeFlatArray(credits1.cast),
                         arr2 = makeFlatArray(credits2.cast),
                         common = arrayMatcher(arr1, arr2);
@@ -116,8 +165,22 @@
                     dataset = {
                         nodes: [
                             // Both actors need to be added as nodes
-                            { id: "person-" + firstId, label: info1.name, "class": "person person-id-" + firstId },
-                            { id: "person-" + secondId, label: info2.name, "class": "person person-id-" + secondId }
+                            {
+                                id: "person-" + firstId,
+                                label: info1.name,
+                                "class": "person person-id-" + firstId,
+                                style: [
+                                    { property: "background-image", value: "url('" + image1 + "')" }
+                                ]
+                            },
+                            {
+                                id: "person-" + secondId,
+                                label: info2.name,
+                                "class": "person person-id-" + secondId,
+                                style: [
+                                    { property: "background-image", value: "url('" + image2 + "')" }
+                                ]
+                            }
                         ],
                         edges: [],
                         paths: []
@@ -126,40 +189,46 @@
                     // Add the movie nodes
                     for (var i = 0; i < common.length; i += 1) {
                         // Add a movie node to the dataset
-                        var newLength = dataset.nodes.push({
-                            id: "movie-" + common[i],
-                            label: getEntryViaId(credits1.cast, common[i]).title,
-                            "class": "movie movie-id-" + common[i]
-                        });
-            
-                        // Add the edges connecting this movie to both actors
-                        var firstEdgeId = "person-" + firstId + "-" + "movie-" + common[i],
-                            secondEdgeId = "movie-" + common[i] + "-" + "person-" + secondId;
-                        var firstEdgeCount = dataset.edges.push({
-                            id: firstEdgeId,
-                            from: dataset.nodes[0],
-                            to: dataset.nodes[newLength - 1],
-                            "class": "stars-in"
-                        });
-            
-                        var secondEdgeCount = dataset.edges.push({
-                            id: secondEdgeId,
-                            from: dataset.nodes[newLength - 1],
-                            to: dataset.nodes[1],
-                            "class": "has-actor"
-                        });
-            
-                        // Lastly, we build the paths
-                        dataset.paths.push({
-                            id: "path-" + i,
-                            edges: [
-                                dataset.edges[firstEdgeCount - 1],
-                                dataset.edges[secondEdgeCount - 1]
-                            ]
+
+                        buildMovieImagePath(credits1, common[i]).done(function (movieImage) {
+                            var newLength = dataset.nodes.push({
+                                id: "movie-" + common[i],
+                                label: getEntryViaId(credits1.cast, common[i]).title,
+                                "class": "movie movie-id-" + common[i],
+                                style: [
+                                    { property: "background-image", value: "url('" + movieImage + "')" }
+                                ]
+                            });
+
+                            // Add the edges connecting this movie to both actors
+                            var firstEdgeId = "person-" + firstId + "-" + "movie-" + common[i],
+                                secondEdgeId = "movie-" + common[i] + "-" + "person-" + secondId;
+                            var firstEdgeCount = dataset.edges.push({
+                                id: firstEdgeId,
+                                from: dataset.nodes[0],
+                                to: dataset.nodes[newLength - 1],
+                                "class": "stars-in"
+                            });
+                
+                            var secondEdgeCount = dataset.edges.push({
+                                id: secondEdgeId,
+                                from: dataset.nodes[newLength - 1],
+                                to: dataset.nodes[1],
+                                "class": "has-actor"
+                            });
+                
+                            // Lastly, we build the paths
+                            dataset.paths.push({
+                                id: "path-" + i,
+                                edges: [
+                                    dataset.edges[firstEdgeCount - 1],
+                                    dataset.edges[secondEdgeCount - 1]
+                                ]
+                            });
                         });
                     }
             
-                    dfd.resolve(dataset, nodeImages);
+                    dfd.resolve(dataset);
             });
         
             return dfd.promise();

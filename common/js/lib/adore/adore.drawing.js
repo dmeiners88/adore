@@ -50,7 +50,7 @@
                 target: dest + "-" + edge.to.id,
                 cssClass: edge["class"],
                 overlays: [
-                    [ "Label", { label: edge["class"] + (!edge.label || (" (" + edge.label + ")").toString()), cssClass: edge["class"] + " class" } ],
+                    [ "Label", { label: edge["class"], cssClass: edge["class"] + " class" } ],
                     [ "Label", { label: "", cssClass: edge["class"] + " icon" } ]
                 ]
             }, alternate);
@@ -67,13 +67,24 @@
         //
         // and the ID of the path that contains the node.
         function makeNodeDiv(node, pathID) {
-            return $("<div/>")
-                .addClass("node")
-                .addClass(node["class"])
-                .attr("id", pathID + "-" + node.id)
-                .data("pathID", pathID)
-                .data("nodeID", node.id)
-                .append($("<div/>").addClass("label").text(node.label));
+            var nodeDiv = $("<div/>")
+            .addClass("node")
+            .addClass(node["class"])
+            .attr("id", pathID + "-" + node.id)
+            .data("pathID", pathID)
+            .data("nodeID", node.id)
+            .append($("<div/>")
+            .addClass("label")
+            .text(node.label));
+
+            // Add style.
+            if (node.hasOwnProperty("style")) {
+                for (var i = 0; i < node.style.length; i += 1) {
+                    nodeDiv.css(node.style[i].property, node.style[i].value);
+                }
+            }
+
+            return nodeDiv;
         }
 
         // This function creates a `<div>` for a single path from the JSON dataset,

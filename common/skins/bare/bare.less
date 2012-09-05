@@ -1,27 +1,29 @@
 /* bare.css – a minimal stylesheet to draw graphs without additional,
    domain specific style information */
 
-@nodeHeight: 80px;
-@nodeWidth: 80px;
+@nodeSize: 80px;
 
 .node {
     position: absolute;
     background-color: white;
-    width: @nodeWidth;
-    height: @nodeHeight;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: @nodeSize;
+    height: @nodeSize;
     text-align: center;
     box-shadow: 2px 2px 19px #AAAAAA;
     border-radius: 0.5em 0.5em 0.5em 0.5em;
 
     & .label {
-        padding-top: @nodeHeight + 10;
+        padding-top: @nodeSize + 10;
     }
 }
 
 .path {
     padding-top: 1.5em;
     padding-bottom: 1.5em;
-    height: @nodeHeight;
+    height: @nodeSize;
 }
 
 ._jsPlumb_connector path {
