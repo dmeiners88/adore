@@ -1,3 +1,8 @@
+/**
+    @name adore.navigation
+    @namespace
+*/
+
 ;(function (namespace, undefined) {
     "use strict";
 
@@ -10,6 +15,20 @@
 
     $(function () {
 
+        /**
+            Navigates the on-screen display to another path.
+
+            @name adore.navigation.navigatePaths
+            @function
+            @public
+            @param {number} offset - The offset of the current path from the desired path. E.g., an offset of 1 means the
+                                     next path, an offset of -1 means the previous path.
+            @param {function} onCompletion - Function to execute on completion of the path switching animation.
+            @example
+            navigatePaths(1);  // Next path.
+            navigatePaths(-1); // Previous path.
+            navigatePaths(2);  // The next but one path.
+        */
         function navigatePaths(offset, onCompletion) {
             var oldPathID,
                 newIndex,
@@ -40,8 +59,14 @@
             }
         }
 
-        // Switches to multi path view. Does not change the internal state variable `activePathIndex`, so
-        // we can easily switch back to single path view if we need to.
+        /**
+            Switches to multi path view. Does not change the internal state variable <code>activePathIndex</code>, so
+            we can easily switch back to single path view if we need to.
+
+            @name adore.navigation.switchToMultiPathView
+            @function
+            @public
+        */
         function switchToMultiPathView() {
             var config = adore.config,
                 pathDivs = config.drawingArea.children();
@@ -57,7 +82,13 @@
             $.when(jsPlumb.animate(pathDivs, { opacity: 1 }, { duration: 500 })).done(drawing.mergeSourceAndTargetNodes());
         }
 
-        // Switches back to single path view.
+        /**
+            Switches back to single path view.
+
+            @name adore.navigation.switchToSinglePathView
+            @function
+            @public
+        */
         function switchToSinglePathView() {
             var config = adore.config,
                 state = adore.state;

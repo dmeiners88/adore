@@ -1,3 +1,9 @@
+/**
+    @name adore.json
+    @namespace
+    @property {object} schema - The JSON schema ADORE uses to validate data sets.
+*/
+
 ;(function (namespace, undefined) {
     "use strict";
 
@@ -8,8 +14,18 @@
 
     // We wait for jQuery being ready.
     $(function () {
-        // This function validates the current JSON data set and calls the given callback function
-        // when finished.
+
+        /**
+            This function validates the current JSON data set and calls the given callback function
+            when finished.
+
+            @name adore.json.validate
+            @function
+            @public
+            @param {function} onSuccess - A function to execute in case of validation success.
+            @param {function} onFailure - A function to execute in case of validation failure. This function gets the
+                                          validation error report.
+        */
         function validate(onSuccess, onFailure) {
             var environmentId = "json-schema-draft-03",
                 jsonUri = "YourJsonInstance",
@@ -37,7 +53,14 @@
             }
         }
 
-        // Sets the JSON data set ADORE should operate on.
+        /**
+            Sets the JSON data set ADORE should operate on.
+
+            @name adore.json.set
+            @function
+            @public
+            @param {string} jsonData - The data set as JSON text.
+        */
         function set(jsonData) {
             namespace.reset();
 
@@ -52,8 +75,15 @@
             }
         }
 
-        // Alternate way to set the data set. This function expects a JavaScritp object
-        // instead of a JSON text.
+        /**
+            Alternate way to set the data set. This function expects a JavaScritp object
+            instead of a JSON text.
+
+            @name adore.json.setObject
+            @function
+            @public
+            @param {object} object - The data set as JavaScript object.
+        */
         function setObject(object) {
             namespace.reset();
 

@@ -1,9 +1,7 @@
-/*jshint browser:true,devel:true,jquery:true,strict:true */
-/*global jsPlumb:true */
-
-// ADORE is using the Revealing Module Pattern as described at
-// [Learning JavaScript Design Patterns](http://addyosmani.com/resources/essentialjsdesignpatterns/book/#revealingmodulepatternjavascript)
-
+/**
+    @name adore
+    @namespace
+*/
 ;(function (namespace, undefined) {
     "use strict";
 
@@ -11,30 +9,44 @@
     $(function () {
         var drawing = namespace.drawing;
 
-        // The config object with its default values.
+        /**
+            The config object with its default values.
+            @name adore.config
+            @property {object} drawingArea - The jQuery object wrapping the drawing area.
+        */
         var config = {
             drawingArea: $("#drawingArea"),
         };
 
-        // An object to group some internal state variables.
+        /**
+             An object to group some internal state variables.
+             @name adore.state
+             @property {number} activePathIndex - The index in the JSON data set of the active path on screen.
+             @property {number} pathCount       - The total number of paths in the current JSON data set.
+             @property {object} jsonData        - The current JSON data set.
+        */
         var state = {
-
-            // The index in the JSON data set of the active path on screen.
             activePathIndex: -1,
-
-            // The total number of paths in the current JSON data set.
             pathCount: -1,
-
-            // The current JSON data set.
             jsonData: {}
         };
 
-        // Returns a path ID for a given path index.
+        /**
+            Returns a path ID for a given path index.
+            @name adore.getPathIdByIndex
+            @function
+            @param {number} index - A path index.
+            @return {number} The path ID of the path from the currently loaded dataset at the given index.
+        */
         function getPathIdByIndex(index) {
             return state.jsonData.paths[index].id;
         }
 
-        // Resets the internal ADORE state and destroys any drawings on screen.
+        /**
+            Resets the internal ADORE state and destroys any drawings on screen.
+            @name adore.reset
+            @function
+        */
         function reset() {
             state.activePathIndex = -1;
             state.pathCount = -1;

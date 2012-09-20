@@ -1,3 +1,8 @@
+/**
+    @name adore.drawing
+    @namespace
+*/
+
 ;(function (namespace, undefined) {
     "use strict";
 
@@ -20,16 +25,22 @@
         // If the window gets resized, jsPlump needs to repaint all the SVG edges.
         $(window).resize(repaint);
 
-        // This function draws the given edge. Expects an edge object from the JSON data set like
-        //
-        //     {
-        //       "id"    : "edge1",
-        //       "from"  : { "id" : "author2", ... },
-        //       "to"    : { "id" : "paperA", ... },
-        //       "class" : "authorship"
-        //     }
-        //
-        // and the ID of the path the two nodes are on.
+        /**
+            Draws the given edge.
+
+            @name adore.drawing.drawEdge
+            @function
+            @private
+            @param {object} edge - An edge object like given in the example.
+            @param {number} pathID - The ID of the path the two nodes are on.
+            @example
+            drawEdge({
+                id    : "edge1",
+                from  : { "id" : "author2", ... },
+                to    : { "id" : "paperA", ... },
+                "class" : "authorship"
+            }, 1);
+        */
         function drawEdge(edge, pathID) {
             var src, dest, alternate = {};
 
@@ -56,16 +67,22 @@
             }, alternate);
         }
 
-        // This function creates and returns a `<div>` for a single source or target node.
-        // Expects a node object from the JSON data set like
-        //
-        //     {
-        //       "id"    : "author2",
-        //       "label" : "Author 2",
-        //       "class" : "author"
-        //     }
-        //
-        // and the ID of the path that contains the node.
+        /**
+            Creates and returns a jQuery object wrapping a <code>&lt;div&gt;</code> for a single node.
+            
+            @name adore.drawing.makeNodeDiv
+            @function
+            @private
+            @param {object} node - A node object like given in the example.
+            @param {number} pathID - The ID of the path that contains the node.
+            @returns {object} A jQuery object wrapping a <code>&lt;div&gt;</code> for the node.
+            @example
+            makeNodeDiv({
+                id    : "author2",
+                label : "Author 2",
+                "class" : "author"
+            }, 1);
+        */
         function makeNodeDiv(node, pathID) {
             var nodeDiv = $("<div/>")
             .addClass("node")
@@ -87,20 +104,24 @@
             return nodeDiv;
         }
 
-        // This function creates a `<div>` for a single path from the JSON dataset,
-        // subsequently adding child-`<div>`'s for all source and target nodes as well.
-        // Expects a path object from the JSON data set like
-        //
-        //     {
-        //       "id": "path1",
-        //       "edges":
-        //         [
-        //           { "id": "edge1", ... },
-        //           { "id": "edge3", ... },
-        //           ...
-        //         ]
-        //     }
-        //
+        /**
+            Creates a jQuery object wrapping a <code>&lt;div&gt;</code> for a single path from the dataset.
+            
+            @name adore.drawing.makePathDiv
+            @function
+            @private
+            @param {object} path - A path object like given in the example.
+            @returns {object} A jQuery object wrapping a <code>&lt;div&gt;</code> for the path.
+            @example
+            makePathDiv({
+                id: "path1",
+                edges: [
+                    { id: "edge1", ... },
+                    { id: "edge3", ... },
+                    ...
+                ]
+            });
+        */
         function makePathDiv(path) {
             var pathDiv = $("<div/>")
                 .addClass("path")
@@ -118,9 +139,15 @@
             return pathDiv;
         }
 
-        // This is a helper function for switchToMultiPathView, that merges the source and target nodes,
-        // that are common to all paths. To achieve this impression, we hide all source and target nodes
-        // but the ones on the "middle" path. Than we replace the relevant edges.
+        /**
+            This is a helper function for switchToMultiPathView, that merges the source and target nodes,
+            that are common to all paths. To achieve this impression, we hide all source and target nodes
+            but the ones on the "middle" path. Than we replace the relevant edges.
+
+            @name adore.drawing.mergeSourceAndTargetNodes
+            @function
+            @public
+        */
         function mergeSourceAndTargetNodes() {
             var state = adore.state,
                 config = adore.config,
@@ -160,6 +187,11 @@
             }
         }
 
+        /**
+            @name adore.drawing.expandSourceAndTargetNodes
+            @function
+            @public
+        */
         function expandSourceAndTargetNodes() {
             var config = adore.config,
                 state = adore.state,
@@ -173,9 +205,15 @@
             });
         }
 
-        // This function positions the single nodes that form a path in suitable way.
-        // All nodes are distributed on the available space evenly.
-        // Expects the jQuery object that represents the path `<div>`.
+        /**
+            This function positions the single nodes that form a path in suitable way.
+            All nodes are distributed on the available space evenly.
+
+            @name adore.drawing.positionNodesOnPath
+            @function
+            @private
+            @param {object} pathDiv - The jQuery object that represents the path <code>&lt;div&gt;</code>.
+        */
         function positionNodesOnPath(pathDiv) {
             var nodeDivs = pathDiv.children(".node"),
                 nodeWidth = nodeDivs.first().width(),
@@ -188,6 +226,11 @@
             })
         }
 
+        /**
+            @name adore.drawing.switchPaths
+            @function
+            @public
+        */
         function switchPaths(oldPathDiv, newPathDiv, onCompletion) {
             jsPlumb.animate(oldPathDiv, { opacity: 0 }, { duration: 500, complete: function () {
                 oldPathDiv.hide();
@@ -200,10 +243,15 @@
             } });
         }
 
-        // This function draws all paths from the JSON dataset.
-        // It expects the current internal state, the config and two functions.
-        // `onSuccess` is executed if the drawing succeeds properly.
-        // `onFailure` is executed if there is an error, e.g. validating the JSON dataset.
+        /**
+            This function draws all paths from the JSON dataset.
+
+            @name adore.drawing.draw
+            @function
+            @public
+            @param {function} onSuccess - A function that is executed if the drawing succeeds properly.
+            @param {function} onFailure - A function that is executed if there is an error, e.g. validating the JSON dataset.
+        */
         function draw(onSuccess, onFailure) {
             var state = adore.state,
                 config = adore.config;
@@ -253,6 +301,13 @@
             namespace.json.validate(continueDrawing, onFailure);
         }
 
+        /**
+            Repaints the screen. Nodes are re-positioned and edges are redrawn.
+
+            @name adore.drawing.repaint
+            @function
+            @public
+        */
         function repaint() {
             namespace.config.drawingArea.children().each(function () {
                 positionNodesOnPath($(this));
@@ -260,6 +315,15 @@
             jsPlumb.repaintEverything();
         }
 
+        /**
+            Destroys all drawing on screen.
+
+            @name adore.drawing.destroyAll
+            @function
+            @public
+            @see adore.reset
+
+        */
         function destroyAll() {
             jsPlumb.reset();
             adore.config.drawingArea.empty();
