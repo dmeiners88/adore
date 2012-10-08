@@ -62,43 +62,43 @@
 }
 
 .node.primary.heavy {
-    background-image: url('skins/metal/heavy-node.png');
+    background-image: url('../common/skins/metal/heavy-node.png');
 }
 
 .node.metal.nwobhm {
-    background-image: url('skins/metal/nwobhm-node.png');
+    background-image: url('../common/skins/metal/nwobhm-node.png');
 }
 
 .node.primary.speed {
-    background-image: url('skins/metal/speed-node.png');
+    background-image: url('../common/skins/metal/speed-node.png');
 }
 
 .node.primary.thrash {
-    background-image: url('skins/metal/thrash-node.png');
+    background-image: url('../common/skins/metal/thrash-node.png');
 }
 
 .node.primary.deathmetal {
-    background-image: url('skins/metal/death-node.png');
+    background-image: url('../common/skins/metal/death-node.png');
 }
 
 .node.metal.brutaldeath {
-    background-image: url('skins/metal/brutaldeath-node.png');
+    background-image: url('../common/skins/metal/brutaldeath-node.png');
 }
 
 .node.related.punkrock {
-    background-image: url('skins/metal/punkrock-node.png');
+    background-image: url('../common/skins/metal/punkrock-node.png');
 }
 
 .node.related.hardcorepunk {
-    background-image: url('skins/metal/hardcorepunk-node.png');
+    background-image: url('../common/skins/metal/hardcorepunk-node.png');
 }
 
 .node.fusion.progressive {
-    background-image: url('skins/metal/progressive-node.png');
+    background-image: url('../common/skins/metal/progressive-node.png');
 }
 
 .node.fusion.neoclassical {
-    background-image: url('skins/metal/neoclassical-node.png');
+    background-image: url('../common/skins/metal/neoclassical-node.png');
 }
 
 /* Edge styles */
