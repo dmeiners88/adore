@@ -31,9 +31,66 @@ $(function () {
         }
     }
 
-    // We handle the file upload of the JSON data set and the CSS skin file
+     // We handle the file upload of the JSON data set and the CSS skin file
     // in the same function.
-    function handleFileUpload() {
+    function handleFileUpload(evt) {
+        var fileObject = evt.target.files[0],
+            fileName = evt.target.value,
+            // The user control that fired the event.
+            sourceControl = evt.target.id,
+            state = adore.state;
+
+        if (fileObject) {
+            var reader = new FileReader();
+
+            reader.onload = function (f) {
+                // If a JSON file has been loaded, pass the JSON data set to ADORE,
+                // draw the contents of the file and update the label indicating the file name.
+                if (sourceControl == "jsonFile") {
+                    $("#domain-specific-style").remove();
+
+                    adore.json.set(f.target.result);
+                    $("#jsonInstanceText").text(f.target.result);
+
+                    adore.drawing.draw(undefined, displayReport);
+                    $("#jsonFileName").text(fileName);
+                    $("#pathIDSpan").text((state.activePathIndex + 1).toString() + " of " + state.pathCount);
+
+                    // We show the path navigator
+                    $("#pathNavigator").show();
+                }
+
+                // If a CSS skin file has been loaded, build a `<style>` tag that holds the
+                // contents of the CSS file and append it to the `<head>` tag of the document.
+                if (sourceControl == "skinFile") {
+                    $("#domain-specific-style").remove();
+
+                    var styleNode = $("<style />")
+                        .attr("type", "text/less")
+                        .attr("id", "domain-specific-style")
+                        .text(f.target.result);
+                    $("head").append(styleNode);
+
+                    $("#lessText").text(f.target.result);
+
+                    less.refresh();
+
+                    // A repaint is needed because the appliance of the CSS file may have changed
+                    // the size and position of the nodes.
+                    adore.drawing.repaint();
+
+                    // We also update the label indicating the CSS file name.
+                    $("#skinFileName").text(fileName);
+                }
+            };
+
+            reader.readAsText(fileObject);
+        } else {
+            console.error("adore: failed to load from file " + evt.target.value + ".");
+        }
+    }
+
+    function draw() {
         adore.reset();
         var state = adore.state;
 
@@ -117,7 +174,7 @@ $(function () {
 
             pathIDSpan.text((state.activePathIndex + 1).toString() + " of " + state.pathCount);
 
-            handleFileUpload();
+            draw();
         });
 
         // Reload JSON Button
@@ -126,7 +183,7 @@ $(function () {
 
             adore.reset();
 
-            handleFileUpload();
+            draw();
 
             navigation.navigatePaths(oldIndex);
 
@@ -137,20 +194,34 @@ $(function () {
         $("#reloadCSSButton").click(function () {
             $("#domain-specific-style").remove();
 
-        var styleNode = $("<style />")
-            .attr("type", "text/less")
-            .attr("id", "domain-specific-style")
-            .text($("#lessText").val());
-
-        $("head").append(styleNode);
-
-        less.refresh();
-
-        // A repaint is needed because the appliance of the CSS file may have changed
-        // the size and position of the nodes.
-        adore.drawing.repaint();
+            var styleNode = $("<style />")
+                .attr("type", "text/less")
+                .attr("id", "domain-specific-style")
+                .text($("#lessText").val());
+    
+            $("head").append(styleNode);
+    
+            less.refresh();
+    
+            // A repaint is needed because the appliance of the CSS file may have changed
+            // the size and position of the nodes.
+            adore.drawing.repaint();
 
         });
+
+        // We set up a new pair of buttons to invoke the file select dialog
+        // boxes. The original, ugly buttons have been hidden via CSS.
+        var skinFileInput = $("#skinFile"),
+            jsonFileInput = $("#jsonFile");
+
+        // The ugly, hidden buttons are bound to their corresponding functions.
+        skinFileInput.get(0).onchange = handleFileUpload;
+        jsonFileInput.get(0).onchange = handleFileUpload;
+
+        // The new, cool buttons fire the click event of the hidden buttons, if they themselves
+        // are clicked.
+        $("#skinFileBrowseButton").get(0).onclick = function () { skinFileInput.click(); };
+        $("#jsonFileBrowseButton").get(0).onclick = function () { jsonFileInput.click(); };
     }
 
     init();
