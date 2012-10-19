@@ -90,18 +90,12 @@
             @public
         */
         function switchToSinglePathView() {
-            var config = adore.config,
-                state = adore.state;
+            var state = adore.state;
 
-            // We expand the previously merged nodes...
-            adore.drawing.expandSourceAndTargetNodes();
+            adore.drawing.destroyAll();
+            adore.drawing.draw();
 
-            // ...and hide all inactive paths.
-            config.drawingArea.children().filter(function (index) {
-                return (index != state.activePathIndex);
-            }).hide();
-
-            adore.drawing.repaint();
+            state.activePathIndex = 0;
         }
 
         navigation.navigatePaths = navigatePaths;

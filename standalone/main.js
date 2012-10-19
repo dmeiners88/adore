@@ -30,7 +30,7 @@ requirejs.config({
             exports: "adore"
         },
         "adore/adore.drawing": ["jsPlumb"],
-        "adore/adore.navigation": ["jquery", "jsPlumb"],
+        "adore/adore.navigation": ["jquery", "jsPlumb", "adore/adore.drawing"],
         "adore/adore.json": ["jquery", "json.ref", "adore/adore.json.schema"]
     }
 });

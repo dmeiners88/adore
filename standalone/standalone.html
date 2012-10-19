@@ -8,6 +8,16 @@
         <link href="standalone.less" type="text/css" rel="stylesheet/less">
 
         <script data-main="main" src="../common/js/require.js"></script>
+
+        <style>
+            .editor {
+                width: 95%;
+                font-family: monospace;
+                font-size: 10pt;
+                height: 25em;
+                resize: none;
+            }
+        </style>
     </head>
     <body>
 
@@ -19,21 +29,23 @@
                     <span>O</span>bject <span>RE</span>lations
                 </h2>
             </hgroup>
-            <div>
-                <form id="fileInputForm">
-                    <div>
-                        <label for="skinFile">CSS Skin File:</label>
-                        <span id="skinFileName"></span>
-                        <input type="file" id="skinFile">
-                        <button id="skinFileBrowseButton" type="button">Browse...</button>
-                    </div>
-                    <div>
-                        <label for="jsonFile">JSON Data File:</label>
-                        <span id="jsonFileName"></span>
-                        <input type="file" id="jsonFile">
-                        <button id="jsonFileBrowseButton" type="button">Browse...</button>
-                    </div>
-                </form>
+            <button id="drawButton">Draw!</button>
+            <button id="reloadJSONButton">Reload JSON!</button>
+            <button id="reloadCSSButton">Reload LESS or CSS!</button>
+        </div>
+
+        <div style="display: table; width: 100%; ">
+
+            <div style="display: table-cell; text-align: center;">
+                <div>JSON instance</div>
+                <!-- JSON instance textbox -->
+                <textarea class="editor" id="jsonInstanceText" spellcheck="false"></textarea>
+            </div>
+
+            <div style="display: table-cell; text-align: center;">
+                <div>LESS or CSS</div>
+                <!-- LESS CSS textbox -->
+                <textarea class="editor" id="lessText" spellcheck="false"></textarea>
             </div>
         </div>
 
