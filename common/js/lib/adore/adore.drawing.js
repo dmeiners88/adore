@@ -42,29 +42,19 @@
             }, 1);
         */
         function drawEdge(edge, pathID) {
-            var src, dest, alternate = {};
 
-            if (pathID.hasOwnProperty("src")) {
-                src = pathID.src;
-                dest = pathID.dest;
-                alternate = { connector: [ "Bezier", { curviness: 250 } ] };
-            } else {
-                src = pathID;
-                dest = pathID;
-            }
-
-            console.log("adore: drawing edge from " + src + "-" + edge.from.id + " to " +
-                    dest + "-" + edge.to.id);
+            console.log("adore: drawing edge from " + pathID + "-" + edge.from.id + " to " +
+                    pathID + "-" + edge.to.id);
 
             jsPlumb.connect({
-                source: src + "-" + edge.from.id,
-                target: dest + "-" + edge.to.id,
+                source: pathID + "-" + edge.from.id,
+                target: pathID + "-" + edge.to.id,
                 cssClass: edge["class"],
                 overlays: [
                     [ "Label", { label: edge["class"], cssClass: edge["class"] + " class" } ],
                     [ "Label", { label: "", cssClass: edge["class"] + " icon" } ]
                 ]
-            }, alternate);
+            });
         }
 
         /**
@@ -185,24 +175,6 @@
             for (var i = 0; i < allConns.length; i += 1) {
                 allConns[i].setConnector("Bezier", { curviness: 300 });
             }
-        }
-
-        /**
-            @name adore.drawing.expandSourceAndTargetNodes
-            @function
-            @public
-        */
-        function expandSourceAndTargetNodes() {
-            var config = adore.config,
-                state = adore.state,
-                paths = config.drawingArea.children();
-
-            // We can restore the merged nodes to their original position by
-            // setting their CSS property "top" to nothing.
-            paths.each(function () {
-                var nodes = $(this).children("div.node");
-                jsPlumb.animate(nodes, { top: nodes.data("oldTop") + "px", opacity: 1 }, { duration: 500, complete: repaint });
-            });
         }
 
         /**
@@ -334,7 +306,6 @@
         drawing.repaint = repaint;
         drawing.destroyAll = destroyAll;
         drawing.mergeSourceAndTargetNodes = mergeSourceAndTargetNodes;
-        drawing.expandSourceAndTargetNodes = expandSourceAndTargetNodes;
         drawing.switchPaths = switchPaths;
     });
 }(window.adore = window.adore || {}));
