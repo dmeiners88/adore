@@ -95,7 +95,9 @@
             adore.drawing.destroyAll();
             adore.drawing.draw();
 
-            state.activePathIndex = 0;
+            if (state.activePathIndex != -1) {
+                state.activePathIndex = 0;
+            }
         }
 
         navigation.navigatePaths = navigatePaths;

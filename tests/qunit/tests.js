@@ -43,13 +43,13 @@ test("No paths are created.", 11, function () {
 });
 
 test("Path switching updates internal state correctly.", 11+4, function () {
-    adore.navigation.switchToNextPath();
+    adore.navigation.navigatePaths(1);
     equal(adore.state.activePathIndex, -1,
         "after switchToNextPath() activePathIndex retains correct value of -1.");
 
-    adore.navigation.switchToPreviousPath();
+    adore.navigation.navigatePaths(-1);
     equal(adore.state.activePathIndex, -1,
-        "after switchToPreviousPath() activePathIndex retains correct value of -1.");
+        "after navigatePaths(-1) activePathIndex retains correct value of -1.");
 
     adore.navigation.switchToSinglePathView();
     equal(adore.state.activePathIndex, -1,
@@ -149,29 +149,29 @@ test("Paths, nodes and edges are created correctly.", 11+6, function () {
 });
 
 test("Path switching updates internal state correctly.", 11+8, function () {
-    adore.navigation.switchToNextPath();
+    adore.navigation.navigatePaths(1);
     equal(adore.state.activePathIndex, 1,
-        "after switchToNextPath() activePathIndex has correct value of 1.");
+        "after navigatePaths(1) activePathIndex has correct value of 1.");
 
-    adore.navigation.switchToNextPath();
+    adore.navigation.navigatePaths(1);
     equal(adore.state.activePathIndex, 2,
-        "after switchToNextPath() activePathIndex has correct value of 2.");
+        "after navigatePaths(1) activePathIndex has correct value of 2.");
 
-    adore.navigation.switchToNextPath();
+    adore.navigation.navigatePaths(1);
     equal(adore.state.activePathIndex, 2,
-        "after switchToNextPath() activePathIndex retains correct value of 2 (maximum path index was hit).");
+        "after navigatePaths(1) activePathIndex retains correct value of 2 (maximum path index was hit).");
 
-    adore.navigation.switchToPreviousPath(function () {});
+    adore.navigation.navigatePaths(-1);
     equal(adore.state.activePathIndex, 1,
-        "after switchToPreviousPath() activePathIndex has correct value of 1.");
+        "after navigatePaths(-1) activePathIndex has correct value of 1.");
 
-    adore.navigation.switchToPreviousPath(function () {});
+    adore.navigation.navigatePaths(-1);
     equal(adore.state.activePathIndex, 0,
-        "after switchToPreviousPath() activePathIndex has correct value of 0.");
+        "after navigatePaths(-1) activePathIndex has correct value of 0.");
 
-    adore.navigation.switchToPreviousPath(function () {});
+    adore.navigation.navigatePaths(-1);
     equal(adore.state.activePathIndex, 0,
-        "after switchToPreviousPath() activePathIndex retains correct value of 0 (minimum path index was hit).");
+        "after navigatePaths(-1) activePathIndex retains correct value of 0 (minimum path index was hit).");
 
     adore.navigation.switchToSinglePathView();
     equal(adore.state.activePathIndex, 0,
@@ -190,24 +190,24 @@ test("Path switching updates visibility of paths on screen correctly.", 11+21, f
     ok($("#path2").is(":hidden"), "and the second path is hidden.");
     ok($("#path3").is(":hidden"), "and the third path is hidden.");
 
-    adore.navigation.switchToNextPath(function () {});
-    ok($("#path1").is(":hidden"), "after switchToNextPath() the first path is hidden.");
+    adore.navigation.navigatePaths(1);
+    ok($("#path1").is(":hidden"), "after navigatePaths(1) the first path is hidden.");
     ok($("#path2").is(":visible"), "and the second path is visible.");
     ok($("#path3").is(":hidden"), "and the third path is hidden.");
 
-    adore.navigation.switchToNextPath(function () {});
-    ok($("#path1").is(":hidden"), "after switchToNextPath() the first path is hidden.");
+    adore.navigation.navigatePaths(1);
+    ok($("#path1").is(":hidden"), "after navigatePaths(1) the first path is hidden.");
     ok($("#path2").is(":hidden"), "and the second path is hidden.");
     ok($("#path3").is(":visible"), "and the third path is visible.");
 
-    adore.navigation.switchToNextPath(function () {});
+    adore.navigation.navigatePaths(1);
     ok($("#path1").is(":hidden"),
-        "after switchToNextPath() the first path stays hidden (maximum path index was hit).");
+        "after navigatePaths(1) the first path stays hidden (maximum path index was hit).");
     ok($("#path2").is(":hidden"), "and the second path is hidden.");
     ok($("#path3").is(":visible"), "and the third path is visible.");
 
-    adore.navigation.switchToPreviousPath(function () {});
-    ok($("#path1").is(":hidden"), "after switchToPreviousPath() the first path is hidden.");
+    adore.navigation.navigatePaths(-1);
+    ok($("#path1").is(":hidden"), "after navigatePaths(-1) the first path is hidden.");
     ok($("#path2").is(":visible"), "and the second path is visible.");
     ok($("#path3").is(":hidden"), "and the third path is hidden.");
 
@@ -217,7 +217,7 @@ test("Path switching updates visibility of paths on screen correctly.", 11+21, f
     ok($("#path3").is(":visible"), "and the third path is visible.");
 
     adore.navigation.switchToSinglePathView();
-    ok($("#path1").is(":hidden"), "after switchToSinglePathView() the first path is hidden.");
-    ok($("#path2").is(":visible"), "and the second path is visible.");
+    ok($("#path1").is(":visible"), "after switchToSinglePathView() the first path is visible.");
+    ok($("#path2").is(":hidden"), "and the second path is hidden.");
     ok($("#path3").is(":hidden"), "and the third path is hidden.");
 });
