@@ -209,6 +209,39 @@ $(function () {
 
         });
 
+        // Load academic button
+        $("#loadAcademic").click(function () {
+            $.get("../json-instances/academic-instance2.json", function(data) {
+                $("#jsonInstanceText").text(data);
+            });
+
+            $.get("../common/skins/academic/academic.less", function(data) {
+                $("#lessText").text(data);
+            });            
+        });
+
+        // Load social button
+        $("#loadSocial").click(function () {
+            $.get("../json-instances/social-instance.json", function(data) {
+                $("#jsonInstanceText").text(data);
+            });
+
+            $.get("../common/skins/social/social.less", function(data) {
+                $("#lessText").text(data);
+            });            
+        });
+
+        // Load music button
+        $("#loadMusic").click(function () {
+            $.get("../json-instances/metal-instance.json", function(data) {
+                $("#jsonInstanceText").text(data);
+            });
+
+            $.get("../common/skins/metal/metal.css", function(data) {
+                $("#lessText").text(data);
+            });            
+        });
+
         // We set up a new pair of buttons to invoke the file select dialog
         // boxes. The original, ugly buttons have been hidden via CSS.
         var skinFileInput = $("#skinFile"),
