@@ -213,33 +213,33 @@ $(function () {
         $("#loadAcademic").click(function () {
             $.get("../json-instances/academic-instance2.json", function(data) {
                 $("#jsonInstanceText").text(data);
-            });
+            }, "text");
 
             $.get("../common/skins/academic/academic.less", function(data) {
                 $("#lessText").text(data);
-            });            
+            }, "text");            
         });
 
         // Load social button
         $("#loadSocial").click(function () {
             $.get("../json-instances/social-instance.json", function(data) {
                 $("#jsonInstanceText").text(data);
-            });
+            }, "text");
 
             $.get("../common/skins/social/social.less", function(data) {
                 $("#lessText").text(data);
-            });            
+            }, "text");            
         });
 
         // Load music button
         $("#loadMusic").click(function () {
             $.get("../json-instances/metal-instance.json", function(data) {
                 $("#jsonInstanceText").text(data);
-            });
+            }, "text");
 
             $.get("../common/skins/metal/metal.css", function(data) {
                 $("#lessText").text(data);
-            });            
+            }, "text");            
         });
 
         // We set up a new pair of buttons to invoke the file select dialog
