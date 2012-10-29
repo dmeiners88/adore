@@ -1,0 +1,98 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>ADORE – An Application for Drawing Object RElations</title>
+
+        <link href="../common/css/normalize.css" type="text/css" rel="stylesheet">
+        <link href="standalone.less" type="text/css" rel="stylesheet/less">
+
+        <script data-main="main" src="../common/js/require.js"></script>
+
+        <style>
+            .editor {
+                width: 95%;
+                font-family: monospace;
+                font-size: 10pt;
+                height: 25em;
+                resize: none;
+            }
+        </style>
+    </head>
+    <body>
+
+        <!-- Menu box -->
+        <div id="menuBox" class="common-box">
+            <hgroup id="headerGroup">
+                <h1 id="header">ADORE</h1>
+                <h2 id="subHeader">An <span>A</span>pplication for <span>D</span>rawing
+                    <span>O</span>bject <span>RE</span>lations
+                </h2>
+            </hgroup>
+
+            <div>
+                <form id="fileInputForm">
+                    <div>
+                        <label for="skinFile">CSS Skin File:</label>
+                        <span id="skinFileName"></span>
+                        <input type="file" id="skinFile">
+                        <button id="skinFileBrowseButton" type="button">Browse...</button>
+                    </div>
+                    <div>
+                        <label for="jsonFile">JSON Data File:</label>
+                        <span id="jsonFileName"></span>
+                        <input type="file" id="jsonFile">
+                        <button id="jsonFileBrowseButton" type="button">Browse...</button>
+                    </div>
+                </form>
+            </div>
+
+            <div>
+                <h2>Controls</h2>
+                <button id="drawButton">Draw!</button>
+                <button id="reloadJSONButton">Reload JSON!</button>
+                <button id="reloadCSSButton">Reload LESS or CSS!</button>
+            </div>
+            <div>
+                <h2>Examples</h2>
+                <button id="loadAcademic">Load Academic Example</button>
+                <button id="loadSocial">Load Social Example</button>
+                <button id="loadMusic">Load Music Example</button>
+            </div>
+        </div>
+
+        <div style="display: table; width: 100%; ">
+
+            <div style="display: table-cell; text-align: center;">
+                <div>JSON instance</div>
+                <!-- JSON instance textbox -->
+                <textarea class="editor" id="jsonInstanceText" spellcheck="false"></textarea>
+            </div>
+
+            <div style="display: table-cell; text-align: center;">
+                <div>LESS or CSS</div>
+                <!-- LESS CSS textbox -->
+                <textarea class="editor" id="lessText" spellcheck="false"></textarea>
+            </div>
+        </div>
+
+        <!-- Drawing area -->
+        <div id="drawingArea">
+        </div>
+
+        <!-- JSON Schema validation result panel -->
+        <div id="reportBox" class="common-box">
+            <h2>There were errors validating the JSON data set...</h2>
+        </div>
+
+        <!-- Path navigator box -->
+        <div id="pathNavigator" class="common-box">
+            Path <span id="pathIDSpan">1 of 3</span>
+            <span id="pathNavButtonSpan">
+                <button id="previousPathButton" type="button">Previous path</button>
+                <button id="nextPathButton" type="button">Next path</button>
+                <input id="allPathsToggle" type="checkbox" /> All Paths
+            </span>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,83 @@
+/* social.less – a stylesheet to use with social data. */
+
+/* Common variables */
+
+@nodeSize: 60px;
+@iconSize: 30px;
+@imagePath: '../common/skins/social/';
+
+/* Parametric Mixin */
+
+.nodeBackground (@class) {
+    background-image: url(~"'@{imagePath}@{class}-node.png'");
+}
+
+.overlayBackground (@class) {
+    background-image: url(~"'@{imagePath}@{class}-edge.png'");
+}
+
+.node {
+    width: @nodeSize;
+    height: @nodeSize;
+
+    box-shadow: 0px 0px;
+    border-radius: 0em 0em 0em 0em;
+
+    .label {
+        padding-top: 70px;
+    }
+
+    &.male {
+        .nodeBackground('male');
+    }
+
+    &.female {
+        .nodeBackground('female');
+    }
+
+    &.movie {
+        .nodeBackground('movie');
+    }
+
+    &.musicBand {
+        .nodeBackground('musicBand');
+    }
+}
+
+._jsPlumb_connector path {
+    stroke-width: 1;
+}
+
+._jsPlumb_overlay {
+    &.label {
+        margin-top: @iconSize;
+    }
+
+    &.class {
+        margin-top: @iconSize;
+    }
+
+    &.icon {
+        display: block;
+        width: 15px;
+        height: 15px;
+        background-size: 15px;
+        background-repeat: no-repeat;
+        background-color: white;
+        background-position: center;
+
+        &.friendship {
+            .overlayBackground('friendship');
+        }
+
+        &.likes {
+            .overlayBackground('is-liked-by');
+            transform: scale(-1,1);
+            -moz-transform: scale(-1,1);
+        }
+
+        &.is-liked-by {
+            .overlayBackground('is-liked-by');
+        }
+    }
+}

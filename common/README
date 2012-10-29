@@ -1,0 +1,4 @@
+This folder holds all resources that are common to all ADORE-clients.
+This includes shared CSS files, all the CSS skins and most importantly
+all shared JavaScript code, including the AMD-compliant require.js script loader, the adore.js
+module and all its dependencies.

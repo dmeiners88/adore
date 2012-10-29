@@ -1,0 +1,49 @@
+{
+    "nodes":
+    [
+        { "id": "author1", "label": "Author 1",  "class": "author" },
+        { "id": "author2", "label": "Author 2",  "class": "author" },
+        { "id": "keyword1", "label": "Social Media", "class": "keyword social-media" },
+        { "id": "keyword2", "label": "Web 2.0", "class": "keyword web20" },
+        { "id": "org1", "label": "UPB", "class": "org upb" },
+        { "id": "org2", "label": "MIT", "class": "org mit" },
+        { "id": "paperA", "label": "Paper A", "class": "paper" },
+        { "id": "paperB", "label": "Paper B", "class": "paper" }
+    ],
+    "edges":
+    [
+        { "id": "author1-keyword1", "from": { "$ref": "author1" }, "to": { "$ref": "keyword1" },
+          "class": "assigned-keyword", "label": "12" },
+        { "id": "author1-org1", "from": { "$ref": "author1" }, "to": { "$ref": "org1" },
+          "class": "associated-with" },
+        { "id": "author1-author2", "from": { "$ref": "author1" }, "to": { "$ref": "author2" },
+          "class": "co-authored", "label": "3" },
+        { "id": "author1-paperA", "from": { "$ref": "author1" }, "to": { "$ref": "paperA" },
+          "class": "authored" },
+        { "id": "keyword1-keyword2", "from": { "$ref": "keyword1" }, "to": { "$ref": "keyword2" },
+          "class": "commonly-assigned", "label": "17" },
+        { "id": "keyword2-author2", "from": { "$ref": "keyword2" }, "to": { "$ref": "author2" },
+          "class": "assigned-keyword", "label": "18" },
+        { "id": "org1-org2", "from": { "$ref": "org1" }, "to": { "$ref": "org2" },
+          "class": "co-authored", "label": "17" },
+        { "id": "org2-author2", "from": { "$ref": "org2" }, "to": { "$ref": "author2" },
+          "class": "associated-with" },
+        { "id": "paperA-paperB", "from": { "$ref": "paperA" }, "to": { "$ref": "paperB" },
+          "class": "similar", "label": "75%" },
+        { "id": "paperB-author2", "from": { "$ref": "paperB" }, "to": { "$ref": "author2" },
+          "class": "authored" }
+    ],
+    "paths":
+    [
+        { "id": "path1", "edges": [ { "$ref": "author1-keyword1" },
+                                    { "$ref": "keyword1-keyword2" },
+                                    { "$ref": "keyword2-author2" } ] },
+        { "id": "path2", "edges": [ { "$ref": "author1-org1" },
+                                    { "$ref": "org1-org2" },
+                                    { "$ref": "org2-author2" } ] },
+        { "id": "path3", "edges": [ { "$ref": "author1-author2" } ] },
+        { "id": "path4", "edges": [ { "$ref": "author1-paperA" },
+                                    { "$ref": "paperA-paperB" },
+                                    { "$ref": "paperB-author2" } ] }
+    ]
+}

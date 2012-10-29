@@ -1,0 +1,114 @@
+/* metal.css – a stylesheet to use with metal genre data. */
+
+/* Class styles */
+
+/* General style */
+
+.path {
+    height: 200px;
+}
+
+.node {
+    box-shadow: 0px 0px;
+    border-radius: 0em 0em 0em 0em;
+}
+
+
+/* Node styles */
+
+.node.primary {
+    width: 200px;
+    height: 200px;
+}
+
+.node.metal {
+    width: 100px;
+    height: 100px;
+    margin-top: 50px;
+}
+
+.node.related {
+    width: 60px;
+    height: 60px;
+    margin-top: 70px;
+}
+
+.node.fusion {
+    width: 80px;
+    height: 80px;
+    margin-top: 60px;
+}
+
+.node.primary .label {
+    padding-top: 200px;
+}
+
+.node.metal .label {
+    padding-top: 150px;
+}
+
+.node.related .label {
+    padding-top: 130px;
+}
+
+.node.fusion .label {
+    padding-top: 140px;
+}
+
+.node {
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+}
+
+.node.primary.heavy {
+    background-image: url('../common/skins/metal/heavy-node.png');
+}
+
+.node.metal.nwobhm {
+    background-image: url('../common/skins/metal/nwobhm-node.png');
+}
+
+.node.primary.speed {
+    background-image: url('../common/skins/metal/speed-node.png');
+}
+
+.node.primary.thrash {
+    background-image: url('../common/skins/metal/thrash-node.png');
+}
+
+.node.primary.deathmetal {
+    background-image: url('../common/skins/metal/death-node.png');
+}
+
+.node.metal.brutaldeath {
+    background-image: url('../common/skins/metal/brutaldeath-node.png');
+}
+
+.node.related.punkrock {
+    background-image: url('../common/skins/metal/punkrock-node.png');
+}
+
+.node.related.hardcorepunk {
+    background-image: url('../common/skins/metal/hardcorepunk-node.png');
+}
+
+.node.fusion.progressive {
+    background-image: url('../common/skins/metal/progressive-node.png');
+}
+
+.node.fusion.neoclassical {
+    background-image: url('../common/skins/metal/neoclassical-node.png');
+}
+
+/* Edge styles */
+
+._jsPlumb_connector.default path {
+    stroke: gray;
+}
+
+/* Overlay styles */
+
+._jsPlumb_overlay.default {
+    display: none;
+}

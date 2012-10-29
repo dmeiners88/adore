@@ -1,0 +1,81 @@
+/* academic.less – a stylesheet to use with academic data. */
+
+/* Common variables */
+
+@nodeSize: 60px;
+@iconSize: 30px;
+@imagePath: '../common/skins/academic/';
+
+/* Parametric Mixin */
+
+.nodeBackground (@class) {
+    background-image: url(~"'@{imagePath}@{class}-node.png'");
+}
+
+.overlayBackground (@class) {
+    background-image: url(~"'@{imagePath}@{class}-edge.png'");
+}
+
+.node {
+    width: @nodeSize;
+    height: @nodeSize;
+    background-size: @nodeSize;
+    background-repeat: no-repeat;
+    background-position: center;
+
+    box-shadow: 0px 0px;
+    border-radius: 0em 0em 0em 0em;
+
+    .label {
+        padding-top: 70px;
+    }
+
+    &.author {
+        .nodeBackground('author');
+    }
+
+    &.upb {
+        .nodeBackground('upb');
+    }
+
+    &.paper {
+        .nodeBackground('paper');
+    }
+
+    &.mit {
+        .nodeBackground('mit');
+    }
+
+    &.keyword {
+       .nodeBackground('keyword');
+    }
+}
+
+._jsPlumb_connector path {
+    stroke-width: 1;
+}
+
+._jsPlumb_overlay {
+    &.class {
+        display: block;
+    }
+
+    &.icon {
+        display: none;
+        width: @iconSize;
+        height: @iconSize;
+        background-size: @iconSize;
+        background-repeat: no-repeat;
+        background-color: white;
+        background-position: center;
+
+        &.authored {
+            .overlayBackground('wrote');
+            z-index: 2;
+        }
+
+        &.associated-with {
+            display: none;
+        }
+    }
+}

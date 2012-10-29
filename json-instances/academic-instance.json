@@ -1,0 +1,26 @@
+{
+    "nodes":
+    [
+        { "id": "author2", "label": "Author 2",  "class": "author" },
+        { "id": "paperA", "label": "Paper A", "class": "paper"  },
+        { "id": "paperB", "label": "Paper B", "class": "paper"  },
+        { "id": "paperC", "label": "Paper C", "class": "paper"  },
+        { "id": "conferenceA", "label": "Conf A", "class": "conference" },
+        { "id": "conferenceB", "label": "Conf B", "class": "conference" }
+    ],
+    "edges":
+    [
+        { "id": "edge1", "from": { "$ref": "author2" }, "to": { "$ref": "paperA" }, "class": "wrote" },
+        { "id": "edge2", "from": { "$ref": "paperA" }, "to": { "$ref": "paperB" }, "class": "cites" },
+        { "id": "edge3", "from": { "$ref": "paperA" }, "to": { "$ref": "paperC" }, "class": "cites" },
+        { "id": "edge4", "from": { "$ref": "paperB" }, "to": { "$ref": "conferenceA" }, "class": "presented-at" },
+        { "id": "edge5", "from": { "$ref": "paperC" }, "to": { "$ref": "conferenceA" }, "class": "presented-at" },
+        { "id": "edge6", "from": { "$ref": "paperA" }, "to": { "$ref": "conferenceA" }, "class": "presented-at" }
+    ],
+    "paths":
+    [
+        { "id": "path1", "edges": [ { "$ref": "edge1" }, { "$ref": "edge3" }, { "$ref": "edge5" } ] },
+        { "id": "path2", "edges": [ { "$ref": "edge1" }, { "$ref": "edge2" }, { "$ref": "edge4" } ] },
+        { "id": "path3", "edges": [ { "$ref": "edge1" }, { "$ref": "edge6" }] }
+    ]
+}

@@ -1,0 +1,38 @@
+{
+    "nodes":
+    [
+        { "id": "heavy", "label": "Heavy Metal",  "class": "primary heavy" },
+        { "id": "nwobhm", "label": "New Wave of British Heavy Metal", "class": "metal nwobhm"},
+        { "id": "speed", "label": "Speed Metal", "class": "primary speed"},
+        { "id": "neoclassical", "label": "Neo-classical Metal", "class": "fusion neoclassical"},
+        { "id": "progressive", "label": "Progressive Metal", "class": "fusion progressive"},
+        { "id": "thrash", "label": "Thrash Metal", "class": "primary thrash"},
+        { "id": "punkrock", "label": "Punk Rock", "class": "related punkrock"},
+        { "id": "hardcorepunk", "label": "Original Harcore Punk", "class": "related hardcorepunk"},
+        { "id": "deathmetal", "label": "Death Metal", "class": "primary deathmetal"},
+        { "id": "brutaldeath", "label": "Brutal Death", "class": "metal brutaldeath"}
+    ],
+    "edges":
+    [
+        { "id": "heavy-nwobhm", "from": { "$ref": "heavy" }, "to": { "$ref": "nwobhm" }, "class": "default" },
+        { "id": "nwobhm-speed", "from": { "$ref": "nwobhm" }, "to": { "$ref": "speed" }, "class": "default" },
+        { "id": "neoclassical-speed", "from": { "$ref": "neoclassical" }, "to": { "$ref": "speed" }, "class": "default" },
+        { "id": "heavy-progressive", "from": { "$ref": "heavy" }, "to": { "$ref": "progressive" }, "class": "default" },
+        { "id": "progressive-neoclassical", "from": { "$ref": "progressive" }, "to": { "$ref": "neoclassical" }, "class": "default" },
+        { "id": "speed-thrash", "from": { "$ref": "speed" }, "to": { "$ref": "thrash" }, "class": "default" },
+        { "id": "nwobhm-punkrock", "from": { "$ref": "nwobhm" }, "to": { "$ref": "punkrock" }, "class": "default" },
+        { "id": "punkrock-hardcorepunk", "from": { "$ref": "punkrock" }, "to": { "$ref": "hardcorepunk" }, "class": "default" },
+        { "id": "hardcorepunk-thrash", "from": { "$ref": "hardcorepunk" }, "to": { "$ref": "thrash" }, "class": "default" },
+        { "id": "thrash-deathmetal", "from": { "$ref": "thrash" }, "to": { "$ref": "deathmetal" }, "class": "default" },
+        { "id": "deathmetal-brutaldeath", "from": { "$ref": "deathmetal" }, "to": { "$ref": "brutaldeath" }, "class": "default" }
+    ],
+    "paths":
+    [
+        { "id": "path1", "edges": [ { "$ref": "heavy-nwobhm" }, { "$ref": "nwobhm-speed" }, { "$ref": "speed-thrash" },
+                                    { "$ref": "thrash-deathmetal" }, { "$ref": "deathmetal-brutaldeath" } ] },
+        { "id": "path2", "edges": [ { "$ref": "heavy-nwobhm" }, { "$ref": "nwobhm-punkrock" }, { "$ref": "punkrock-hardcorepunk" },
+                                    { "$ref": "hardcorepunk-thrash" }, { "$ref": "thrash-deathmetal" }, { "$ref": "deathmetal-brutaldeath" } ] },
+        { "id": "path3", "edges": [ { "$ref": "heavy-progressive" }, { "$ref": "progressive-neoclassical" }, { "$ref": "neoclassical-speed" },
+                                    { "$ref": "speed-thrash" }, { "$ref": "thrash-deathmetal" }, { "$ref": "deathmetal-brutaldeath" } ] }
+    ]
+}
