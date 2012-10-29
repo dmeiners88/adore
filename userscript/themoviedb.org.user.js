@@ -55,6 +55,7 @@ function run() {
     if (result) {
         var currentId = result[1],
             previousId = GM_getValue("previousId");
+
         myLog("caught actor page");
     
         if (currentId !== previousId) {
@@ -62,17 +63,33 @@ function run() {
         }
 
         $("#mainCol").prepend($("<div />").attr("id", "drawingArea"));
+        var drawingArea = $("#drawingArea");
 
         $.extend(window.adore.config, {
-            drawingArea: $("#drawingArea")
+            drawingArea: drawingArea
         });
 
         GM_addStyle(GM_getResourceText("bare-css"));
-        $("#drawingArea").css("margin-bottom", "2em");
+        drawingArea.css("margin-bottom", "2em");
     
         myLog("firing with ids " + currentId + " and " + previousId);
     
-        fire(currentId, previousId);
+        $.when(fire(currentId, previousId)).then(function () {
+            var prevButton = $("<button />").click(function () {
+                window.adore.navigation.navigatePaths(-1, function () {
+                    window.adore.drawing.repaint();
+                });
+            }).text("<");
+            var nextButton = $("<button />").click(function () {
+                window.adore.navigation.navigatePaths(1, function () {
+                    window.adore.drawing.repaint();
+                });
+                window.adore.drawing.repaint();
+            }).text(">");
+
+            drawingArea.prepend(nextButton);
+            drawingArea.prepend(prevButton);
+        });
     }
 }
 
