@@ -31,6 +31,24 @@
             </hgroup>
 
             <div>
+                <h2>Step 1: Load a predefined example:</h2>
+                <ul>
+                    <li><button id="loadAcademic">Load Academic Example</button></li>
+                    <li><button id="loadSocial">Load Social Example</button></li>
+                    <li><button id="loadMusic">Load Music Example</button></li>
+                </ul>
+            </div>
+            <div>
+                <h2>Step 2: Hit the Draw! button</h2>
+                <button id="drawButton">Draw!</button>
+                <button id="reloadJSONButton">Reload JSON!</button>
+                <button id="reloadCSSButton">Reload LESS or CSS!</button>
+            </div>
+            <div>
+                <h2>Step 3: Manipulate JSON and/or CSS and use the buttons "Reload JSON!" and "Reload LESS or CSS!"</h2>
+            </div>
+            <div>
+                <h2>Optional: Load files from your local hard disk</h2>
                 <form id="fileInputForm">
                     <div>
                         <label for="skinFile">CSS Skin File:</label>
@@ -45,19 +63,6 @@
                         <button id="jsonFileBrowseButton" type="button">Browse...</button>
                     </div>
                 </form>
-            </div>
-
-            <div>
-                <h2>Controls</h2>
-                <button id="drawButton">Draw!</button>
-                <button id="reloadJSONButton">Reload JSON!</button>
-                <button id="reloadCSSButton">Reload LESS or CSS!</button>
-            </div>
-            <div>
-                <h2>Examples</h2>
-                <button id="loadAcademic">Load Academic Example</button>
-                <button id="loadSocial">Load Social Example</button>
-                <button id="loadMusic">Load Music Example</button>
             </div>
         </div>
 
@@ -91,7 +96,7 @@
             <span id="pathNavButtonSpan">
                 <button id="previousPathButton" type="button">Previous path</button>
                 <button id="nextPathButton" type="button">Next path</button>
-                <input id="allPathsToggle" type="checkbox" /> All Paths
+                <!--<input id="allPathsToggle" type="checkbox" /> All Paths-->
             </span>
         </div>
     </body>

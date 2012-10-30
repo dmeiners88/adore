@@ -180,7 +180,6 @@ $(function () {
         // Reload JSON Button
         $("#reloadJSONButton").click(function () {
             var oldIndex = state.activePathIndex;
-
             adore.reset();
 
             draw();
