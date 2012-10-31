@@ -14,7 +14,7 @@
 // @require     http://danmei.github.com/adore/common/js/lib/adore/adore.navigation.js
 // @require     http://danmei.github.com/adore/common/js/lib/adore/adore.json.adapters.themoviedb.org.js
 // @require     http://lesscss.googlecode.com/files/less-1.3.0.min.js
-// @resource    bare-css http://localhost:8080/common/skins/bare/bare.css
+// @resource    bare-css http://danmei.github.com/adore/common/skins/bare/bare.css
 // @version     0.1
 // @updateURL   http://danmei.github.com/adore/userscript/themoviedb.org.meta.js
 // ==/UserScript==
