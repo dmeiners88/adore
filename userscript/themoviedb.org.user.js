@@ -5,18 +5,18 @@
 // @include     http://www.themoviedb.org/*
 // @require     http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js
 // @require     http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js
-// @require     http://localhost:8080/common/js/lib/jquery.json.js
-// @require     http://localhost:8080/common/js/lib/jstorage.js
+// @require     http://danmei.github.com/adore/common/js/lib/jquery.json.js
+// @require     http://danmei.github.com/adore/common/js/lib/jstorage.js
 // @require     http://jsplumb.org/js/jquery.jsPlumb-1.3.13-all-min.js
-// @require     http://localhost:8080/common/js/lib/adore/adore.js
-// @require     http://localhost:8080/common/js/lib/adore/adore.drawing.js
-// @require     http://localhost:8080/common/js/lib/adore/adore.json.js
-// @require     http://localhost:8080/common/js/lib/adore/adore.navigation.js
-// @require     http://localhost:8080/common/js/lib/adore/adore.json.adapters.themoviedb.org.js
+// @require     http://danmei.github.com/adore/common/js/lib/adore/adore.js
+// @require     http://danmei.github.com/adore/common/js/lib/adore/adore.drawing.js
+// @require     http://danmei.github.com/adore/common/js/lib/adore/adore.json.js
+// @require     http://danmei.github.com/adore/common/js/lib/adore/adore.navigation.js
+// @require     http://danmei.github.com/adore/common/js/lib/adore/adore.json.adapters.themoviedb.org.js
 // @require     http://lesscss.googlecode.com/files/less-1.3.0.min.js
 // @resource    bare-css http://localhost:8080/common/skins/bare/bare.css
 // @version     0.1
-// @updateURL   http://localhost:8080/userscript/themoviedb.org.meta.js
+// @updateURL   http://danmei.github.com/adore/userscript/themoviedb.org.meta.js
 // ==/UserScript==
 
 var api_key    = "c69cd982c351c47ccd809268cc49fda2",
