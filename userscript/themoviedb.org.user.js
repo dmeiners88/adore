@@ -16,7 +16,6 @@
 // @require     http://lesscss.googlecode.com/files/less-1.3.0.min.js
 // @resource    bare-css http://danmei.github.com/adore/common/skins/bare/bare.css
 // @version     0.1
-// @updateURL   http://danmei.github.com/adore/userscript/themoviedb.org.meta.js
 // ==/UserScript==
 
 var api_key    = "c69cd982c351c47ccd809268cc49fda2",
